@@ -22,9 +22,9 @@ export default function RootLayout({
         <div className="absolute top-0 h-screen w-screen flex justify-center items-center lg:hidden">
           Mobile view is not avialable
         </div>
-        <div className="hidden  w-full lg:flex justify-center min-h-screen bg-gray-950 text-gray-300">
+        <div className="hidden  w-full lg:flex justify-center min-h-screen bg-neutral-900 text-gray-300">
           <Provider>
-            <div className=" w-full  px-3">
+            <div className=" w-full">
               <div
                 className="w-full h-14 flex justify-center
              z-50"

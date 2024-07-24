@@ -4,7 +4,7 @@ import Link from "next/link";
 import BackPic from "../../../../../public/backgroundjpeg.jpeg";
 import NoPhoto from "../../../../../public/no-photo.jpg";
 
-async function getShowDetails(id: any) {
+async function getShowDetails(id: string) {
   const response = await fetch(
     `https://api.themoviedb.org/3/tv/${id}?api_key=${process.env.TMDB_API_KEY}`
   );
@@ -12,7 +12,7 @@ async function getShowDetails(id: any) {
   const data = await response.json();
   return data;
 }
-async function getShowCredit(id: any) {
+async function getShowCredit(id: string) {
   const response = await fetch(
     `https://api.themoviedb.org/3/tv/${id}/credits?api_key=${process.env.TMDB_API_KEY}&language=en-US`
   );
@@ -28,7 +28,7 @@ const ShowDetails = async ({
   params: { id: string };
   searchParams?: { [key: string]: string | string[] | undefined };
 }) => {
-  const { id }: any = params;
+  const { id } = params;
   const show = await getShowDetails(id);
   console.log(show);
   const { cast, crew } = await getShowCredit(id);
@@ -59,7 +59,7 @@ const ShowDetails = async ({
             <Image
               src={`https://image.tmdb.org/t/p/original${show.poster_path}`}
               width={500}
-              height={750}
+              height={500}
               alt={show.name}
               quality={50}
             />
