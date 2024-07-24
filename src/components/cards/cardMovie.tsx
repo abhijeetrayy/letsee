@@ -4,6 +4,7 @@ import { MdOutlineDownloadDone } from "react-icons/md";
 import { CiSaveDown1 } from "react-icons/ci";
 import { FcLike } from "react-icons/fc";
 import Link from "next/link";
+import { IoEyeOutline } from "react-icons/io5";
 
 async function getMovie(id: any) {
   const response = await fetch(
@@ -67,10 +68,10 @@ async function CardMovie({ genre }: any) {
             {movies?.slice(0, 6).map((movie: any) => (
               <div
                 key={movie.id}
-                className=" relative group flex flex-col  bg-black mr-2.5 max-w-72 min-h-64 text-gray-300 rounded-md border border-gray-800  duration-300  hover:scale-125 hover:z-50"
+                className=" relative group flex flex-col  bg-neutral-950 mr-2.5 max-w-72 min-h-64 text-gray-300 rounded-md shadow-md shadow-black  duration-300  hover:scale-125 hover:z-50"
               >
                 <Image
-                  className="rounded-md w-full max-h-48 group-hover:opacity-30"
+                  className="rounded-md w-full object-cover max-h-48 group-hover:opacity-30"
                   src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
                   width={200}
                   height={200}
@@ -93,7 +94,12 @@ async function CardMovie({ genre }: any) {
                     {movie.overview}
                   </p>
                 </span>
-                <div className="p-4 flex flex-row gap-5 absolute bottom-4 right-3 transform  opacity-0 group-hover:-translate-x-28 group-hover:opacity-100 transition-transform duration-500">
+                <div className="p-4 flex flex-row gap-5 absolute bottom-4 right-3 transform  opacity-0 group-hover:-translate-x-16 group-hover:opacity-100 transition-transform duration-500">
+                  <CardMovieButton
+                    movieId={movie.id}
+                    text={"watched"}
+                    icon={<IoEyeOutline />}
+                  />
                   <CardMovieButton
                     movieId={movie.id}
                     text={"watched"}

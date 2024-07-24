@@ -7,12 +7,13 @@ import CardMovieButton from "@/components/buttons/cardMovieButton";
 import { CiSaveDown1 } from "react-icons/ci";
 import { FcLike } from "react-icons/fc";
 import Staring from "@/components/person/server/staringCredit";
+import { IoEyeOutline } from "react-icons/io5";
 function personCredits({ cast, crew, name }: any) {
   return (
     <div className="grid grid-cols-5 gap-3 ">
       {cast?.map((data: any) => (
         <div className="" key={data.id}>
-          <div className=" relative group flex flex-col  bg-black mr-2.5 w-full h-[320px] text-gray-300 rounded-md border border-gray-800  duration-300  hover:scale-105 hover:z-50">
+          <div className=" relative group flex flex-col  bg-black mr-2.5 w-full h-[320px] text-gray-300 rounded-md  duration-300  hover:scale-105 hover:z-50">
             <div className="absolute top-0 left-0 z-50">
               <p className="p-1 bg-black text-white rounded-br-md text-sm">
                 {data.media_type}
@@ -27,9 +28,8 @@ function personCredits({ cast, crew, name }: any) {
               className="relative rounded-md object-cover w-full h-full group-hover:opacity-20"
               src={
                 data.poster_path || data.backdrop_path
-                  ? `https://image.tmdb.org/t/p/original${
-                      data.poster_path || data.backdrop_path
-                    }`
+                  ? `https://image.tmdb.org/t/p/original${data.poster_path || data.backdrop_path
+                  }`
                   : NoPhoto
               }
               width={200}
@@ -62,7 +62,12 @@ function personCredits({ cast, crew, name }: any) {
                 <Staring id={data.id} type={data.media_type} />
               </div>
             </span>
-            <div className="p-4 flex flex-row gap-5 absolute bottom-4 right-3 transform  opacity-0 group-hover:-translate-x-20 group-hover:opacity-100 transition-transform duration-500">
+            <div className="p-4 flex flex-row gap-5 absolute bottom-4 right-3 transform  opacity-0 group-hover:-translate-x-11 group-hover:opacity-100 transition-transform duration-500">
+              <CardMovieButton
+                movieId={data.id}
+                text={"watched"}
+                icon={<IoEyeOutline />}
+              />
               <CardMovieButton
                 movieId={data.id}
                 text={"watched"}
@@ -82,7 +87,7 @@ function personCredits({ cast, crew, name }: any) {
       )}
       {crew?.map((data: any) => (
         <div className="" key={data.id}>
-          <div className=" relative group flex flex-col  bg-black mr-2.5 w-full h-[320px] text-gray-300 rounded-md border border-gray-800  duration-300  hover:scale-105 hover:z-50">
+          <div className=" relative group flex flex-col  bg-black mr-2.5 w-full h-[320px] text-gray-300 rounded-md  duration-300  hover:scale-105 hover:z-50">
             <div className="absolute top-0 left-0 z-50">
               <p className="p-1 bg-black text-white rounded-br-md text-sm">
                 {data.media_type}
@@ -97,9 +102,8 @@ function personCredits({ cast, crew, name }: any) {
               className="relative rounded-md object-cover w-full h-full group-hover:opacity-20"
               src={
                 data.poster_path || data.backdrop_path
-                  ? `https://image.tmdb.org/t/p/original${
-                      data.poster_path || data.backdrop_path
-                    }`
+                  ? `https://image.tmdb.org/t/p/original${data.poster_path || data.backdrop_path
+                  }`
                   : NoPhoto
               }
               width={200}
@@ -131,7 +135,12 @@ function personCredits({ cast, crew, name }: any) {
                 </span>
               </p>
             </span>
-            <div className="p-4 flex flex-row gap-5 absolute bottom-4 right-3 transform  opacity-0 group-hover:-translate-x-20 group-hover:opacity-100 transition-transform duration-500">
+            <div className="p-4 flex flex-row gap-5 absolute bottom-4 right-3 transform  opacity-0 group-hover:-translate-x-11 group-hover:opacity-100 transition-transform duration-500">
+              <CardMovieButton
+                movieId={data.id}
+                text={"watched"}
+                icon={<IoEyeOutline />}
+              />
               <CardMovieButton
                 movieId={data.id}
                 text={"watched"}

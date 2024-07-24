@@ -71,9 +71,8 @@ const MovieSearch = () => {
                   className="relative rounded-md object-cover max-w-full min-h-[382px] group-hover:opacity-40"
                   src={
                     data.poster_path || data.backdrop_path
-                      ? `https://image.tmdb.org/t/p/original${
-                          data.poster_path || data.backdrop_path
-                        }`
+                      ? `https://image.tmdb.org/t/p/original${data.poster_path || data.backdrop_path
+                      }`
                       : pic
                   }
                   width={500}
@@ -119,7 +118,7 @@ const MovieSearch = () => {
             data?.media_type == "person" && (
               <div
                 key={data.id}
-                className=" relative group flex flex-col  bg-black mr-2.5 w-64 max-h-full text-gray-300 rounded-md border border-gray-800  duration-300  hover:scale-105 hover:z-50"
+                className=" relative group flex flex-col  bg-black mr-2.5 w-64 max-h-full text-gray-300 rounded-md   duration-300  hover:scale-105 hover:z-50"
               >
                 <div className="absolute top-0 left-0 z-50">
                   <p className="p-1 bg-black text-white rounded-br-md text-sm">
