@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+// import { Inter } from "next/font/google";
 import "./globals.css";
 import Provider from "./storeProvider";
 import Navbar from "@/components/header/navbar";
 
-const inter = Inter({ subsets: ["latin"] });
+// const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Unisocial",
@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="">
-      <body className={inter.className}>
+      <body>
         <div className="absolute top-0 h-screen w-screen flex justify-center items-center lg:hidden">
           Mobile view is not avialable
         </div>
