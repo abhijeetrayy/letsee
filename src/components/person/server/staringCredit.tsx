@@ -24,7 +24,7 @@ async function credits({ id, type }: any) {
             <span key={item.id}>
               <Link
                 href={`/app/person/${item.id}`}
-                className=" break-words text-xs hover:underline"
+                className=" text-xs hover:underline"
               >
                 {item.name}
               </Link>

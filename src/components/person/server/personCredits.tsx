@@ -1,17 +1,26 @@
-import React from "react";
+"use client";
 import Image from "next/image";
 import Link from "next/link";
-import NoPhoto from "../../../../public/no-photo.jpg";
-import GenreName from "@/components/server/genreConvert";
-import CardMovieButton from "@/components/buttons/cardMovieButton";
 import { CiSaveDown1 } from "react-icons/ci";
 import { FcLike } from "react-icons/fc";
-import Staring from "@/components/person/server/staringCredit";
 import { IoEyeOutline } from "react-icons/io5";
+import { useState } from "react";
+
+import CardMovieButton from "@/components/buttons/cardMovieButton";
+import GenreName from "@/components/server/genreConvert";
+import NoPhoto from "../../../../public/no-photo.jpg";
+import Staring from "@/components/person/server/staringCredit";
+
 function personCredits({ cast, crew, name }: any) {
+  const [limit, setlimit] = useState(19);
+
+  function getAllCredits() {
+    setlimit(cast.length);
+  }
+
   return (
     <div className="grid grid-cols-5 gap-3 ">
-      {cast?.map((data: any) => (
+      {cast?.slice(0, limit).map((data: any) => (
         <div className="" key={data.id}>
           <div className=" relative group flex flex-col  bg-black mr-2.5 w-full h-[320px] text-gray-300 rounded-md  duration-300  hover:scale-105 hover:z-50">
             <div className="absolute top-0 left-0 z-50">
@@ -28,8 +37,9 @@ function personCredits({ cast, crew, name }: any) {
               className="relative rounded-md object-cover w-full h-full group-hover:opacity-20"
               src={
                 data.poster_path || data.backdrop_path
-                  ? `https://image.tmdb.org/t/p/original${data.poster_path || data.backdrop_path
-                  }`
+                  ? `https://image.tmdb.org/t/p/original${
+                      data.poster_path || data.backdrop_path
+                    }`
                   : NoPhoto
               }
               width={200}
@@ -37,7 +47,7 @@ function personCredits({ cast, crew, name }: any) {
               quality={40}
               alt={data.title}
             />
-            <span className="opacity-0 flex flex-col gap-2  hlimitSearch px-4 absolute bottom-3  translate-y-0 duration-300 group-hover:opacity-100 group-hover:bottom-24 group-hover:bg-transparent  group-hover:text-gray-200 ">
+            <span className="opacity-0 flex flex-col gap-2 break-all hlimitSearch px-4 absolute bottom-3  translate-y-0 duration-300 group-hover:opacity-100 group-hover:bottom-24 group-hover:bg-transparent  group-hover:text-gray-200 ">
               <div className="mb-1">
                 <Link
                   className="group-hover:underline"
@@ -54,13 +64,11 @@ function personCredits({ cast, crew, name }: any) {
                 {data.release_date || data.first_air_date}
               </p>
               <div className=" mb-4 text-xs">
-                {data.genre_ids.map((item: any) => (
-                  <GenreName genreid={item} />
-                ))}
+                <GenreName genreids={data.genre_ids} />
               </div>
-              <div className="mt-1">
+              {/* <div className="mt-1 ">
                 <Staring id={data.id} type={data.media_type} />
-              </div>
+              </div> */}
             </span>
             <div className="p-4 flex flex-row gap-5 absolute bottom-4 right-3 transform  opacity-0 group-hover:-translate-x-11 group-hover:opacity-100 transition-transform duration-500">
               <CardMovieButton
@@ -82,6 +90,16 @@ function personCredits({ cast, crew, name }: any) {
           </div>
         </div>
       ))}
+      {cast.length > limit ? (
+        <button
+          className="w-full h-[320px] px-3 py-2 rounded bg-neutral-800 hover:bg-neutral-700"
+          onClick={getAllCredits}
+        >
+          Get All
+        </button>
+      ) : (
+        <div className="col-span-5 px-3 py-2 rounded bg-neutral-800">end.</div>
+      )}
       {crew.length >= 1 && (
         <h3 className=" col-span-5 p-3 font-semibold">In prod. ~ crew</h3>
       )}
@@ -102,8 +120,9 @@ function personCredits({ cast, crew, name }: any) {
               className="relative rounded-md object-cover w-full h-full group-hover:opacity-20"
               src={
                 data.poster_path || data.backdrop_path
-                  ? `https://image.tmdb.org/t/p/original${data.poster_path || data.backdrop_path
-                  }`
+                  ? `https://image.tmdb.org/t/p/original${
+                      data.poster_path || data.backdrop_path
+                    }`
                   : NoPhoto
               }
               width={200}
@@ -111,7 +130,7 @@ function personCredits({ cast, crew, name }: any) {
               quality={40}
               alt={data.title}
             />
-            <span className="opacity-0 flex flex-col gap-3  hlimitSearch px-4 absolute bottom-3  translate-y-0 duration-300 group-hover:opacity-100 group-hover:bottom-24 group-hover:bg-transparent  group-hover:text-gray-200 ">
+            <span className="opacity-0 flex flex-col gap-3 break-all hlimitSearch px-4 absolute bottom-3  translate-y-0 duration-300 group-hover:opacity-100 group-hover:bottom-24 group-hover:bg-transparent  group-hover:text-gray-200 ">
               <div className="mb-1">
                 <Link
                   className="group-hover:underline text-lg"

@@ -1,19 +1,9 @@
-import { lazy, Suspense } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { lazy, Suspense } from "react";
 
 const PersonCredits = lazy(
   () => import("@/components/person/server/personCredits")
 );
-
-async function getCredit(id: any) {
-  const response = await fetch(
-    `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${process.env.TMDB_API_KEY}`
-  );
-
-  const data = await response.json();
-  return data;
-}
 
 async function fetchPersonData(id: any) {
   const response = await fetch(

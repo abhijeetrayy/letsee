@@ -39,11 +39,11 @@ export default async function Home() {
           </button>
         ))}
       </div>
-      <div className="grid gap-2 mt-5">
+      {/* <div className="grid gap-2 mt-5">
         {genre?.genres.map((genre) => (
-          <MovieCard genre={genre} />
+          <MovieCard key={genre.id} genre={genre} />
         ))}
-      </div>
+      </div> */}
     </div>
   );
 }
