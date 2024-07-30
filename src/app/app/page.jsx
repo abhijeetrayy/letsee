@@ -28,10 +28,10 @@ export default async function Home() {
         <SearchForm />
       </div>
       <h1>Movie Genres</h1>
-      <div className="flex flex-row gap-3 overflow-x-scroll no-scrollbar mx-5">
+      <div className="grid grid-cols-6 gap-3 mx-5">
         {genre?.genres.map((genre) => (
           <button
-            className="  h-24 min-w-32 text-sm border-2 rounded-md border-gray-700 text-white p-2 whitespace-nowrap"
+            className=" h-24 min-w-32 text-sm border-2 rounded-md border-gray-700 text-white p-2 whitespace-nowrap"
             key={genre.id}
             // onClick={() => setSelectedGenre(genre.id)}
           >

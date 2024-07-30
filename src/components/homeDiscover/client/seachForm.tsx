@@ -66,21 +66,20 @@ const MovieSearch = () => {
                   </p>
                 </div>
 
-                <Image
-                  className="relative rounded-md object-cover max-w-full min-h-[382px] group-hover:opacity-40"
+                <img
+                  className="relative rounded-md object-cover max-w-full min-h-[382px] group-hover:opacity-20"
                   src={
                     data.poster_path || data.backdrop_path
                       ? `https://image.tmdb.org/t/p/original${
                           data.poster_path || data.backdrop_path
                         }`
-                      : pic
+                      : "/no-photo.jpg"
                   }
                   width={400}
                   height={400}
-                  quality={20}
                   alt={data.title}
                 />
-                <span className="opacity-0 flex flex-col gap-3  hlimitSearch px-4 absolute bottom-3  translate-y-0 duration-300 group-hover:opacity-100 group-hover:bottom-24 group-hover:bg-transparent  group-hover:text-gray-200 ">
+                <span className="opacity-0 flex flex-col gap-3 font-semibold  hlimitSearch px-4 absolute bottom-3  translate-y-0 duration-300 group-hover:opacity-100 group-hover:bottom-24 group-hover:bg-transparent  group-hover:text-gray-200 ">
                   <div className="mb-1">
                     <Link
                       className="group-hover:underline"
@@ -125,20 +124,18 @@ const MovieSearch = () => {
                     {data.media_type}
                   </p>
                 </div>
-
-                <Image
-                  className="relative rounded-md object-cover max-w-full min-h-[382px] group-hover:opacity-40"
+                <img
+                  className="relative rounded-md object-cover max-w-full min-h-[382px] group-hover:opacity-20"
                   src={
                     data.profile_path
                       ? `https://image.tmdb.org/t/p/original${data.profile_path}`
-                      : pic
+                      : "/no-photo.jpg"
                   }
-                  width={500}
-                  height={500}
-                  quality={20}
+                  width={400}
+                  height={400}
                   alt={data.title}
                 />
-                <span className="opacity-0 flex flex-col gap-3  hlimitSearch px-4 absolute bottom-3  translate-y-0 duration-300 group-hover:opacity-100 group-hover:bottom-24 group-hover:bg-transparent  group-hover:text-gray-200 ">
+                <span className="opacity-0 flex flex-col gap-3  font-semibold hlimitSearch px-4 absolute bottom-3  translate-y-0 duration-300 group-hover:opacity-100 group-hover:bottom-24 group-hover:bg-transparent  group-hover:text-gray-200 ">
                   <div className="mb-1">
                     <Link
                       className="group-hover:underline"
