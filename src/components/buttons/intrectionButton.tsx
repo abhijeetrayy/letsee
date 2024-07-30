@@ -25,7 +25,7 @@ export async function likedButton({ itemId, itemType, imgUrl }: any) {
         image_url: imgUrl,
       });
 
-    console.log(error);
+    console.log(insertError);
   }
   return (
     <form>
