@@ -7,16 +7,23 @@ export async function likedButton({ itemId, itemType, imgUrl }: any) {
     "use server";
     const supabase = createClient();
 
-    const { data } = await supabase.auth.getUser();
+    const { data, error } = await supabase.auth.getUser();
+    if (error) {
+      console.log("user isn't loged in ");
+      return;
+    }
+
     const userId = data?.user.id;
     console.log(userId);
 
-    const { error } = await supabase.from("favorite_items").insert({
-      user_id: userId,
-      item_id: itemId,
-      item_type: itemType,
-      image_url: imgUrl,
-    });
+    const { error: insertError } = await supabase
+      .from("favorite_items")
+      .insert({
+        user_id: userId,
+        item_id: itemId,
+        item_type: itemType,
+        image_url: imgUrl,
+      });
 
     console.log(error);
   }
