@@ -39,62 +39,62 @@ export async function likedButton({ itemId, itemType, imgUrl }: any) {
   );
 }
 
-export async function watchedButton({ itemId, itemType, imgUrl }: any) {
-  async function liked() {
-    "use server";
-    const supabase = createClient();
+// export async function watchedButton({ itemId, itemType, imgUrl }: any) {
+//   async function liked() {
+//     "use server";
+//     const supabase = createClient();
 
-    const { data } = await supabase.auth.getUser();
-    const userId = data?.user.id;
-    console.log(userId);
+//     const { data } = await supabase.auth.getUser();
+//     const userId = data?.user.id;
+//     console.log(userId);
 
-    const { error } = await supabase.from("favorite_items").insert({
-      user_id: userId,
-      item_id: itemId,
-      item_type: itemType,
-      image_url: imgUrl,
-    });
+//     const { error } = await supabase.from("favorite_items").insert({
+//       user_id: userId,
+//       item_id: itemId,
+//       item_type: itemType,
+//       image_url: imgUrl,
+//     });
 
-    console.log(error);
-  }
-  return (
-    <form>
-      <button
-        formAction={liked}
-        className="px-4 py-2 rounded-md bg-neutral-700 hover:bg-neutral-600"
-      >
-        <FcLike />
-      </button>
-    </form>
-  );
-}
+//     console.log(error);
+//   }
+//   return (
+//     <form>
+//       <button
+//         formAction={liked}
+//         className="px-4 py-2 rounded-md bg-neutral-700 hover:bg-neutral-600"
+//       >
+//         <FcLike />
+//       </button>
+//     </form>
+//   );
+// }
 
-export async function watchlistButton({ itemId, itemType, imgUrl }: any) {
-  async function liked() {
-    "use server";
-    const supabase = createClient();
+// export async function watchlistButton({ itemId, itemType, imgUrl }: any) {
+//   async function liked() {
+//     "use server";
+//     const supabase = createClient();
 
-    const { data } = await supabase.auth.getUser();
-    const userId = data?.user.id;
-    console.log(userId);
+//     const { data } = await supabase.auth.getUser();
+//     const userId = data?.user.id;
+//     console.log(userId);
 
-    const { error } = await supabase.from("favorite_items").insert({
-      user_id: userId,
-      item_id: itemId,
-      item_type: itemType,
-      image_url: imgUrl,
-    });
+//     const { error } = await supabase.from("favorite_items").insert({
+//       user_id: userId,
+//       item_id: itemId,
+//       item_type: itemType,
+//       image_url: imgUrl,
+//     });
 
-    console.log(error);
-  }
-  return (
-    <form>
-      <button
-        formAction={liked}
-        className="px-4 py-2 rounded-md bg-neutral-700 hover:bg-neutral-600"
-      >
-        <FcLike />
-      </button>
-    </form>
-  );
-}
+//     console.log(error);
+//   }
+//   return (
+//     <form>
+//       <button
+//         formAction={liked}
+//         className="px-4 py-2 rounded-md bg-neutral-700 hover:bg-neutral-600"
+//       >
+//         <FcLike />
+//       </button>
+//     </form>
+//   );
+// }
