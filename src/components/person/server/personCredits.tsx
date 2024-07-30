@@ -12,41 +12,53 @@ import NoPhoto from "../../../../public/no-photo.jpg";
 import Staring from "@/components/person/server/staringCredit";
 
 function personCredits({ cast, crew, name }: any) {
+  console.log(cast);
   const [limit, setlimit] = useState(19);
-
+  const [crewlimit, setcrewlimit] = useState(0);
   function getAllCredits() {
     setlimit(cast.length);
   }
 
+  function getAllCrewCredits() {
+    setcrewlimit(crew.length);
+  }
+  const NoImage = NoPhoto;
   return (
     <div className="grid grid-cols-5 gap-3 ">
       {cast?.slice(0, limit).map((data: any) => (
         <div className="" key={data.id}>
           <div className=" relative group flex flex-col  bg-black mr-2.5 w-full h-[320px] text-gray-300 rounded-md  duration-300  hover:scale-105 hover:z-50">
             <div className="absolute top-0 left-0 z-50">
-              <p className="p-1 bg-black text-white rounded-br-md text-sm">
-                {data.media_type}
-              </p>
+              {data.adult ? (
+                <p className="p-1 bg-red-600 text-white rounded-br-md text-sm">
+                  Adult
+                </p>
+              ) : (
+                <p className="p-1 bg-black text-white rounded-br-md text-sm">
+                  {data.media_type}
+                </p>
+              )}
             </div>
             <div className="absolute top-0 right-0 z-50">
               <p className="p-1 bg-indigo-500 text-white rounded-bl-md text-sm">
                 Staring
               </p>
             </div>
-            <Image
+
+            <img
               className="relative rounded-md object-cover w-full h-full group-hover:opacity-20"
               src={
-                data.poster_path || data.backdrop_path
+                (data.poster_path || data.backdrop_path) && !data.adult
                   ? `https://image.tmdb.org/t/p/original${
                       data.poster_path || data.backdrop_path
                     }`
-                  : NoPhoto
+                  : data.adult
+                  ? "/pixeled.jpg"
+                  : "/no-photo.jpg"
               }
-              width={200}
-              height={200}
-              quality={40}
               alt={data.title}
             />
+
             <span className="opacity-0 flex flex-col gap-2 break-all hlimitSearch px-4 absolute bottom-3  translate-y-0 duration-300 group-hover:opacity-100 group-hover:bottom-24 group-hover:bg-transparent  group-hover:text-gray-200 ">
               <div className="mb-1">
                 <Link
@@ -92,10 +104,10 @@ function personCredits({ cast, crew, name }: any) {
       ))}
       {cast.length > limit ? (
         <button
-          className="w-full h-[320px] px-3 py-2 rounded bg-neutral-800 hover:bg-neutral-700"
+          className="col-span-5 px-3 py-2 rounded bg-neutral-800 hover:bg-neutral-700"
           onClick={getAllCredits}
         >
-          Get All
+          More..
         </button>
       ) : (
         <div className="col-span-5 px-3 py-2 rounded bg-neutral-800">end.</div>
@@ -103,7 +115,18 @@ function personCredits({ cast, crew, name }: any) {
       {crew.length >= 1 && (
         <h3 className=" col-span-5 p-3 font-semibold">In prod. ~ crew</h3>
       )}
-      {crew?.map((data: any) => (
+      {crew.length > crewlimit ? (
+        <button
+          className="col-span-5 px-3 py-2 rounded bg-neutral-800 hover:bg-neutral-700"
+          onClick={getAllCrewCredits}
+        >
+          Off Staring Credits
+        </button>
+      ) : (
+        <></>
+      )}
+
+      {crew?.slice(0, crewlimit).map((data: any) => (
         <div className="" key={data.id}>
           <div className=" relative group flex flex-col  bg-black mr-2.5 w-full h-[320px] text-gray-300 rounded-md  duration-300  hover:scale-105 hover:z-50">
             <div className="absolute top-0 left-0 z-50">
@@ -116,18 +139,17 @@ function personCredits({ cast, crew, name }: any) {
                 In Prod.
               </p>
             </div>
-            <Image
+            <img
               className="relative rounded-md object-cover w-full h-full group-hover:opacity-20"
               src={
-                data.poster_path || data.backdrop_path
+                (data.poster_path || data.backdrop_path) && !data.adult
                   ? `https://image.tmdb.org/t/p/original${
                       data.poster_path || data.backdrop_path
                     }`
-                  : NoPhoto
+                  : data.adult
+                  ? "/pixeled.jpg"
+                  : "/no-photo.jpg"
               }
-              width={200}
-              height={200}
-              quality={40}
               alt={data.title}
             />
             <span className="opacity-0 flex flex-col gap-3 break-all hlimitSearch px-4 absolute bottom-3  translate-y-0 duration-300 group-hover:opacity-100 group-hover:bottom-24 group-hover:bg-transparent  group-hover:text-gray-200 ">

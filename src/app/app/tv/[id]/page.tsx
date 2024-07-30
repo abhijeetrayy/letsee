@@ -41,27 +41,25 @@ const ShowDetails = async ({
       {/* Content */}
       <div className="relative  flex flex-col  overflow-y-clip">
         <div className="absolute top-0 left-0 w-full h-auto z-0">
-          <Image
+          <img
             className="object-cover opacity-10 w-full"
-            src={
+            src={`${
               show.backdrop_path
                 ? `https://image.tmdb.org/t/p/original${show.backdrop_path}`
-                : BackPic
-            }
+                : "/backgroundjpeg.jpeg"
+            }`}
             width={500}
             height={500}
             alt={show.name}
-            quality={50}
           />
         </div>
         <div className="relative flex flex-row gap-5 pt-6 px-6">
           <div className="flex-1">
-            <Image
+            <img
               src={`https://image.tmdb.org/t/p/original${show.poster_path}`}
               width={500}
               height={500}
               alt={show.name}
-              quality={50}
             />
           </div>
           <div className="flex-[2]">
@@ -142,16 +140,15 @@ const ShowDetails = async ({
       <div className="flex flex-col gap-4 my-9 max-w-5xl">
         {show.seasons.map((season: any) => (
           <div key={season.id} className="flex flex-row gap-4">
-            <Image
-              src={
+            <img
+              src={`${
                 !season.poster_path
-                  ? NoPhoto
+                  ? "/no-photo.jpg"
                   : `https://image.tmdb.org/t/p/original${season.poster_path}`
-              }
+              }`}
               width={150}
               height={225}
               alt={season.name}
-              quality={50}
             />
             <div>
               <h2 className="text-xl font-bold">{season.name}</h2>

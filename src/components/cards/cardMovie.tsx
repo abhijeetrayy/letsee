@@ -70,12 +70,11 @@ async function CardMovie({ genre }: any) {
                 key={movie.id}
                 className=" relative group flex flex-col  bg-neutral-950 mr-2.5 max-w-72 min-h-64 text-gray-300 rounded-md shadow-md shadow-black  duration-300  hover:scale-125 hover:z-50"
               >
-                <Image
+                <img
                   className="rounded-md w-full object-cover max-h-48 group-hover:opacity-30"
                   src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}
                   width={200}
                   height={200}
-                  quality={40}
                   alt={movie.title}
                 />
                 <span className=" flex flex-col gap-3  hlimit px-4 absolute bottom-3  translate-y-0 duration-300 group-hover:bottom-20 group-hover:text-white group-hover:text-sm">

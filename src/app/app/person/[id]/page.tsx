@@ -40,7 +40,7 @@ const PersonList = async ({
         <div className="flex flex-row gap-4">
           <div className="w-full flex-1 ">
             {person.profile_path ? (
-              <Image
+              <img
                 src={`https://image.tmdb.org/t/p/original${person.profile_path}`}
                 width={300}
                 height={450}
