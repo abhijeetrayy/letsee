@@ -1,10 +1,17 @@
 import type { Metadata } from "next";
 // import { Inter } from "next/font/google";
+import localfont from "next/font/local";
 import "./globals.css";
 import Provider from "./storeProvider";
 import Navbar from "@/components/header/navbar";
+import { ToastContainer } from "react-toastify";
 
 // const inter = Inter({ subsets: ["latin"] });
+
+const inter = localfont({
+  src: [{ path: "../../../public/font/Inter.ttf", weight: "400" }],
+  variable: "--font-inter",
+});
 
 export const metadata: Metadata = {
   title: "Unisocial",
@@ -18,11 +25,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="">
-      <body>
-        <div className="absolute top-0 h-screen w-screen flex justify-center items-center lg:hidden">
+      <body className={inter.variable}>
+        <div className="absolute top-0 min-h-screen w-screen flex justify-center items-center lg:hidden">
           Mobile view is not avialable
         </div>
-        <div className="hidden  w-full lg:flex justify-center min-h-screen bg-neutral-900 text-gray-300">
+        <div className="hidden  w-full font-inter lg:flex justify-center  bg-neutral-900 text-gray-300">
           <Provider>
             <div className=" w-full">
               <div
@@ -33,6 +40,7 @@ export default function RootLayout({
               </div>
               <div className="">{children}</div>
             </div>
+            <ToastContainer />
           </Provider>
         </div>
       </body>

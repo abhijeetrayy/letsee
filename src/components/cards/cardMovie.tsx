@@ -1,5 +1,5 @@
 import Image from "next/image";
-import CardMovieButton from "@/components/buttons/cardMovieButton";
+import CardMovieButton from "@/components/buttons/cardButtons";
 import { MdOutlineDownloadDone } from "react-icons/md";
 import { CiSaveDown1 } from "react-icons/ci";
 import { FcLike } from "react-icons/fc";

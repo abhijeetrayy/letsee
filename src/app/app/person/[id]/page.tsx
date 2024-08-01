@@ -1,9 +1,9 @@
+import CardMovieButton from "@/components/buttons/cardButtons";
 import Image from "next/image";
 import { lazy, Suspense } from "react";
+import { IoEyeOutline } from "react-icons/io5";
 
-const PersonCredits = lazy(
-  () => import("@/components/person/server/personCredits")
-);
+import PersonCredits from "@/components/person/server/personCredits";
 
 async function fetchPersonData(id: any) {
   const response = await fetch(
@@ -37,11 +37,11 @@ const PersonList = async ({
   return (
     <div className="text-white w-full flex justify-center">
       <div className=" flex flex-col gap-4 p-4 max-w-6xl  w-full">
-        <div className="flex flex-row gap-4">
+        <div className="flex flex-row gap-4 z-10">
           <div className="w-full flex-1 ">
             {person.profile_path ? (
               <img
-                src={`https://image.tmdb.org/t/p/original${person.profile_path}`}
+                src={`https://image.tmdb.org/t/p/h632${person.profile_path}`}
                 width={300}
                 height={450}
                 className="object-contain rounded-md w-full min-h-full"
@@ -55,6 +55,7 @@ const PersonList = async ({
           </div>
           <div className="flex-[2]">
             <h1 className="mt-4 text-2xl font-bold">{person.name}</h1>
+
             <p className="mt-2 text-sm text-gray-400">{person.birthday}</p>
             <p className="mt-2 text-sm text-gray-400">
               {person.place_of_birth}
@@ -62,20 +63,24 @@ const PersonList = async ({
             <p className="mt-2 text-sm text-gray-400">
               {person.known_for_department}
             </p>
-            <p className="mt-2 text-sm text-gray-400">{person.biography}</p>
+            <p className="mt-2 text-sm text-gray-400">
+              {person.biography.slice(0, 400)} ...
+            </p>
           </div>
         </div>
 
         <h3 className="text-lg font-semibold">Known For:</h3>
-        <Suspense
-          fallback={
-            <div className="w-full h-72 flex justify-center items-center">
-              Loading up.
-            </div>
-          }
-        >
-          <PersonCredits cast={cast} crew={crew} name={person.name} />
-        </Suspense>
+        <div>
+          <Suspense
+            fallback={
+              <div className="w-full h-72 flex justify-center items-center">
+                Loading up.
+              </div>
+            }
+          >
+            <PersonCredits cast={cast} crew={crew} name={person.name} />
+          </Suspense>
+        </div>
       </div>
     </div>
   );

@@ -1,7 +1,12 @@
 import Link from "next/link";
 import SignOut from "../buttons/signOut";
+import { redirect } from "next/navigation";
 
 function navbar() {
+  async function search(formData: FormData) {
+    "use server";
+    redirect(`/app/search/${formData.get("searchtext")}`);
+  }
   return (
     <div className="w-full flex flex-row items-center justify-between text-white max-w-7xl h-full">
       <div className="">
@@ -10,7 +15,14 @@ function navbar() {
 
       <div className="flex flex-row gap-3">
         <div>
-          <input className="border-2 border-black" type="text" />
+          <form action="">
+            <input
+              className="border-2 border-black text-gray-900"
+              name="searchtext"
+              type="text"
+            />
+            <button formAction={search}>Serch</button>
+          </form>
         </div>
 
         <div>Notify</div>
