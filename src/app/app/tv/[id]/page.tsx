@@ -35,14 +35,14 @@ const ShowDetails = async ({
   console.log(cast, crew);
 
   return (
-    <div className="text-white relative max-w-7xl w-full min-h-screen mx-auto">
+    <div className="text-white relative w-full flex flex-col items-center justify-center">
       {/* Poster Image as Background */}
 
       {/* Content */}
-      <div className="relative  flex flex-col  overflow-y-clip">
-        <div className="absolute top-0 left-0 w-full h-auto z-0">
+      <div className="relative w-full flex flex-col  overflow-y-clip justify-center items-center bg-black">
+        <div className="absolute top-0 left-0 h-auto z-0 w-full flex justify-center">
           <img
-            className="object-cover opacity-10 w-full"
+            className="object-cover opacity-10 max-w-[2100px] w-full"
             src={`${
               show.backdrop_path
                 ? `https://image.tmdb.org/t/p/original${show.backdrop_path}`
@@ -53,7 +53,7 @@ const ShowDetails = async ({
             alt={show.name}
           />
         </div>
-        <div className="relative flex flex-row gap-5 pt-6 px-6">
+        <div className="relative flex flex-row gap-5 pt-6 px-6 w-full max-w-6xl">
           <div className="flex-1">
             <img
               src={`https://image.tmdb.org/t/p/original${show.poster_path}`}
@@ -64,19 +64,21 @@ const ShowDetails = async ({
           </div>
           <div className="flex-[2]">
             <h1 className="text-4xl font-bold mb-4">{show.name}</h1>
-            <p className="text-lg mb-4">{show.overview}</p>
-            <p className="text-md mb-2">
+            <p className=" mb-4 text-gray-400">{show.overview}</p>
+            <p className=" text-gray-400 mb-2">
               First Air Date: {show.first_air_date}
             </p>
-            <p className="text-md mb-2">Last Air Date: {show.last_air_date}</p>
-            <p className="text-md mb-2">Status: {show.status}</p>
-            <p className="text-md mb-2">
+            <p className=" text-gray-400  mb-2">
+              Last Air Date: {show.last_air_date}
+            </p>
+            <p className=" text-gray-400  mb-2">Status: {show.status}</p>
+            <p className=" text-gray-400  mb-2">
               Number of Seasons: {show.number_of_seasons}
             </p>
-            <p className="text-md mb-2">
+            <p className=" text-gray-400 mb-2">
               Number of Episodes: {show.number_of_episodes}
             </p>
-            <div className="mb-4">
+            <div className="mb-4  text-gray-400">
               <span>Genres: </span>
               {show.genres.map((genre: any, index: number) => (
                 <span key={genre.id}>
@@ -85,7 +87,7 @@ const ShowDetails = async ({
                 </span>
               ))}
             </div>
-            <div className="mb-4">
+            <div className="mb-4  text-gray-400">
               <span>Staring: </span>
               {cast?.slice(0, 5).map((item: any, index: number) =>
                 cast?.slice(0, 5).length - 1 > index ? (
@@ -112,7 +114,7 @@ const ShowDetails = async ({
               )}
             </div>
 
-            <div className="mb-4">
+            <div className="mb-4  text-gray-400">
               <span>Created by: </span>
               {show.created_by.map((creator: any, index: number) => (
                 <Link
@@ -125,7 +127,7 @@ const ShowDetails = async ({
                 </Link>
               ))}
             </div>
-            <div className="mb-4">
+            <div className="mb-4  text-gray-400">
               <span>Production Companies: </span>
               {show.production_companies.map((company: any, index: number) => (
                 <span key={company.id}>
@@ -137,7 +139,46 @@ const ShowDetails = async ({
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-4 my-9 max-w-5xl">
+
+      <div className="max-w-6xl w-full">
+        <div>
+          <h2>Cast</h2>
+          <div>
+            <div className="grid grid-cols-7 m-3 rounded-md">
+              {cast?.slice(0, 6).map((item: any) => (
+                <Link
+                  href={`/app/person/${item.id}`}
+                  className="group hover:bg-indigo-600"
+                >
+                  <img
+                    className="w-52 h-56 object-cover"
+                    src={
+                      item.profile_path
+                        ? `https://image.tmdb.org/t/p/original${item.profile_path}`
+                        : "/avatar.svg"
+                    }
+                    alt=""
+                  />
+                  <p className=" opacity-0 group-hover:opacity-100 ml-2">
+                    {item.name}
+                  </p>
+                </Link>
+              ))}
+
+              <div className="   ml-3">
+                <Link
+                  href={`/app/movie/${id}/cast`}
+                  className="flex justify-center items-center w-full h-56 border-2 border-neutral-500 hover:border-indigo-600 hover:bg-neutral-800 rounded-md"
+                >
+                  more..
+                </Link>
+                <p className=" opacity-0 ml-2">""</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-col gap-4 my-9 w-full max-w-5xl">
         {show.seasons.map((season: any) => (
           <div key={season.id} className="flex flex-row gap-4">
             <img
@@ -152,10 +193,16 @@ const ShowDetails = async ({
             />
             <div>
               <h2 className="text-xl font-bold">{season.name}</h2>
-              <p className="text-sm">{season.overview}</p>
-              <p className="text-sm">Air Date: {season.air_date}</p>
-              <p className="text-sm">Episode Count: {season.episode_count}</p>
-              <p className="text-sm">Average Vote: {season.vote_average}</p>
+              <p className="text- text-gray-400">
+                {season.overview.slice(0, 200)} ..
+              </p>
+              <p className="text- text-gray-400">Air Date: {season.air_date}</p>
+              <p className="text- text-gray-400">
+                Episode Count: {season.episode_count}
+              </p>
+              <p className="text- text-gray-400">
+                Average Vote: {season.vote_average}
+              </p>
             </div>
           </div>
         ))}
