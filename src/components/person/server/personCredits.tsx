@@ -70,7 +70,7 @@ function personCredits({ cast, crew, name }: any) {
                 className="relative object-cover w-full  "
                 src={
                   (data.poster_path || data.backdrop_path) && !data.adult
-                    ? `https://image.tmdb.org/t/p/w185${
+                    ? `https://image.tmdb.org/t/p/w342${
                         data.poster_path || data.backdrop_path
                       }`
                     : data.adult

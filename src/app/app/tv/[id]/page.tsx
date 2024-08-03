@@ -35,7 +35,7 @@ const ShowDetails = async ({
   console.log(cast, crew);
 
   return (
-    <div className="text-white relative w-full flex flex-col items-center justify-center">
+    <div className="text-white relative w-full flex flex-col gap-3 items-center justify-center">
       {/* Poster Image as Background */}
 
       {/* Content */}
@@ -45,7 +45,7 @@ const ShowDetails = async ({
             className="object-cover opacity-10 max-w-[2100px] w-full"
             src={`${
               show.backdrop_path
-                ? `https://image.tmdb.org/t/p/original${show.backdrop_path}`
+                ? `https://image.tmdb.org/t/p/w300${show.backdrop_path}`
                 : "/backgroundjpeg.jpeg"
             }`}
             width={500}
@@ -56,7 +56,7 @@ const ShowDetails = async ({
         <div className="relative flex flex-row gap-5 pt-6 px-6 w-full max-w-6xl">
           <div className="flex-1">
             <img
-              src={`https://image.tmdb.org/t/p/original${show.poster_path}`}
+              src={`https://image.tmdb.org/t/p/w342${show.poster_path}`}
               width={500}
               height={500}
               alt={show.name}
@@ -142,7 +142,7 @@ const ShowDetails = async ({
 
       <div className="max-w-6xl w-full">
         <div>
-          <h2>Cast</h2>
+          <h2 className="text-lg">Cast</h2>
           <div>
             <div className="grid grid-cols-7 m-3 rounded-md">
               {cast?.slice(0, 6).map((item: any) => (
@@ -154,7 +154,7 @@ const ShowDetails = async ({
                     className="w-52 h-56 object-cover"
                     src={
                       item.profile_path
-                        ? `https://image.tmdb.org/t/p/original${item.profile_path}`
+                        ? `https://image.tmdb.org/t/p/w185${item.profile_path}`
                         : "/avatar.svg"
                     }
                     alt=""
@@ -185,7 +185,7 @@ const ShowDetails = async ({
               src={`${
                 !season.poster_path
                   ? "/no-photo.jpg"
-                  : `https://image.tmdb.org/t/p/original${season.poster_path}`
+                  : `https://image.tmdb.org/t/p/w185${season.poster_path}`
               }`}
               width={150}
               height={225}

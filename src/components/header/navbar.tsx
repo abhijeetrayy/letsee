@@ -1,6 +1,7 @@
 import Link from "next/link";
 import SignOut from "../buttons/signOut";
 import { redirect } from "next/navigation";
+import { CiSearch } from "react-icons/ci";
 
 function navbar() {
   async function search(formData: FormData) {
@@ -13,21 +14,27 @@ function navbar() {
         <Link href={"/app"}>Let's see</Link>
       </div>
 
-      <div className="flex flex-row gap-3">
+      <div className="flex flex-row gap-3  items-center">
         <div>
-          <form action="">
+          <form className="flex flex-row items-center gap-2" action="">
             <input
-              className="border-2 border-black text-gray-900"
+              className="pl-3 ring-2 ring-gray-200 outline-0 rounded-sm  focus:bg-neutral-200 bg-gray-200 text-gray-900"
               name="searchtext"
               type="text"
+              placeholder="Search"
             />
-            <button formAction={search}>Serch</button>
+            <button
+              className="px-4 py-2  rounded-md bg-neutral-600 hover:bg-neutral-500"
+              formAction={search}
+            >
+              <CiSearch />
+            </button>
           </form>
         </div>
 
-        <div>Notify</div>
+        {/* <div>Notify</div> */}
         <div className=" group relative inline-block text-left">
-          <div>
+          {/* <div>
             <button
               type="button"
               className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
@@ -49,9 +56,9 @@ function navbar() {
                 />
               </svg>
             </button>
-          </div>
+          </div> */}
 
-          <div className="hidden absolute right-0 z-10  border-transparent w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5  group-hover:block focus:outline-none duration-300">
+          {/* <div className="hidden absolute right-0 z-10  border-transparent w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5  group-hover:block focus:outline-none duration-300">
             <div className="py-1">
               <div className="block px-4 py-2 text-sm text-gray-700">
                 Account settings
@@ -66,7 +73,14 @@ function navbar() {
                 <SignOut />
               </div>
             </div>
-          </div>
+          </div> */}
+          <select name="dog-names" id="dog-names">
+            {" "}
+            <option value="rigatoni">{/* <SignOut /> */}</option>
+            <option value="dave">Dave</option>
+            <option value="pumpernickel">Pumpernickel</option>
+            <option value="reeses">Reeses</option>
+          </select>
         </div>
       </div>
     </div>
