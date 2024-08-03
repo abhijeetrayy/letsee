@@ -56,7 +56,8 @@ function Page() {
     <div className="min-h-screen mx-auto w-full max-w-7xl">
       <div>
         <p>
-          Search Results: {query} {Sresults.total_pages * 20} items
+          Search Results: {decodeURIComponent(query as string)} '
+          {Sresults?.total_results}' items
         </p>
       </div>
       {loading ? (
@@ -74,7 +75,7 @@ function Page() {
                       key={data.id}
                       className=" overflow-hidden relative group flex flex-col  bg-black mr-2.5 w-full h-full text-gray-300 rounded-sm   duration-300  hover:scale-105 hover:z-50"
                     >
-                      <div className="absolute  top-0 left-0 flex flex-row justify-between w-full z-50">
+                      <div className="absolute  top-0 left-0 flex flex-row justify-between w-full z-10">
                         <p className="p-1 bg-black text-white rounded-br-md text-sm">
                           {data.media_type}
                         </p>
@@ -183,9 +184,9 @@ function Page() {
                   data?.media_type == "person" && (
                     <div
                       key={data.id}
-                      className=" relative group flex flex-col  bg-black mr-2.5 w-64 max-h-full text-gray-300 rounded-md   duration-300  hover:scale-105 hover:z-50"
+                      className="overflow-hidden relative group flex flex-col  bg-black mr-2.5 w-full h-full text-gray-300 rounded-sm   duration-300  hover:scale-105 hover:z-50"
                     >
-                      <div className="absolute top-0 left-0 z-50">
+                      <div className="absolute top-0 left-0 z-10">
                         <p className="p-1 bg-black text-white rounded-br-md text-sm">
                           {data.media_type}
                         </p>

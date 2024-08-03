@@ -35,7 +35,7 @@ const MovieDetails = async ({
       {/* Poster Image as Background */}
 
       {/* Content */}
-      <div className="relative flex flex-col items-center  w-full p-8">
+      <div className="relative flex flex-col items-center  w-full">
         <div className="absolute flex justify-center bg-black top-0 left-0 w-full max-h-[530px] z-0 overflow-y-clip">
           <img
             className="object-cover opacity-10 w-full max-w-[2100px] "
@@ -49,7 +49,7 @@ const MovieDetails = async ({
             alt=""
           />
         </div>
-        <div className="max-w-6xl w-full relative  z-10 px-3 flex flex-row  gap-5 h-full">
+        <div className="max-w-6xl w-full relative  z-10 p-3 flex flex-row  gap-5 h-full">
           <div className="">
             <img
               className="w-fit flex-1 rounded-md max-h-[500px]"
@@ -65,7 +65,7 @@ const MovieDetails = async ({
               alt=""
             />
           </div>
-          <div className="mt-3 flex-[2] w-full ">
+          <div className=" flex-[2] w-full ">
             <div>
               <h1 className="text-4xl font-bold  mb-4">{movie.title}</h1>
 
