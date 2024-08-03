@@ -71,6 +71,11 @@ export default async function Home() {
         <div className="grid grid-cols-5 gap-4 max-w-6xl w-full">
           {data?.results.map((item: any) => (
             <div className="group relative">
+              <div className="absolute top-0 left-0">
+                <p className="px-1 py-1 bg-neutral-950  text-white rounded-br-md">
+                  {item.media_type}
+                </p>
+              </div>
               <Link
                 className="max-h-[330px]  h-full"
                 href={`/app/${item.media_type}/${item.id}`}

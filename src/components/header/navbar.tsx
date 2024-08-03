@@ -2,14 +2,18 @@ import Link from "next/link";
 import SignOut from "../buttons/signOut";
 import { redirect } from "next/navigation";
 import { CiSearch } from "react-icons/ci";
+import DropdownMenu from "./dropDownMenu";
+import { createClient } from "@/utils/supabase/server";
 
-function navbar() {
+async function navbar() {
   async function search(formData: FormData) {
     "use server";
     redirect(`/app/search/${formData.get("searchtext")}`);
   }
+  const supabase = createClient();
+  const { error } = await supabase.auth.getUser();
   return (
-    <div className="w-full flex flex-row items-center justify-between text-white max-w-7xl h-full">
+    <div className="w-full flex flex-row items-center justify-between text-white max-w-7xl h-full z-50">
       <div className="">
         <Link href={"/app"}>Let's see</Link>
       </div>
@@ -74,13 +78,7 @@ function navbar() {
               </div>
             </div>
           </div> */}
-          <select name="dog-names" id="dog-names">
-            {" "}
-            <option value="rigatoni">{/* <SignOut /> */}</option>
-            <option value="dave">Dave</option>
-            <option value="pumpernickel">Pumpernickel</option>
-            <option value="reeses">Reeses</option>
-          </select>
+          <DropdownMenu />
         </div>
       </div>
     </div>

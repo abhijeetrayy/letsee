@@ -9,6 +9,7 @@ import CardMovieButton from "@/components/buttons/cardButtons";
 import { IoEyeOutline } from "react-icons/io5";
 import { FcLike } from "react-icons/fc";
 import { CiSaveDown1 } from "react-icons/ci";
+import ProfileWatched from "@/components/profile/profileWatched";
 
 const getUserData = async () => {
   const supabase = createClient();
@@ -19,33 +20,40 @@ const getUserData = async () => {
   }
 
   const userId = data?.user.id;
-  console.log(userId);
-
-  const watched = await supabase
-    .from("watched_items")
-    .select()
-
-    .eq("user_id", userId);
 
   const { count: watchedCount, error: countError } = await supabase
     .from("watched_items")
     .select("*", { count: "exact", head: true });
-  console.log(watchedCount);
+
   const watchlater = await supabase
     .from("user_watchlist")
     .select()
     .eq("user_id", userId);
+  const { count: favoriteCount } = await supabase
+    .from("favorite_items")
+    .select("*", { count: "exact", head: true })
+    .eq("user_id", userId);
+  const { data: favorates } = await supabase
+    .from("favorite_items")
+    .select()
+    .eq("user_id", userId);
 
-  return { watchlater, watched, data, watchedCount };
+  return { watchlater, data, watchedCount, favoriteCount, favorates };
 };
 
 const ProfilePage = async ({ user }: any) => {
-  const { data, watched, watchlater, watchedCount }: any = await getUserData();
-  console.log(data);
+  const {
+    data,
 
+    watchlater,
+    watchedCount,
+    favoriteCount,
+    favorates,
+  }: any = await getUserData();
+  console.log(data);
   return (
     <div className=" flex flex-col items-center ">
-      <div className=" flex flex-col max-w-6xl ">
+      <div className=" flex flex-col max-w-6xl gap-5">
         <div className=" w-full flex flex-row  p-6 mt-6">
           <div className="flex-1 flex flex-col">
             <img
@@ -55,9 +63,9 @@ const ProfilePage = async ({ user }: any) => {
               src={"/avatar.svg"}
               alt="Profile"
             />
-            <h2 className="text-2xl font-semibold ">{user.name}</h2>
+            <h2 className="text-2xl font-semibold ">HELLO --</h2>
             <p className="">{data?.user?.email}</p>
-            <div className="mt-6">
+            {/* <div className="mt-6">
               <h3 className="text-lg font-semibold  mb-2">Details</h3>
               <ul className="">
                 <li>
@@ -70,10 +78,10 @@ const ProfilePage = async ({ user }: any) => {
                   <strong>Member Since:</strong> {user.memberSince}
                 </li>
               </ul>
-            </div>
+            </div> */}
           </div>
           <div className="flex-[2] mt-6 flex flex-col gap-4">
-            <div>
+            {/* <div>
               <h3 className="text-lg font-semibold  mb-2">About</h3>
               <p className="">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
@@ -81,7 +89,7 @@ const ProfilePage = async ({ user }: any) => {
                 scelerisque, orci eget interdum dapibus, risus orci pulvinar
                 sapien, eu bibendum leo turpis non risus.
               </p>
-            </div>
+            </div> */}
             <div className="w-full flex flex-row max-h-64 h-full">
               <div className="group flex-1 flex justify-center items-center flex-col rounded-l-md border border-gray-500 hover:flex-[2] duration-300">
                 <Link
@@ -90,16 +98,16 @@ const ProfilePage = async ({ user }: any) => {
                 >
                   {watchedCount}
                 </Link>
-                <span className="text-sm">Movie Watched</span>
+                <span className="text-sm">Movie/TV Show Watched</span>
               </div>
               <div className="group flex-1 flex justify-center items-center flex-col  border border-gray-500 hover:flex-[2] duration-300">
                 <Link
                   href={""}
                   className="text-2xl group-hover:text-4xl group-hover:text-indigo-500 duration-300 group-hover:underline"
                 >
-                  {watchedCount}
+                  {favoriteCount}
                 </Link>
-                <span className="text-sm">Tv Shows Wactched</span>
+                <span className="text-sm">Favorites</span>
               </div>
               <div className="group flex-1 flex justify-center items-center flex-col rounded-r-md border border-gray-500 hover:flex-[2] duration-300">
                 <Link
@@ -113,9 +121,11 @@ const ProfilePage = async ({ user }: any) => {
             </div>
           </div>
         </div>
-
+        <div>
+          <div>Favorites</div>
+        </div>
         <div className="grid grid-cols-6 gap-3">
-          {watched?.data.map((item: any) => (
+          {favorates?.map((item: any) => (
             <div className="" key={item.id}>
               <div className=" relative group flex flex-col rounded-md bg-black mr-2.5 w-full  text-gray-300 overflow-hidden duration-300  hover:scale-105 ">
                 <div className="absolute top-0 left-0 z-10 opacity-0 group-hover:opacity-100">
@@ -207,6 +217,10 @@ const ProfilePage = async ({ user }: any) => {
             </div>
           ))}
         </div>
+        <div>
+          <div>Watched</div>
+        </div>
+        {data && <ProfileWatched userId={data.user.id} />}
       </div>
     </div>
   );
