@@ -1,37 +1,70 @@
 "use client";
-import React, { Suspense, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
+import React, { useState } from "react";
 // import CardMovieButton from "@/components/buttons/cardMovieButton";
+import CardMovieButton from "@/components/buttons/cardButtons";
 import { CiSaveDown1 } from "react-icons/ci";
 import { FcLike } from "react-icons/fc";
-import { DiVim } from "react-icons/di";
-import pic from "../../../../public/no-photo.jpg";
-import CardMovieButton from "@/components/buttons/cardButtons";
 import { IoEyeOutline } from "react-icons/io5";
 
 const MovieSearch = () => {
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<any[]>([]);
+  const [results, setResults] = useState([]) as any;
   const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
+
     setLoading(true);
     const search = await fetch("/api/search", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ query }),
+      body: JSON.stringify({ query, page: 1 }),
     });
 
     const data = await search.json();
-
+    console.log(data);
     setResults(data);
     setLoading(false);
   };
 
+  const nextPage = async () => {
+    setLoading(true);
+    setPage(page + 1);
+
+    const search = await fetch("/api/search", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ query, page }),
+    });
+
+    const data = await search.json();
+    console.log(data);
+    setResults(data);
+    setLoading(false);
+  };
+  const lastPage = async () => {
+    setLoading(true);
+    setPage(page - 1);
+
+    const search = await fetch("/api/search", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ query, page }),
+    });
+
+    const data = await search.json();
+    console.log(data);
+    setResults(data);
+    setLoading(false);
+  };
   return (
     <div className="text-white max-w-7xl w-full min-h-64 mx-auto p-8">
       <form onSubmit={handleSearch} className="mb-8">
@@ -54,13 +87,13 @@ const MovieSearch = () => {
           loading..
         </div>
       )}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {results?.map(
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        {results?.results?.map(
           (data: any) =>
             data?.media_type !== "person" && (
               <div
                 key={data.id}
-                className=" overflow-hidden relative group flex flex-col  bg-black mr-2.5 w-64 max-h-full text-gray-300 rounded-sm   duration-300  hover:scale-105 hover:z-50"
+                className=" overflow-hidden relative group flex flex-col  bg-black w-full text-gray-300 rounded-md   duration-300  hover:scale-105 hover:z-50"
               >
                 <div className="absolute  top-0 left-0 flex flex-row justify-between w-full z-50">
                   <p className="p-1 bg-black text-white rounded-br-md text-sm">
@@ -75,13 +108,13 @@ const MovieSearch = () => {
                 </div>
                 <Link
                   href={`/app/${data.media_type}/${data.id}`}
-                  className="min-h-[382px] w-full"
+                  className="min-h-[342px] h-full w-full"
                 >
                   <img
-                    className="relative rounded-md object-cover max-w-full h-full "
+                    className="relative object-cover max-w-full h-full "
                     src={
                       data.poster_path || data.backdrop_path
-                        ? `https://image.tmdb.org/t/p/original${
+                        ? `https://image.tmdb.org/t/p/w342${
                             data.poster_path || data.backdrop_path
                           }`
                         : "/no-photo.jpg"
@@ -91,25 +124,8 @@ const MovieSearch = () => {
                     alt={data.title}
                   />
                 </Link>
-                {/* <span className="opacity-0 flex flex-col gap-3   hlimitSearch px-4 absolute bottom-3  translate-y-0 duration-300 group-hover:opacity-100 group-hover:bottom-24 group-hover:bg-transparent  group-hover:text-gray-200 ">
-                  <div className="mb-1">
-                    <Link
-                      className="group-hover:underline"
-                      href={
-                        data.media_type == "tv"
-                          ? `/app/tv/${data.id}`
-                          : `/app/movie/${data.id}`
-                      }
-                    >
-                      {data.title || data.name}
-                    </Link>
-                  </div>
-                  <p className="text-xs mb-1 ">
-                    {data.release_date || data.first_air_date}
-                  </p>
-                  <p className=" text-xs ">{data.overview}</p>
-                </span> */}
-                <div className="absolute bottom-0 w-full bg-neutral-900 opacity-0 group-hover:opacity-100 z-10">
+
+                <div className="absolute bottom-0 w-full bg-neutral-900 opacity-0 group-hover:opacity-100 ">
                   <div className="w-full h-14 grid grid-cols-3 ">
                     <CardMovieButton
                       className="border-r border-neutral-400"
@@ -164,12 +180,12 @@ const MovieSearch = () => {
               </div>
             )
         )}
-        {results?.map(
+        {results?.results?.map(
           (data: any) =>
             data?.media_type == "person" && (
               <div
                 key={data.id}
-                className=" relative group flex flex-col  bg-black mr-2.5 w-64 max-h-full text-gray-300 rounded-md   duration-300  hover:scale-105 hover:z-50"
+                className=" relative group flex flex-col  bg-black mr-2.5  text-gray-300 rounded-md   duration-300  hover:scale-105 hover:z-50"
               >
                 <div className="absolute top-0 left-0 z-50">
                   <p className="p-1 bg-black text-white rounded-br-md text-sm">
@@ -177,10 +193,10 @@ const MovieSearch = () => {
                   </p>
                 </div>
                 <img
-                  className="relative rounded-md object-cover max-w-full min-h-[382px] group-hover:opacity-20"
+                  className="relative rounded-md object-cover min-h-[342px] h-full w-full  group-hover:opacity-20"
                   src={
                     data.profile_path
-                      ? `https://image.tmdb.org/t/p/original${data.profile_path}`
+                      ? `https://image.tmdb.org/t/p/h632${data.profile_path}`
                       : "/no-photo.jpg"
                   }
                   width={400}
@@ -249,6 +265,28 @@ const MovieSearch = () => {
             )
         )}
       </div>
+      {loading && (
+        <div className="w-full min-h-52 flex justify-center items-center">
+          loading..
+        </div>
+      )}
+      {results?.total_page > 1 && (
+        <div>
+          <button
+            className="px-4 py-2 bg-neutral-700 hover:bg-neutral-600"
+            onClick={lastPage}
+          >
+            Last
+          </button>
+          page: <span>{results.page}</span> of {results?.total_pages}//{page}
+          <button
+            className="px-4 py-2  bg-neutral-700 hover:bg-neutral-600"
+            onClick={nextPage}
+          >
+            next
+          </button>
+        </div>
+      )}
     </div>
   );
 };
