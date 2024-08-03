@@ -67,7 +67,7 @@ function personCredits({ cast, crew, name }: any) {
               href={`/app/${data.media_type}/${data.id}}`}
             >
               <img
-                className="relative object-cover w-full  "
+                className="relative object-cover w-full h-full "
                 src={
                   (data.poster_path || data.backdrop_path) && !data.adult
                     ? `https://image.tmdb.org/t/p/w342${

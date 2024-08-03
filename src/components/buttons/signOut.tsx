@@ -18,7 +18,11 @@ const SignOut = () => {
     }
   };
 
-  return <button onClick={signOut}>Sign Out</button>;
+  return (
+    <button className="w-full text-left" onClick={signOut}>
+      Sign Out
+    </button>
+  );
 };
 
 export default SignOut;

@@ -53,21 +53,26 @@ function Page() {
   };
 
   return (
-    <div className="min-h-screen ">
+    <div className="min-h-screen mx-auto w-full max-w-7xl">
+      <div>
+        <p>
+          Search Results: {query} {Sresults.total_pages * 20} items
+        </p>
+      </div>
       {loading ? (
         <div className="min-h-screen w-full flex justify-center items-center">
           Loading..
         </div>
       ) : (
         <div>
-          <div className="text-white max-w-7xl w-full  mx-auto p-8">
-            <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="text-white  w-full   p-8">
+            <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
               {Sresults?.results?.map(
                 (data: any) =>
                   data?.media_type !== "person" && (
                     <div
                       key={data.id}
-                      className=" overflow-hidden relative group flex flex-col  bg-black mr-2.5 w-64 max-h-full text-gray-300 rounded-sm   duration-300  hover:scale-105 hover:z-50"
+                      className=" overflow-hidden relative group flex flex-col  bg-black mr-2.5 w-full h-full text-gray-300 rounded-sm   duration-300  hover:scale-105 hover:z-50"
                     >
                       <div className="absolute  top-0 left-0 flex flex-row justify-between w-full z-50">
                         <p className="p-1 bg-black text-white rounded-br-md text-sm">
@@ -265,27 +270,29 @@ function Page() {
               )}
             </div>
           </div>
-          {Sresults?.total_pages > 1 && (
-            <div className="text-center w-full">
-              <button
-                className="px-4 py-2 bg-neutral-700 hover:bg-neutral-600"
-                onClick={() => changePage(page - 1)}
-                disabled={page === 1}
-              >
-                Previous
-              </button>
-              <span className="mx-4">
-                Page {page} of {Sresults.total_pages}
-              </span>
-              <button
-                className="px-4 py-2 bg-neutral-700 hover:bg-neutral-600"
-                onClick={() => changePage(page + 1)}
-                disabled={page === Sresults.total_pages}
-              >
-                Next
-              </button>
-            </div>
-          )}
+        </div>
+      )}
+      {Sresults?.total_pages > 1 && (
+        <div className="flex flex-row justify-center items-center ">
+          <div className=" my-3 ">
+            <button
+              className="px-4 py-2 bg-neutral-700 rounded-md hover:bg-neutral-600"
+              onClick={() => changePage(page - 1)}
+              disabled={page === 1}
+            >
+              Last
+            </button>
+            <span className="mx-4">
+              Page {page} of {Sresults.total_pages}
+            </span>
+            <button
+              className="px-4 py-2 bg-neutral-700 rounded-md hover:bg-neutral-600"
+              onClick={() => changePage(page + 1)}
+              disabled={page === Sresults.total_pages}
+            >
+              Next
+            </button>
+          </div>
         </div>
       )}
     </div>

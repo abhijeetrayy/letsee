@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import localfont from "next/font/local";
 import "./globals.css";
 import Provider from "./storeProvider";
+import Footbar from "@/components/footbar/foot";
 import Navbar from "@/components/header/navbar";
 import { ToastContainer } from "react-toastify";
 
@@ -39,6 +40,7 @@ export default function RootLayout({
                 <Navbar />
               </div>
               <div className="">{children}</div>
+              <Footbar />
             </div>
             <ToastContainer />
           </Provider>
