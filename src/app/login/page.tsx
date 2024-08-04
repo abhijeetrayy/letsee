@@ -33,7 +33,7 @@ export default async function LoginPage(this: any) {
             Email
           </label>
           <input
-            className="text-neutral-100 ring-0 outline-0 px-3 focus:ring-2 rounded-sm focus:ring-indigo-600 py-2"
+            className="text-neutral-700 ring-0 outline-0 px-3 focus:ring-2 rounded-sm focus:ring-indigo-600 py-2"
             id="email"
             name="email"
             type="email"
@@ -43,7 +43,7 @@ export default async function LoginPage(this: any) {
             Password
           </label>
           <input
-            className="text-neutral-100 ring-0 outline-0 px-3 focus:ring-2 rounded-sm focus:ring-indigo-600 py-2"
+            className="text-neutral-700 ring-0 outline-0 px-3 focus:ring-2 rounded-sm focus:ring-indigo-600 py-2"
             id="password"
             name="password"
             type="password"

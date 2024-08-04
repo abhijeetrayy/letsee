@@ -6,12 +6,15 @@ import CardMovieButton from "../buttons/cardButtons";
 import { IoEyeOutline } from "react-icons/io5";
 import { FcLike } from "react-icons/fc";
 import { CiSaveDown1 } from "react-icons/ci";
+import { set } from "mongoose";
 // Assuming you're using Supabase Auth
 
 const WatchedMoviesList = ({ userId }: any): any => {
   const [movies, setMovies] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+
   const [loading, setLoading] = useState(false);
   const userID = userId;
   useEffect(() => {
@@ -31,6 +34,8 @@ const WatchedMoviesList = ({ userId }: any): any => {
       const data = await response.json();
       console.log(data);
       setMovies((previous) => [...previous, ...data.data]);
+
+      setTotalItems(data.totalItems);
       setTotalPages(data.totalPages);
     } catch (error) {
       console.error("Error fetching watched movies:", error);
@@ -159,16 +164,21 @@ const WatchedMoviesList = ({ userId }: any): any => {
         <select
           value={currentPage}
           onChange={(e) => handlePageChange(Number(e.target.value))}
-        >
-          {renderPageOptions()}
-        </select> */}
-          <button
-            className="w-full h-full text-gray-300 border min-h-[330px] bg-neutral-700 rounded-md hover:bg-neutral-800"
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
           >
-            {loading ? "Loading.." : "More.."}
-          </button>
+          {renderPageOptions()}
+          </select> */}
+
+          {movies.length < totalItems && (
+            <div>
+              <button
+                className="w-full h-full text-gray-300 border min-h-[330px] bg-neutral-700 rounded-md hover:bg-neutral-800"
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={loading}
+              >
+                {loading ? "Loading.." : "More.."}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
