@@ -51,7 +51,7 @@ const DropdownMenu = () => {
             <Link
               onClick={() => setIsOpen(!isOpen)}
               className="w-full text-left px-2 py-1 rounded-sm bg-neutral-200 hover:bg-neutral-100"
-              href={"/app/me"}
+              href={`/app/profile`}
             >
               Profile
             </Link>

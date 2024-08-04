@@ -39,32 +39,43 @@ const ShowDetails = async ({
       {/* Poster Image as Background */}
 
       {/* Content */}
-      <div className="relative w-full flex flex-col  overflow-y-clip justify-center items-center">
-        <div className="absolute top-0 left-0 h-auto z-0 w-full flex justify-center max-h-[590px] bg-black">
+      <div className="relative w-full flex flex-col  overflow-y-clip justify-center items-center min-h-[590px]">
+        <div className="absolute top-0 left-0 h-auto z-0 w-full flex justify-center  bg-black">
           <img
-            className="object-cover opacity-10 max-w-[2100px] h-ful w-full"
+            className="object-cover opacity-20 max-w-[2100px] h-ful w-full"
             src={`${
               show.backdrop_path
-                ? `https://image.tmdb.org/t/p/w300${show.backdrop_path}`
+                ? show.adult
+                  ? "/pixeled.jpg"
+                  : `https://image.tmdb.org/t/p/w300${show.backdrop_path}`
                 : "/backgroundjpeg.jpeg"
             }`}
-            width={500}
-            height={500}
             alt={show.name}
           />
         </div>
+
         <div className="relative flex flex-row gap-5 py-3 px-6 w-full max-w-6xl">
           <div className="flex-1">
             <img
-              className="max-h[500px] h-full"
-              src={`https://image.tmdb.org/t/p/w342${show.poster_path}`}
-              width={500}
-              height={500}
+              className="min-h[500px] rounded-md"
+              src={
+                show.adult
+                  ? "/pixeled.jpg"
+                  : `https://image.tmdb.org/t/p/w342${show.poster_path}`
+              }
               alt={show.name}
             />
           </div>
           <div className="flex-[2]">
-            <h1 className="text-4xl font-bold mb-4">{show.name}</h1>
+            <h1 className="text-4xl font-bold mb-4">
+              {" "}
+              {show?.adult && (
+                <span className="text-sm px-3 py-1 rounded-md m-2 bg-red-600 text-white z-50">
+                  Adult
+                </span>
+              )}
+              {show.name}
+            </h1>
             <p className=" mb-4 text-gray-400">{show.overview}</p>
             <p className=" text-gray-400 mb-2">
               First Air Date: {show.first_air_date}
@@ -82,10 +93,14 @@ const ShowDetails = async ({
             <div className="mb-4  text-gray-400">
               <span>Genres: </span>
               {show.genres.map((genre: any, index: number) => (
-                <span key={genre.id}>
+                <Link
+                  className="px-2 py-1 bg-neutral-600 hover:bg-neutral-500 mr-2 rounded-md"
+                  href={`/app/tvbygenre/list/${genre.id}-${genre.name}`}
+                  key={genre.id}
+                >
                   {genre.name}
-                  {index < show.genres.length - 1 && ", "}
-                </span>
+                  {/* {index < show.genres.length - 1 && ", "} */}
+                </Link>
               ))}
             </div>
             {/* <div className="mb-4  text-gray-400">
@@ -184,9 +199,11 @@ const ShowDetails = async ({
           <div key={season.id} className="flex flex-row gap-4">
             <img
               src={`${
-                !season.poster_path
-                  ? "/no-photo.jpg"
-                  : `https://image.tmdb.org/t/p/w185${season.poster_path}`
+                season.poster_path
+                  ? show.adult
+                    ? "/pixeled.jpg"
+                    : `https://image.tmdb.org/t/p/w185${season.poster_path}`
+                  : "/no-photo.jpg"
               }`}
               width={150}
               height={225}

@@ -36,12 +36,14 @@ export async function POST(req: NextRequest, res: NextResponse) {
     if (error) throw error;
 
     const totalPages = Math.ceil((count || 0) / itemsPerPage);
+    const perloadLength = data.length;
 
     return NextResponse.json({
       data,
       page: pageNumber,
       totalPages,
       totalItems: count,
+      perloadLength,
     });
   } catch (error) {
     return NextResponse.json({

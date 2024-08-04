@@ -87,7 +87,7 @@ const Page: React.FC<PageProps> = async ({ params, searchParams }) => {
                     <CardMovieButton
                       className="border-r border-neutral-400"
                       itemId={data.id}
-                      mediaType={data.media_type}
+                      mediaType={"movie"}
                       name={data.name || data.title}
                       funcType={"watched"}
                       adult={data.adult}
@@ -97,7 +97,7 @@ const Page: React.FC<PageProps> = async ({ params, searchParams }) => {
                     <CardMovieButton
                       className="border-r border-neutral-400"
                       itemId={data.id}
-                      mediaType={data.media_type}
+                      mediaType={"movie"}
                       name={data.name || data.title}
                       funcType={"favorite"}
                       adult={data.adult}
@@ -106,7 +106,7 @@ const Page: React.FC<PageProps> = async ({ params, searchParams }) => {
                     />
                     <CardMovieButton
                       itemId={data.id}
-                      mediaType={data.media_type}
+                      mediaType={"movie"}
                       name={data.name || data.title}
                       funcType={"watchlater"}
                       adult={data.adult}
