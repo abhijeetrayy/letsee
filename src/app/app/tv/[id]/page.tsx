@@ -39,10 +39,10 @@ const ShowDetails = async ({
       {/* Poster Image as Background */}
 
       {/* Content */}
-      <div className="relative w-full flex flex-col  overflow-y-clip justify-center items-center bg-black">
-        <div className="absolute top-0 left-0 h-auto z-0 w-full flex justify-center">
+      <div className="relative w-full flex flex-col  overflow-y-clip justify-center items-center">
+        <div className="absolute top-0 left-0 h-auto z-0 w-full flex justify-center max-h-[590px] bg-black">
           <img
-            className="object-cover opacity-10 max-w-[2100px] w-full"
+            className="object-cover opacity-10 max-w-[2100px] h-ful w-full"
             src={`${
               show.backdrop_path
                 ? `https://image.tmdb.org/t/p/w300${show.backdrop_path}`
@@ -53,9 +53,10 @@ const ShowDetails = async ({
             alt={show.name}
           />
         </div>
-        <div className="relative flex flex-row gap-5 pt-6 px-6 w-full max-w-6xl">
+        <div className="relative flex flex-row gap-5 py-3 px-6 w-full max-w-6xl">
           <div className="flex-1">
             <img
+              className="max-h[500px] h-full"
               src={`https://image.tmdb.org/t/p/w342${show.poster_path}`}
               width={500}
               height={500}
@@ -87,7 +88,7 @@ const ShowDetails = async ({
                 </span>
               ))}
             </div>
-            <div className="mb-4  text-gray-400">
+            {/* <div className="mb-4  text-gray-400">
               <span>Staring: </span>
               {cast?.slice(0, 5).map((item: any, index: number) =>
                 cast?.slice(0, 5).length - 1 > index ? (
@@ -112,7 +113,7 @@ const ShowDetails = async ({
                   </Link>
                 )
               )}
-            </div>
+            </div> */}
 
             <div className="mb-4  text-gray-400">
               <span>Created by: </span>
