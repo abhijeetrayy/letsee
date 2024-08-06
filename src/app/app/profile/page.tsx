@@ -1,17 +1,12 @@
 import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
-import React from "react";
 
-import ChineCard from "@/components/cards/chineCard";
-import ProfilePic from "../../../../public/avatar.svg";
-import Image from "next/image";
 import CardMovieButton from "@/components/buttons/cardButtons";
-import { IoEyeOutline } from "react-icons/io5";
-import { FcLike } from "react-icons/fc";
-import { CiSaveDown1 } from "react-icons/ci";
 import ProfileWatched from "@/components/profile/profileWatched";
-import { watched } from "@/components/buttons/intrectionButton";
 import { redirect } from "next/navigation";
+import { CiSaveDown1 } from "react-icons/ci";
+import { FcLike } from "react-icons/fc";
+import { IoEyeOutline } from "react-icons/io5";
 
 const getUserData = async (id: any) => {
   console.log(id, "hola");
