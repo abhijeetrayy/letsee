@@ -1,7 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: NextRequest, res: NextResponse) {
+export async function POST(req: NextRequest) {
   const requestClone = req.clone();
   const body = await requestClone.json();
   const { itemId, name, mediaType, imgUrl, adult } = body;
@@ -9,24 +9,41 @@ export async function POST(req: NextRequest, res: NextResponse) {
   const supabase = createClient();
 
   const { data, error } = await supabase.auth.getUser();
-  if (error) {
-    console.log("user isn't loged in ");
-    return;
+  if (error || !data?.user) {
+    console.log("User isn't logged in");
+    return NextResponse.json(
+      { error: "User isn't logged in" },
+      { status: 401 }
+    );
   }
 
-  const userId = data?.user.id;
+  const userId = data.user.id;
 
   const { error: insertError } = await supabase.from("user_watchlist").insert({
     user_id: userId,
     item_name: name,
     item_id: itemId,
     item_type: mediaType,
-    image_url: imgUrl,
+    item_img: imgUrl,
     item_adult: adult,
   });
   if (insertError) {
-    console.log(insertError);
-    return NextResponse.json("insertError");
+    if (
+      insertError.code === "23505" // PostgreSQL unique violation error code
+    ) {
+      console.log("Duplicate item:", insertError);
+      return NextResponse.json(
+        { error: "Item already exists" },
+        { status: 409 }
+      );
+    } else {
+      console.log("Error inserting item:", insertError);
+      return NextResponse.json(
+        { error: "Error inserting item" },
+        { status: 500 }
+      );
+    }
   }
-  return NextResponse.json("Added");
+
+  return NextResponse.json({ message: "Added" }, { status: 200 });
 }

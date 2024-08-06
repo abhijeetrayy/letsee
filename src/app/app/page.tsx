@@ -5,7 +5,6 @@
 // import Image from "next/image";
 // import Link from "next/link";
 import CardMovieButton from "@/components/buttons/cardButtons";
-import MovieCard from "@/components/cards/cardMovie";
 import SearchForm from "@/components/homeDiscover/client/seachForm";
 import Link from "next/link";
 import { CiSaveDown1 } from "react-icons/ci";
@@ -85,7 +84,7 @@ export default async function Home() {
         <h2 className="text-2xl my-4 font-bold">Weekly Top 20</h2>
         <div className="grid grid-cols-5 gap-4 max-w-6xl w-full">
           {data?.results.map((item: any) => (
-            <div className="group relative">
+            <div className="group relative w-full">
               <div className="absolute top-0 left-0">
                 <p className="px-1 py-1 bg-neutral-950  text-white rounded-br-md">
                   {item.media_type}
@@ -105,7 +104,6 @@ export default async function Home() {
                 <div className="  bg-neutral-900 ">
                   <div className="w-full h-14 grid grid-cols-3 ">
                     <CardMovieButton
-                      className="border-r border-neutral-400"
                       itemId={item.id}
                       mediaType={item.media_type}
                       name={item.name || item.title}
@@ -115,7 +113,6 @@ export default async function Home() {
                       icon={<IoEyeOutline />}
                     />
                     <CardMovieButton
-                      className="border-r  border-neutral-400"
                       itemId={item.id}
                       mediaType={item.media_type}
                       name={item.name || item.title}
@@ -170,7 +167,7 @@ export default async function Home() {
         <h2 className="text-2xl my-4 font-bold">Trending Tv Show's</h2>
         <div className="grid grid-cols-5 gap-4 max-w-6xl w-full">
           {TrendingTv?.results.map((item: any) => (
-            <div className="group relative">
+            <div className="group relative w-full">
               <div className="absolute top-0 left-0">
                 <p className="px-1 py-1 bg-neutral-950  text-white rounded-br-md">
                   {item.media_type}
@@ -190,7 +187,6 @@ export default async function Home() {
                 <div className="  bg-neutral-900 ">
                   <div className="w-full h-14 grid grid-cols-3 ">
                     <CardMovieButton
-                      className="border-r border-neutral-400"
                       itemId={item.id}
                       mediaType={item.media_type}
                       name={item.name || item.title}
@@ -200,7 +196,6 @@ export default async function Home() {
                       icon={<IoEyeOutline />}
                     />
                     <CardMovieButton
-                      className="border-r  border-neutral-400"
                       itemId={item.id}
                       mediaType={item.media_type}
                       name={item.name || item.title}
