@@ -85,7 +85,6 @@ const Page: React.FC<PageProps> = async ({ params, searchParams }) => {
                 <div className="absolute bottom-0 w-full bg-neutral-900 opacity-0 group-hover:opacity-100 z-10">
                   <div className="w-full h-14 grid grid-cols-3">
                     <CardMovieButton
-                      className="border-r border-neutral-400"
                       itemId={data.id}
                       mediaType={"movie"}
                       name={data.name || data.title}
@@ -95,7 +94,6 @@ const Page: React.FC<PageProps> = async ({ params, searchParams }) => {
                       icon={<IoEyeOutline />}
                     />
                     <CardMovieButton
-                      className="border-r border-neutral-400"
                       itemId={data.id}
                       mediaType={"movie"}
                       name={data.name || data.title}

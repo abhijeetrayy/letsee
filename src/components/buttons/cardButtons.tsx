@@ -2,8 +2,78 @@
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import React from "react";
 
-function CardMovieButton({
+interface CardMovieButtonProps {
+  icon: React.ReactNode;
+  name: string;
+  itemId: number;
+  funcType: "watched" | "watchlater" | "favorite";
+  mediaType: string;
+  imgUrl: string;
+  adult: boolean;
+}
+
+async function handleAction(
+  funcType: "watched" | "watchlater" | "favorite",
+  itemId: number,
+  name: string,
+  mediaType: string,
+  imgUrl: string,
+  adult: boolean
+) {
+  const toastId = toast.loading("Adding...");
+  let apiUrl = "";
+  let successMessage = "";
+
+  switch (funcType) {
+    case "watched":
+      apiUrl = "/api/watchedButton";
+      successMessage = "Added to watched";
+      break;
+    case "watchlater":
+      apiUrl = "/api/watchlistButton";
+      successMessage = "Saved to Watch Later";
+      break;
+    case "favorite":
+      apiUrl = "/api/favoriteButton";
+      successMessage = "Added to favorites";
+      break;
+  }
+
+  try {
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ itemId, name, mediaType, imgUrl, adult }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    const data = await response.json();
+    toast.update(toastId, {
+      render: successMessage,
+      type: "success",
+      isLoading: false,
+      autoClose: 2000,
+    });
+    console.log(data);
+  } catch (error) {
+    toast.update(toastId, {
+      render: "An error occurred",
+      type: "error",
+      isLoading: false,
+      autoClose: 5000,
+    });
+    console.error(error);
+  }
+}
+
+const CardMovieButton: React.FC<CardMovieButtonProps> = ({
   icon,
   name,
   itemId,
@@ -11,103 +81,18 @@ function CardMovieButton({
   mediaType,
   imgUrl,
   adult,
-}: any) {
-  async function handleAction() {
-    const toastit = toast.loading("Adding...");
-    if (funcType == "watched") {
-      try {
-        const actionResult = await fetch("/api/watchedButton", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ itemId, name, mediaType, imgUrl, adult }),
-        });
-        const data = await actionResult.json();
-        toast.update(toastit, {
-          render: "Added to watched",
-          type: "success",
-          isLoading: false,
-          autoClose: 2000,
-        });
-        console.log(data);
-      } catch (error) {
-        toast.update(toastit, {
-          render: "An error occurred",
-          type: "error",
-          isLoading: false,
-          autoClose: 5000,
-        });
-        console.error(error);
-      }
-    }
-    if (funcType == "watchlater") {
-      try {
-        const actionResult = await fetch("/api/watchlistButton", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ itemId, name, mediaType, imgUrl, adult }),
-        });
-        const data = await actionResult.json();
-        toast.update(toastit, {
-          render: "Save to Watch Later",
-          type: "success",
-          isLoading: false,
-          autoClose: 2000,
-        });
-        console.log(data);
-      } catch (error) {
-        toast.update(toastit, {
-          render: "An error occurred",
-          type: "error",
-          isLoading: false,
-          autoClose: 5000,
-        });
-        console.error(error);
-      }
-    }
-    if (funcType == "favorite") {
-      try {
-        const actionResult = await fetch("/api/favoriteButton", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ itemId, name, mediaType, imgUrl, adult }),
-        });
-        const data = await actionResult.json();
-        toast.update(toastit, {
-          render: "Your favorite",
-          type: "success",
-          isLoading: false,
-          autoClose: 2000,
-        });
-        console.log(data);
-      } catch (error) {
-        toast.update(toastit, {
-          render: "An error occurred",
-          type: "error",
-          isLoading: false,
-          autoClose: 5000,
-        });
-        console.error(error);
-      }
-    }
-  }
-
+}) => {
   return (
-    <>
-      <button
-        onClick={handleAction}
-        title={funcType}
-        className="h-full w-full flex items-center justify-center text-2xl bg-neutral-800 text-neutral-200 hover:bg-neutral-700"
-      >
-        {icon}
-      </button>
-    </>
+    <button
+      onClick={() =>
+        handleAction(funcType, itemId, name, mediaType, imgUrl, adult)
+      }
+      title={funcType}
+      className="h-full w-full flex items-center justify-center text-2xl bg-neutral-800 text-neutral-200 hover:bg-neutral-700"
+    >
+      {icon}
+    </button>
   );
-}
+};
 
 export default CardMovieButton;
