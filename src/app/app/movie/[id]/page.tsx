@@ -1,4 +1,8 @@
+import CardMovieButton from "@/components/buttons/cardButtons";
 import Link from "next/link";
+import { CiSaveDown1 } from "react-icons/ci";
+import { FcLike } from "react-icons/fc";
+import { IoEyeOutline } from "react-icons/io5";
 
 // import { likedButton as LikedButton } from "@/components/buttons/intrectionButton";
 async function getMovieDetails(id: any) {
@@ -68,7 +72,37 @@ const MovieDetails = async ({
           <div className=" flex-[2] w-full ">
             <div>
               <h1 className="text-4xl font-bold  mb-4">{movie.title}</h1>
-
+              <div className=" w-full bg-neutral-900 rounded-md overflow-hidden my-2">
+                <div className="w-full h-14 grid grid-cols-3 ">
+                  <CardMovieButton
+                    itemId={movie.id}
+                    mediaType={"movie"}
+                    name={movie.name || movie.title}
+                    funcType={"watched"}
+                    adult={movie.adult}
+                    imgUrl={movie.poster_path || movie.backdrop_path}
+                    icon={<IoEyeOutline />}
+                  />
+                  <CardMovieButton
+                    itemId={movie.id}
+                    mediaType={"movie"}
+                    name={movie.name || movie.title}
+                    funcType={"favorite"}
+                    adult={movie.adult}
+                    imgUrl={movie.poster_path || movie.backdrop_path}
+                    icon={<FcLike />}
+                  />
+                  <CardMovieButton
+                    itemId={movie.id}
+                    mediaType={"movie"}
+                    name={movie.name || movie.title}
+                    funcType={"watchlater"}
+                    adult={movie.adult}
+                    imgUrl={movie.poster_path || movie.backdrop_path}
+                    icon={<CiSaveDown1 />}
+                  />
+                </div>
+              </div>
               <p className="text-md mb-2 text-neutral-300">
                 {movie.runtime} min.
               </p>
