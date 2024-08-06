@@ -35,7 +35,7 @@ const MovieDetails = async ({
       {/* Poster Image as Background */}
 
       {/* Content */}
-      <div className="relative flex flex-col items-center justify-center w-full min-h-[550px]">
+      <div className="relative flex flex-col items-center justify-center w-full min-h-[550px] h-full">
         <div className="absolute flex justify-center  bg-black top-0 left-0 w-full h-full z-0 overflow-y-clip">
           <img
             className="object-cover opacity-20 w-full max-w-[2100px] h-full "
@@ -52,7 +52,7 @@ const MovieDetails = async ({
         <div className="max-w-6xl w-full relative  z-10  flex flex-row  gap-5">
           <div className=" flex-1 ">
             <img
-              className="rounded-md object-cover min-h-[500px] h-full"
+              className="rounded-md object-cover h-full max-h-[500px]"
               src={`${
                 movie.poster_path && !movie.adult
                   ? `https://image.tmdb.org/t/p/w342${movie.poster_path}`
