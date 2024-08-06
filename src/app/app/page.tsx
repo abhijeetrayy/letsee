@@ -5,7 +5,6 @@
 // import Image from "next/image";
 // import Link from "next/link";
 import CardMovieButton from "@/components/buttons/cardButtons";
-import MovieCard from "@/components/cards/cardMovie";
 import SearchForm from "@/components/homeDiscover/client/seachForm";
 import Link from "next/link";
 import { CiSaveDown1 } from "react-icons/ci";
