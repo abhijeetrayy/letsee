@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
     ) {
       console.log("Duplicate item:", insertError);
       return NextResponse.json(
-        { error: "Item already exists" },
+        { error: "already marked favorite" },
         { status: 409 }
       );
     } else {
