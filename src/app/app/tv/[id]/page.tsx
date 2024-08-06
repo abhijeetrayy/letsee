@@ -3,6 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 import BackPic from "../../../../../public/backgroundjpeg.jpeg";
 import NoPhoto from "../../../../../public/no-photo.jpg";
+import CardShowButton from "@/components/buttons/cardButtons";
+import { CiSaveDown1 } from "react-icons/ci";
+import { FcLike } from "react-icons/fc";
+import { IoEyeOutline } from "react-icons/io5";
 
 async function getShowDetails(id: string) {
   const response = await fetch(
@@ -76,6 +80,37 @@ const ShowDetails = async ({
               )}
               {show.name}
             </h1>
+            <div className=" w-full bg-neutral-900 rounded-md overflow-hidden my-2">
+              <div className="w-full h-14 grid grid-cols-3 ">
+                <CardShowButton
+                  itemId={show.id}
+                  mediaType={"Tv"}
+                  name={show.name || show.title}
+                  funcType={"watched"}
+                  adult={show.adult}
+                  imgUrl={show.poster_path || show.backdrop_path}
+                  icon={<IoEyeOutline />}
+                />
+                <CardShowButton
+                  itemId={show.id}
+                  mediaType={"Tv"}
+                  name={show.name || show.title}
+                  funcType={"favorite"}
+                  adult={show.adult}
+                  imgUrl={show.poster_path || show.backdrop_path}
+                  icon={<FcLike />}
+                />
+                <CardShowButton
+                  itemId={show.id}
+                  mediaType={"Tv"}
+                  name={show.name || show.title}
+                  funcType={"watchlater"}
+                  adult={show.adult}
+                  imgUrl={show.poster_path || show.backdrop_path}
+                  icon={<CiSaveDown1 />}
+                />
+              </div>
+            </div>
             <p className=" mb-4 text-gray-400">{show.overview}</p>
             <p className=" text-gray-400 mb-2">
               First Air Date: {show.first_air_date}
