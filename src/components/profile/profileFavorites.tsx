@@ -24,7 +24,7 @@ const WatchedMoviesList = ({ userId }: any): any => {
   const fetchMovies = async (page: number) => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/UserWatchedPagination`, {
+      const response = await fetch(`/api/profileWatched`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

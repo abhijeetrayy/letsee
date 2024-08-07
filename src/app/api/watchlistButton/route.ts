@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
     ) {
       console.log("Duplicate item:", insertError);
       return NextResponse.json(
-        { error: "Item already exists" },
+        { error: "already in watchlist" },
         { status: 409 }
       );
     } else {

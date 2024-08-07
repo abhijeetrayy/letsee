@@ -71,7 +71,14 @@ const MovieDetails = async ({
           </div>
           <div className=" flex-[2] w-full ">
             <div>
-              <h1 className="text-4xl font-bold  mb-4">{movie.title}</h1>
+              <h1 className="text-4xl font-bold  mb-4">
+                {movie?.adult && (
+                  <span className="text-sm px-3 py-1 rounded-md m-2 bg-red-600 text-white z-50">
+                    Adult
+                  </span>
+                )}
+                {movie.title}
+              </h1>
               <div className=" w-full bg-neutral-900 rounded-md overflow-hidden my-2">
                 <div className="w-full h-14 grid grid-cols-3 ">
                   <CardMovieButton
