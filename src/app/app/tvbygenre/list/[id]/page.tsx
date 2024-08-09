@@ -1,11 +1,8 @@
 "use client";
-import CardMovieButton from "@/components/buttons/cardButtons";
+import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
 import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
-import { CiSaveDown1 } from "react-icons/ci";
-import { FcLike } from "react-icons/fc";
-import { IoEyeOutline } from "react-icons/io5";
+import { useEffect, useState } from "react";
 
 function Page() {
   const [Sresults, setSResults] = useState([]) as any;
@@ -86,7 +83,7 @@ function Page() {
                     )}
                   </div>
                   <Link
-                    href={`/app/tv/${data.id}--${data.title
+                    href={`/app/tv/${data.id}-${(data.title || data.name)
                       .trim()
                       .replace(/[^a-zA-Z0-9]/g, "-")
                       .replace(/-+/g, "-")}`}
@@ -106,54 +103,16 @@ function Page() {
                       alt={data.title}
                     />
                   </Link>
-                  {/* <span className="opacity-0 flex flex-col gap-3   hlimitSearch px-4 absolute bottom-3  translate-y-0 duration-300 group-hover:opacity-100 group-hover:bottom-24 group-hover:bg-transparent  group-hover:text-gray-200 ">
-              <div className="mb-1">
-              <Link
-                  className="group-hover:underline"
-                  href={
-                    data.media_type == "tv"
-                    ? `/app/tv/${data.id}`
-                    : `/app/movie/${data.id}`
-                    }
-                    >
-                    {data.title || data.name}
-                    </Link>
-                    </div>
-                    <p className="text-xs mb-1 ">
-                    {data.release_date || data.first_air_date}
-                    </p>
-                    <p className=" text-xs ">{data.overview}</p>
-                    </span> */}
+
                   <div className="absolute bottom-0 w-full bg-neutral-900 opacity-0 group-hover:opacity-100 z-10">
-                    <div className="w-full h-14 grid grid-cols-3 ">
-                      <CardMovieButton
-                        itemId={data.id}
-                        mediaType={"Tv"}
-                        name={data.name || data.title}
-                        funcType={"watched"}
-                        adult={data.adult}
-                        imgUrl={data.poster_path || data.backdrop_path}
-                        icon={<IoEyeOutline />}
-                      />
-                      <CardMovieButton
-                        itemId={data.id}
-                        mediaType={"Tv"}
-                        name={data.name || data.title}
-                        funcType={"favorite"}
-                        adult={data.adult}
-                        imgUrl={data.poster_path || data.backdrop_path}
-                        icon={<FcLike />}
-                      />
-                      <CardMovieButton
-                        itemId={data.id}
-                        mediaType={"Tv"}
-                        name={data.name || data.title}
-                        funcType={"watchlater"}
-                        adult={data.adult}
-                        imgUrl={data.poster_path || data.backdrop_path}
-                        icon={<CiSaveDown1 />}
-                      />
-                    </div>
+                    <ThreePrefrenceBtn
+                      cardId={data.id}
+                      cardType={data.media_type}
+                      cardName={data.name || data.title}
+                      cardAdult={data.adult}
+                      cardImg={data.poster_path || data.backdrop_path}
+                    />
+
                     <div
                       title={data.name || data.title}
                       className="w-full flex flex-col gap-2  px-4  bg-indigo-700  text-gray-200 "

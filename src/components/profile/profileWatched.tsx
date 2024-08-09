@@ -11,6 +11,7 @@ import { FaRegEyeSlash } from "react-icons/fa";
 import { RiEyeCloseLine } from "react-icons/ri";
 import { GiBleedingEye } from "react-icons/gi";
 import { PiEyeBold } from "react-icons/pi";
+import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
 // Assuming you're using Supabase Auth
 interface UserPreference {
   item_id: number;
@@ -150,43 +151,13 @@ const WatchedMoviesList = ({ userId }: any): any => {
                 />
               </Link>
               <div className=" w-full bg-neutral-900 z-10">
-                <div className="w-full h-14 grid grid-cols-3 ">
-                  <CardMovieButton
-                    itemId={item.item_id}
-                    mediaType={item.item_type}
-                    name={item.item_name}
-                    funcType={"watched"}
-                    adult={item.item_adult}
-                    imgUrl={item.image_url}
-                    icon={
-                      isItemWatched(item.item_id) ? (
-                        <PiEyeBold />
-                      ) : (
-                        <RiEyeCloseLine />
-                      )
-                    }
-                  />
-                  <CardMovieButton
-                    itemId={item.item_id}
-                    mediaType={item.item_type}
-                    name={item.item_name}
-                    funcType={"favorite"}
-                    adult={item.item_adult}
-                    imgUrl={item.image_url}
-                    icon={
-                      isItemPreferred(item.item_id) ? <FcLike /> : <CiHeart />
-                    }
-                  />
-                  <CardMovieButton
-                    itemId={item.item_id}
-                    mediaType={item.item_type}
-                    name={item.item_name}
-                    funcType={"watchlater"}
-                    adult={item.item_adult}
-                    imgUrl={item.image_url}
-                    icon={<CiSaveDown1 />}
-                  />
-                </div>
+                <ThreePrefrenceBtn
+                  cardId={item.item_id}
+                  cardType={item.item_type}
+                  cardName={item.item_name}
+                  cardAdult={item.item_adult}
+                  cardImg={item.item_img}
+                />
                 <div
                   title={item.name || item.title}
                   className="w-full flex flex-col gap-2  px-4  bg-indigo-700  text-gray-200 "

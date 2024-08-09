@@ -4,12 +4,9 @@
 // import Movie from "./api/genre/route";
 // import Image from "next/image";
 // import Link from "next/link";
-import CardMovieButton from "@/components/buttons/cardButtons";
+import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
 import SearchForm from "@/components/homeDiscover/client/seachForm";
 import Link from "next/link";
-import { CiSaveDown1 } from "react-icons/ci";
-import { FcLike } from "react-icons/fc";
-import { IoEyeOutline } from "react-icons/io5";
 
 async function getData() {
   const res = await fetch(
@@ -102,40 +99,18 @@ export default async function Home() {
                 <img
                   className="h-full"
                   src={`https://image.tmdb.org/t/p/w342${item.poster_path}`}
-                  alt={item.id}
+                  alt={item.name}
                 />
               </Link>
               <div className="absolute bottom-0 w-full opacity-0 group-hover:opacity-100">
                 <div className="  bg-neutral-900 ">
-                  <div className="w-full h-14 grid grid-cols-3 ">
-                    <CardMovieButton
-                      itemId={item.id}
-                      mediaType={item.media_type}
-                      name={item.name || item.title}
-                      funcType={"watched"}
-                      adult={item.adult}
-                      imgUrl={item.poster_path || item.backdrop_path}
-                      icon={<IoEyeOutline />}
-                    />
-                    <CardMovieButton
-                      itemId={item.id}
-                      mediaType={item.media_type}
-                      name={item.name || item.title}
-                      funcType={"favorite"}
-                      adult={item.adult}
-                      imgUrl={item.poster_path || item.backdrop_path}
-                      icon={<FcLike />}
-                    />
-                    <CardMovieButton
-                      itemId={item.id}
-                      mediaType={item.media_type}
-                      name={item.name || item.title}
-                      funcType={"watchlater"}
-                      adult={item.adult}
-                      imgUrl={item.poster_path || item.backdrop_path}
-                      icon={<CiSaveDown1 />}
-                    />
-                  </div>
+                  <ThreePrefrenceBtn
+                    cardId={item.id}
+                    cardType={item.media_type}
+                    cardName={item.name || item.title}
+                    cardAdult={item.adult}
+                    cardImg={item.poster_path || item.backdrop_path}
+                  />
                 </div>
                 <div className=" min-h-14 flex flex-col justify-center px-3 pb-1   w-full bg-indigo-600 text-gray-100 ">
                   <p className="">
@@ -195,35 +170,13 @@ export default async function Home() {
               </Link>
               <div className="absolute bottom-0 w-full opacity-0 group-hover:opacity-100">
                 <div className="  bg-neutral-900 ">
-                  <div className="w-full h-14 grid grid-cols-3 ">
-                    <CardMovieButton
-                      itemId={item.id}
-                      mediaType={item.media_type}
-                      name={item.name || item.title}
-                      funcType={"watched"}
-                      adult={item.adult}
-                      imgUrl={item.poster_path || item.backdrop_path}
-                      icon={<IoEyeOutline />}
-                    />
-                    <CardMovieButton
-                      itemId={item.id}
-                      mediaType={item.media_type}
-                      name={item.name || item.title}
-                      funcType={"favorite"}
-                      adult={item.adult}
-                      imgUrl={item.poster_path || item.backdrop_path}
-                      icon={<FcLike />}
-                    />
-                    <CardMovieButton
-                      itemId={item.id}
-                      mediaType={item.media_type}
-                      name={item.name || item.title}
-                      funcType={"watchlater"}
-                      adult={item.adult}
-                      imgUrl={item.poster_path || item.backdrop_path}
-                      icon={<CiSaveDown1 />}
-                    />
-                  </div>
+                  <ThreePrefrenceBtn
+                    cardId={item.id}
+                    cardType={item.media_type}
+                    cardName={item.name || item.title}
+                    cardAdult={item.adult}
+                    cardImg={item.poster_path || item.backdrop_path}
+                  />
                 </div>
                 <div className=" min-h-14 flex flex-col justify-center px-3 pb-1   w-full bg-indigo-600 text-gray-100 ">
                   <p className="">

@@ -87,7 +87,13 @@ const Page: React.FC<PageProps> = async ({ params, searchParams }) => {
                   />
                 </Link>
                 <div className="absolute bottom-0 w-full bg-neutral-900 opacity-0 group-hover:opacity-100 z-10">
-                  <ThreeUserPrefrenceBtn />
+                  <ThreeUserPrefrenceBtn
+                    cardId={data.id}
+                    cardType={data.media_type}
+                    cardName={data.name || data.title}
+                    cardAdult={data.adult}
+                    cardImg={data.poster_path || data.backdrop_path}
+                  />
                   <div
                     title={data.name || data.title}
                     className="w-full flex flex-col gap-2 px-4 bg-indigo-700 text-gray-200"

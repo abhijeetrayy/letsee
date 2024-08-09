@@ -47,3 +47,52 @@ export async function POST(req: NextRequest) {
 
   return NextResponse.json({ message: "Added" }, { status: 200 });
 }
+
+export async function DELETE(req: NextRequest) {
+  const requestClone = req.clone();
+  const body = await requestClone.json();
+  const { itemId, name, mediaType, imgUrl, adult } = body;
+
+  const supabase = createClient();
+
+  const { data, error } = await supabase.auth.getUser();
+  if (error || !data?.user) {
+    console.log("User isn't logged in");
+    return NextResponse.json(
+      { error: "User isn't logged in" },
+      { status: 401 }
+    );
+  }
+
+  const userId = data.user.id;
+
+  // Check if the item exists before attempting to delete it
+  const { data: existingItem, error: fetchError } = await supabase
+    .from("watched_items")
+    .select()
+    .eq("user_id", userId)
+    .eq("item_id", itemId)
+    .single();
+
+  // Proceed to delete the item
+  if (existingItem && !fetchError) {
+    const { error: deleteError } = await supabase
+      .from("watched_items")
+      .delete()
+      .eq("user_id", userId)
+      .eq("item_id", itemId);
+
+    if (deleteError) {
+      console.log("Error deleting item:", deleteError);
+      return NextResponse.json({ error: "Error " }, { status: 500 });
+    }
+  }
+  if (fetchError) {
+    return NextResponse.json(
+      { message: "Fetch Error Try again" },
+      { status: 500 }
+    );
+  }
+
+  return NextResponse.json({ message: "Cleared.." }, { status: 200 });
+}

@@ -22,5 +22,9 @@ export const POST = async (req: NextRequest) => {
     .select("item_id")
     .eq("user_id", user?.user.id);
 
-  return NextResponse.json({ userFavorites, userWatched, userWatchlist });
+  return NextResponse.json({
+    favorite: userFavorites,
+    watched: userWatched,
+    watchlater: userWatchlist,
+  });
 };
