@@ -1,12 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
-import CardMovieButton from "../buttons/cardButtons";
-import { IoEyeOutline } from "react-icons/io5";
-import { FcLike } from "react-icons/fc";
-import { CiSaveDown1 } from "react-icons/ci";
-import { set } from "mongoose";
+import { useEffect, useState } from "react";
+import ThreePrefrenceBtn from "../buttons/threePrefrencebtn";
 // Assuming you're using Supabase Auth
 
 const WatchedMoviesList = ({ userId }: any): any => {
@@ -99,35 +95,14 @@ const WatchedMoviesList = ({ userId }: any): any => {
                 />
               </Link>
               <div className=" w-full bg-neutral-900 z-10">
-                <div className="w-full h-14 grid grid-cols-3 ">
-                  <CardMovieButton
-                    itemId={item.item_id}
-                    mediaType={item.item_type}
-                    name={item.item_name}
-                    funcType={"watched"}
-                    adult={item.item_adult}
-                    imgUrl={item.image_url}
-                    icon={<IoEyeOutline />}
-                  />
-                  <CardMovieButton
-                    itemId={item.item_id}
-                    mediaType={item.item_type}
-                    name={item.item_name}
-                    funcType={"favorite"}
-                    adult={item.item_adult}
-                    imgUrl={item.image_url}
-                    icon={<FcLike />}
-                  />
-                  <CardMovieButton
-                    itemId={item.item_id}
-                    mediaType={item.item_type}
-                    name={item.item_name}
-                    funcType={"watchlater"}
-                    adult={item.item_adult}
-                    imgUrl={item.image_url}
-                    icon={<CiSaveDown1 />}
-                  />
-                </div>
+                <ThreePrefrenceBtn
+                  cardId={item.id}
+                  cardType={item.media_type}
+                  cardName={item.name || item.title}
+                  cardAdult={item.adult}
+                  cardImg={item.poster_path || item.backdrop_path}
+                />
+
                 <div
                   title={item.name || item.title}
                   className="w-full flex flex-col gap-2  px-4  bg-indigo-700  text-gray-200 "

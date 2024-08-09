@@ -2,10 +2,7 @@
 import Link from "next/link";
 import React, { useState } from "react";
 // import CardMovieButton from "@/components/buttons/cardMovieButton";
-import CardMovieButton from "@/components/buttons/cardButtons";
-import { CiSaveDown1 } from "react-icons/ci";
-import { FcLike } from "react-icons/fc";
-import { IoEyeOutline } from "react-icons/io5";
+import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
 
 const MovieSearch = () => {
   const [query, setQuery] = useState("");
@@ -131,35 +128,14 @@ const MovieSearch = () => {
                   </Link>
 
                   <div className="absolute bottom-0 w-full bg-neutral-900 opacity-0 group-hover:opacity-100 ">
-                    <div className="w-full h-14 grid grid-cols-3 ">
-                      <CardMovieButton
-                        itemId={data.id}
-                        mediaType={data.media_type}
-                        name={data.name || data.title}
-                        funcType={"watched"}
-                        adult={data.adult}
-                        imgUrl={data.poster_path || data.backdrop_path}
-                        icon={<IoEyeOutline />}
-                      />
-                      <CardMovieButton
-                        itemId={data.id}
-                        mediaType={data.media_type}
-                        name={data.name || data.title}
-                        funcType={"favorite"}
-                        adult={data.adult}
-                        imgUrl={data.poster_path || data.backdrop_path}
-                        icon={<FcLike />}
-                      />
-                      <CardMovieButton
-                        itemId={data.id}
-                        mediaType={data.media_type}
-                        name={data.name || data.title}
-                        funcType={"watchlater"}
-                        adult={data.adult}
-                        imgUrl={data.poster_path || data.backdrop_path}
-                        icon={<CiSaveDown1 />}
-                      />
-                    </div>
+                    <ThreePrefrenceBtn
+                      cardId={data.id}
+                      cardType={data.media_type}
+                      cardName={data.name || data.title}
+                      cardAdult={data.adult}
+                      cardImg={data.poster_path || data.backdrop_path}
+                    />
+
                     <div
                       title={data.name || data.title}
                       className="w-full flex flex-col gap-2  px-4  bg-indigo-700  text-gray-200 "

@@ -78,7 +78,12 @@ const PersonList = async ({
               </div>
             }
           >
-            <PersonCredits cast={cast} crew={crew} name={person.name} />
+            <PersonCredits
+              orginalCast={cast}
+              cast={cast}
+              crew={crew}
+              name={person.name}
+            />
           </Suspense>
         </div>
       </div>

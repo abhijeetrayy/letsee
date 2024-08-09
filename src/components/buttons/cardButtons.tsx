@@ -2,7 +2,8 @@
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import React from "react";
+import React, { useContext } from "react";
+import UserPrefrenceContext from "@/app/contextAPI/userPrefrence";
 
 interface CardMovieButtonProps {
   icon: React.ReactNode;
@@ -12,6 +13,10 @@ interface CardMovieButtonProps {
   mediaType: string;
   imgUrl: string;
   adult: boolean;
+  state: boolean;
+  Wstate: boolean;
+  WLstate: boolean;
+  Favstate: boolean;
 }
 
 const CardMovieButton: React.FC<CardMovieButtonProps> = ({
@@ -22,7 +27,13 @@ const CardMovieButton: React.FC<CardMovieButtonProps> = ({
   mediaType,
   imgUrl,
   adult,
+  state,
+  Wstate,
+  WLstate,
+  Favstate,
 }) => {
+  const { setUserPrefrence }: any = useContext(UserPrefrenceContext);
+
   async function handleAction(
     funcType: "watched" | "watchlater" | "favorite",
     itemId: number,
@@ -31,27 +42,99 @@ const CardMovieButton: React.FC<CardMovieButtonProps> = ({
     imgUrl: string,
     adult: boolean
   ) {
-    const toastId = toast.loading("Adding...");
+    const toastId = toast.loading(state ? "Removing..." : "Adding...");
     let apiUrl = "";
+    let apiDeleteUrl = "";
     let successMessage = "";
 
     switch (funcType) {
       case "watched":
         apiUrl = "/api/watchedButton";
-        successMessage = "Added to watched";
+        apiDeleteUrl = "/api/deletewatchedButton";
+        successMessage = state ? "Removed from watched" : "Added to watched";
         break;
       case "watchlater":
         apiUrl = "/api/watchlistButton";
-        successMessage = "Saved to Watch Later";
+        apiDeleteUrl = "/api/deletewatchlaterButton";
+        successMessage = state
+          ? "Removed from Watch Later"
+          : "Saved to Watch Later";
         break;
       case "favorite":
         apiUrl = "/api/favoriteButton";
-        successMessage = "Added to favorites";
+        apiDeleteUrl = "/api/deletefavoriteButton";
+        successMessage = state
+          ? "Removed from favorites"
+          : "Added to favorites";
         break;
+      default:
+        toast.update(toastId, {
+          render: "Invalid action",
+          type: "error",
+          isLoading: false,
+          autoClose: 5000,
+        });
+        return;
     }
 
     try {
-      const response = await fetch(apiUrl, {
+      if (!Favstate) {
+        const response = await fetch(apiUrl, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ itemId, name, mediaType, imgUrl, adult }),
+        });
+        if (response.ok) {
+          const res = await fetch(apiUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ itemId, name, mediaType, imgUrl, adult }),
+          });
+          if (res.ok) {
+            setUserPrefrence((prev: any) => {
+              const updatedPrefrence = { ...prev };
+
+              // Remove from "watched" if it exists
+              if (updatedPrefrence["watched"]) {
+                updatedPrefrence["watched"] = updatedPrefrence[
+                  "watched"
+                ].filter((item: any) => item.item_id !== itemId);
+              }
+
+              // Handle "watchlater"
+              if (!updatedPrefrence["watchlater"]) {
+                updatedPrefrence["watchlater"] = [];
+              }
+
+              const watchlaterIndex = updatedPrefrence["watchlater"].findIndex(
+                (item: any) => item.item_id === itemId
+              );
+
+              if (watchlaterIndex === -1) {
+                // Item doesn't exist in watchlater, so add it
+                updatedPrefrence["watchlater"].push({ item_id: itemId });
+              } else {
+                // Item exists in watchlater, so remove it
+                updatedPrefrence["watchlater"].splice(watchlaterIndex, 1);
+              }
+
+              return updatedPrefrence;
+            });
+          }
+        }
+        toast.update(toastId, {
+          render: successMessage,
+          type: "success",
+          isLoading: false,
+          autoClose: 2000,
+        });
+      }
+      const url = state ? apiDeleteUrl : apiUrl;
+      const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -60,10 +143,30 @@ const CardMovieButton: React.FC<CardMovieButtonProps> = ({
       });
 
       const data = await response.json();
+      console.log(data);
 
       if (!response.ok) {
         throw new Error(data.error || "An error occurred");
       }
+
+      setUserPrefrence((prev: any) => {
+        const updatedPrefrence = { ...prev };
+
+        if (state) {
+          // Remove item if it exists
+          updatedPrefrence[funcType] = updatedPrefrence[funcType].filter(
+            (item: any) => item.item_id !== itemId
+          );
+        } else {
+          // Add item if it doesn't exist
+          if (!updatedPrefrence[funcType]) {
+            updatedPrefrence[funcType] = [];
+          }
+          updatedPrefrence[funcType].push({ item_id: itemId });
+        }
+
+        return updatedPrefrence;
+      });
 
       toast.update(toastId, {
         render: successMessage,
@@ -71,7 +174,6 @@ const CardMovieButton: React.FC<CardMovieButtonProps> = ({
         isLoading: false,
         autoClose: 2000,
       });
-      console.log(data);
     } catch (error: any) {
       toast.update(toastId, {
         render: error.message || "An error occurred",

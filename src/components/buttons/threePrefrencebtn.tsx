@@ -17,41 +17,56 @@ function threePrefrencebtn({
 }: any) {
   const { userPrefrence }: any = useContext(UserPrefrenceContext);
   const isItemWatched = (itemId: number): boolean => {
-    if (Array.isArray(userPrefrence.userWatched)) {
-      return userPrefrence.userWatched.some(
-        (pref: any) => pref.item_id === itemId
-      );
+    if (Array.isArray(userPrefrence.watched)) {
+      return userPrefrence.watched.some((pref: any) => pref.item_id === itemId);
     } else if (
-      typeof userPrefrence.userWatched === "object" &&
-      userPrefrence.userWatched !== null
+      typeof userPrefrence.watched === "object" &&
+      userPrefrence.watched !== null
     ) {
       // If userPrefrence.userPrefrence is an object, check if it has the item_id as a key
-      return Object.keys(userPrefrence.userWatched).includes(itemId.toString());
+      return Object.keys(userPrefrence.watched).includes(itemId.toString());
     } else {
       console.error(
         "Unexpected userPrefrence.userPrefrence type:",
-        typeof userPrefrence.userWatched
+        typeof userPrefrence.watched
       );
       return false;
     }
   };
   const isItemPreferred = (itemId: number): boolean => {
-    if (Array.isArray(userPrefrence.userFavorites)) {
-      return userPrefrence.userFavorites.some(
+    if (Array.isArray(userPrefrence.favorite)) {
+      return userPrefrence.favorite.some(
         (pref: any) => pref.item_id === itemId
       );
     } else if (
-      typeof userPrefrence.userFavorites === "object" &&
-      userPrefrence.userFavorites !== null
+      typeof userPrefrence.favorite === "object" &&
+      userPrefrence.favorite !== null
     ) {
       // If userPrefrence.userPrefrence is an object, check if it has the item_id as a key
-      return Object.keys(userPrefrence.userFavorites).includes(
-        itemId.toString()
-      );
+      return Object.keys(userPrefrence.favorite).includes(itemId.toString());
     } else {
       console.error(
         "Unexpected userPrefrence.userPrefrence type:",
-        typeof userPrefrence.userFavorites
+        typeof userPrefrence.favorite
+      );
+      return false;
+    }
+  };
+  const isItemInWatchLater = (itemId: number): boolean => {
+    if (Array.isArray(userPrefrence.watchlater)) {
+      return userPrefrence.watchlater.some(
+        (pref: any) => pref.item_id === itemId
+      );
+    } else if (
+      typeof userPrefrence.watchlater === "object" &&
+      userPrefrence.watchlater !== null
+    ) {
+      // If userPrefrence.userPrefrence is an object, check if it has the item_id as a key
+      return Object.keys(userPrefrence.watchlater).includes(itemId.toString());
+    } else {
+      console.error(
+        "Unexpected userPrefrence.userPrefrence type:",
+        typeof userPrefrence.watchlater
       );
       return false;
     }
@@ -66,6 +81,10 @@ function threePrefrencebtn({
             itemId={cardId}
             mediaType={cardType}
             name={cardName}
+            state={isItemWatched(cardId) ? true : false}
+            Wstate={isItemWatched(cardId) ? true : false}
+            Favstate={isItemPreferred(cardId) ? true : false}
+            WLstate={isItemInWatchLater(cardId) ? true : false}
             funcType={"watched"}
             adult={cardAdult}
             imgUrl={cardImg}
@@ -81,6 +100,10 @@ function threePrefrencebtn({
             itemId={cardId}
             mediaType={cardType}
             name={cardName}
+            state={isItemPreferred(cardId) ? true : false}
+            Wstate={isItemWatched(cardId) ? true : false}
+            Favstate={isItemPreferred(cardId) ? true : false}
+            WLstate={isItemInWatchLater(cardId) ? true : false}
             funcType={"favorite"}
             adult={cardAdult}
             imgUrl={cardImg}
@@ -90,10 +113,20 @@ function threePrefrencebtn({
             itemId={cardId}
             mediaType={cardType}
             name={cardName}
+            state={isItemInWatchLater(cardId) ? true : false}
+            Wstate={isItemWatched(cardId) ? true : false}
+            Favstate={isItemPreferred(cardId) ? true : false}
+            WLstate={isItemInWatchLater(cardId) ? true : false}
             funcType={"watchlater"}
             adult={cardAdult}
             imgUrl={cardImg}
-            icon={<CiSaveDown1 />}
+            icon={
+              isItemInWatchLater(cardId) ? (
+                <CiSaveDown1 className="font-bold text-green-500" />
+              ) : (
+                <CiSaveDown1 />
+              )
+            }
           />
         </div>
       </div>

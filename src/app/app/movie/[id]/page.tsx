@@ -80,7 +80,13 @@ const MovieDetails = async ({
                 )}
                 {movie.title}
               </h1>
-              <ThreeUserPrefrenceBtn movie={movie} />
+              <ThreeUserPrefrenceBtn
+                cardId={movie.id}
+                cardType={movie.media_type}
+                cardName={movie.name || movie.title}
+                cardAdult={movie.adult}
+                cardImg={movie.poster_path || movie.backdrop_path}
+              />
               <p className="text-md mb-2 text-neutral-300">
                 {movie.runtime} min.
               </p>
@@ -196,6 +202,7 @@ const MovieDetails = async ({
             <div className="grid grid-cols-7 m-3 rounded-md">
               {credits?.cast.slice(0, 6).map((item: any) => (
                 <Link
+                  key={item.id}
                   href={`/app/person/${item.id}-${item.name
                     .trim()
                     .replace(/[^a-zA-Z0-9]/g, "-")
