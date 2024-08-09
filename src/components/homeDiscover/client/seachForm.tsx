@@ -107,7 +107,12 @@ const MovieSearch = () => {
                     )}
                   </div>
                   <Link
-                    href={`/app/${data.media_type}/${data.id}`}
+                    href={`/app/${data.media_type}/${data.id}--${(
+                      data.name || data.title
+                    )
+                      .trim()
+                      .replace(/[^a-zA-Z0-9]/g, "-")
+                      .replace(/-+/g, "-")}`}
                     className="min-h-[342px] h-full w-full"
                   >
                     <img
@@ -160,7 +165,12 @@ const MovieSearch = () => {
                       className="w-full flex flex-col gap-2  px-4  bg-indigo-700  text-gray-200 "
                     >
                       <Link
-                        href={`/app/${data.media_type}/${data.id}}`}
+                        href={`/app/${data.media_type}/${data.id}-${(
+                          data.name || data.title
+                        )
+                          .trim()
+                          .replace(/[^a-zA-Z0-9]/g, "-")
+                          .replace(/-+/g, "-")}}`}
                         className="mb-1"
                       >
                         <span className="">
@@ -205,7 +215,10 @@ const MovieSearch = () => {
                     <div className="mb-1">
                       <Link
                         className="group-hover:underline"
-                        href={`/app/person/${data.id}`}
+                        href={`/app/person/${data.id}-${data.name
+                          .trim()
+                          .replace(/[^a-zA-Z0-9]/g, "-")
+                          .replace(/-+/g, "-")}`}
                       >
                         {data.name}
                       </Link>
@@ -227,7 +240,12 @@ const MovieSearch = () => {
                                   className={
                                     " inline-block hover:underline  px-1 "
                                   }
-                                  href={`/app/${item.media_type}/${item.id}`}
+                                  href={`/app/${item.media_type}/${item.id}-${(
+                                    item.name || item.title
+                                  )
+                                    .trim()
+                                    .replace(/[^a-zA-Z0-9]/g, "-")
+                                    .replace(/-+/g, "-")}`}
                                 >
                                   {item.title || item.orignal_name || item.name}
                                   ,
@@ -238,7 +256,12 @@ const MovieSearch = () => {
                                   className={
                                     " inline-block hover:underline px-1 "
                                   }
-                                  href={`/app/${item.media_type}/${item.id}`}
+                                  href={`/app/${item.media_type}/${item.id}-${(
+                                    item.name || item.title
+                                  )
+                                    .trim()
+                                    .replace(/[^a-zA-Z0-9]/g, "-")
+                                    .replace(/-+/g, "-")}`}
                                 >
                                   {item.title ||
                                     item.original_name ||

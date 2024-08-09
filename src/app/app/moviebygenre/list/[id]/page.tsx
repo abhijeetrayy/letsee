@@ -4,6 +4,7 @@ import { CiSaveDown1 } from "react-icons/ci";
 import { FcLike } from "react-icons/fc";
 import { IoEyeOutline } from "react-icons/io5";
 import Pagination from "@/components/buttons/serchbygenreBtn";
+import ThreeUserPrefrenceBtn from "@/components/buttons/threePrefrencebtn";
 
 interface Movie {
   id: number;
@@ -65,7 +66,10 @@ const Page: React.FC<PageProps> = async ({ params, searchParams }) => {
                   )}
                 </div>
                 <Link
-                  href={`/app/movie/${data.id}-${data.name || data.title}`}
+                  href={`/app/movie/${data.id}-${(data.name || data.title)
+                    .trim()
+                    .replace(/[^a-zA-Z0-9]/g, "-")
+                    .replace(/-+/g, "-")}`}
                   className="min-h-[382px] w-full"
                 >
                   <img
@@ -83,41 +87,18 @@ const Page: React.FC<PageProps> = async ({ params, searchParams }) => {
                   />
                 </Link>
                 <div className="absolute bottom-0 w-full bg-neutral-900 opacity-0 group-hover:opacity-100 z-10">
-                  <div className="w-full h-14 grid grid-cols-3">
-                    <CardMovieButton
-                      itemId={data.id}
-                      mediaType={"movie"}
-                      name={data.name || data.title}
-                      funcType={"watched"}
-                      adult={data.adult}
-                      imgUrl={data.poster_path || data.backdrop_path}
-                      icon={<IoEyeOutline />}
-                    />
-                    <CardMovieButton
-                      itemId={data.id}
-                      mediaType={"movie"}
-                      name={data.name || data.title}
-                      funcType={"favorite"}
-                      adult={data.adult}
-                      imgUrl={data.poster_path || data.backdrop_path}
-                      icon={<FcLike />}
-                    />
-                    <CardMovieButton
-                      itemId={data.id}
-                      mediaType={"movie"}
-                      name={data.name || data.title}
-                      funcType={"watchlater"}
-                      adult={data.adult}
-                      imgUrl={data.poster_path || data.backdrop_path}
-                      icon={<CiSaveDown1 />}
-                    />
-                  </div>
+                  <ThreeUserPrefrenceBtn />
                   <div
                     title={data.name || data.title}
                     className="w-full flex flex-col gap-2 px-4 bg-indigo-700 text-gray-200"
                   >
                     <Link
-                      href={`/app/${data.media_type}/${data.id}}`}
+                      href={`/app/${data.media_type}/${data.id}-${(
+                        data.name || data.title
+                      )
+                        .trim()
+                        .replace(/[^a-zA-Z0-9]/g, "-")
+                        .replace(/-+/g, "-")}`}
                       className="mb-1"
                     >
                       <span className="">

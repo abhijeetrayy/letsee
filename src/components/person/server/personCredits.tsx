@@ -1,14 +1,16 @@
-import Image from "next/image";
+"use client";
+
 import Link from "next/link";
-import { CiSaveDown1 } from "react-icons/ci";
+import { CiHeart, CiSaveDown1 } from "react-icons/ci";
 import { FcLike } from "react-icons/fc";
-import { IoEyeOutline } from "react-icons/io5";
 // import { useState } from "react";
 
+import userPrefrenceContext from "@/app/contextAPI/userPrefrence";
 import CardMovieButton from "@/components/buttons/cardButtons";
-import GenreName from "@/components/server/genreConvert";
-import NoPhoto from "../../../../public/no-photo.jpg";
-import Staring from "@/components/person/server/staringCredit";
+import { useContext } from "react";
+import { PiEyeBold } from "react-icons/pi";
+import { RiEyeCloseLine } from "react-icons/ri";
+import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
 
 function personCredits({ cast, crew, name }: any) {
   // const [limit, setlimit] = useState(19);
@@ -22,6 +24,7 @@ function personCredits({ cast, crew, name }: any) {
   //   setcrewlimit(crew.length);
   // }
 
+  const { userPrefrence }: any = useContext(userPrefrenceContext);
   const excludedCharacters = [
     "Self",
     "Herself",
@@ -33,10 +36,6 @@ function personCredits({ cast, crew, name }: any) {
     "Self - Special Guest",
     "Self - Guest",
   ];
-
-  const filteredCast = cast.filter(
-    (item: any) => !excludedCharacters.includes(item.character)
-  );
 
   return (
     <div className="grid grid-cols-5 gap-3 ">
@@ -64,7 +63,12 @@ function personCredits({ cast, crew, name }: any) {
             </div>
             <Link
               className="h-[320px] "
-              href={`/app/${data.media_type}/${data.id}}`}
+              href={`/app/${data.media_type}/${data.id}-${(
+                data.name || data.title
+              )
+                .trim()
+                .replace(/[^a-zA-Z0-9]/g, "-")
+                .replace(/-+/g, "-")}`}
             >
               <img
                 className="relative object-cover w-full h-full "
@@ -82,41 +86,25 @@ function personCredits({ cast, crew, name }: any) {
               />
             </Link>
             <div className="absolute bottom-0 w-full bg-neutral-900 opacity-0 group-hover:opacity-100 z-10">
-              <div className="w-full h-14 grid grid-cols-3 ">
-                <CardMovieButton
-                  itemId={data.id}
-                  mediaType={data.media_type}
-                  name={data.name || data.title}
-                  funcType={"watched"}
-                  adult={data.adult}
-                  imgUrl={data.poster_path || data.backdrop_path}
-                  icon={<IoEyeOutline />}
-                />
-                <CardMovieButton
-                  itemId={data.id}
-                  mediaType={data.media_type}
-                  name={data.name || data.title}
-                  funcType={"favorite"}
-                  adult={data.adult}
-                  imgUrl={data.poster_path || data.backdrop_path}
-                  icon={<FcLike />}
-                />
-                <CardMovieButton
-                  itemId={data.id}
-                  mediaType={data.media_type}
-                  name={data.name || data.title}
-                  funcType={"watchlater"}
-                  adult={data.adult}
-                  imgUrl={data.poster_path || data.backdrop_path}
-                  icon={<CiSaveDown1 />}
-                />
-              </div>
+              <ThreePrefrenceBtn
+                cardId={data.id}
+                cardType={data.media_type}
+                cardName={data.name || data.title}
+                cardAdult={data.adult}
+                cardImg={data.poster_path || data.backdrop_path}
+              />
+
               <div
                 title={data.name || data.title}
                 className="w-full flex flex-col gap-2  px-4  bg-indigo-700  text-gray-200 "
               >
                 <Link
-                  href={`/app/${data.media_type}/${data.id}}`}
+                  href={`/app/${data.media_type}/${data.id}-${(
+                    data.name || data.title
+                  )
+                    .trim()
+                    .replace(/[^a-zA-Z0-9]/g, "-")
+                    .replace(/-+/g, "-")}`}
                   className="mb-1"
                 >
                   <span className="">
@@ -197,11 +185,12 @@ function personCredits({ cast, crew, name }: any) {
               <div className="mb-1">
                 <Link
                   className="group-hover:underline text-lg"
-                  href={
-                    data.media_type == "tv"
-                      ? `/app/tv/${data.id}`
-                      : `/app/movie/${data.id}`
-                  }
+                  href={`/app/${data.media_type}/${data.id}-${(
+                    data.name || data.title
+                  )
+                    .trim()
+                    .replace(/[^a-zA-Z0-9]/g, "-")
+                    .replace(/-+/g, "-")}`}
                 >
                   {data.title || data.name}
                 </Link>

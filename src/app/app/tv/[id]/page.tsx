@@ -170,7 +170,10 @@ const ShowDetails = async ({
               {show.created_by.map((creator: any, index: number) => (
                 <Link
                   className="hover:underline"
-                  href={`/app/person/${creator.id}`}
+                  href={`/app/person/${creator.id}-${creator.name
+                    .trim()
+                    .replace(/[^a-zA-Z0-9]/g, "-")
+                    .replace(/-+/g, "-")}`}
                   key={creator.id}
                 >
                   {creator.name}
@@ -198,7 +201,10 @@ const ShowDetails = async ({
             <div className="grid grid-cols-7 m-3 rounded-md">
               {cast?.slice(0, 6).map((item: any) => (
                 <Link
-                  href={`/app/person/${item.id}`}
+                  href={`/app/person/${item.id}-${item.name
+                    .trim()
+                    .replace(/[^a-zA-Z0-9]/g, "-")
+                    .replace(/-+/g, "-")}`}
                   className="group hover:bg-indigo-600"
                 >
                   <img

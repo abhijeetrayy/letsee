@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 import { CiSaveDown1 } from "react-icons/ci";
 import { FcLike } from "react-icons/fc";
 import { IoEyeOutline } from "react-icons/io5";
+import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
 
 const getUserData = async (id: any) => {
   console.log(id, "hola");
@@ -189,7 +190,12 @@ const page = async ({
                   </div> */}
                     <Link
                       className="h-[270px]"
-                      href={`/app/${item.item_type}/${item.item_id}}`}
+                      href={`/app/${item.item_type}/${
+                        item.item_id
+                      }-${item.item_name
+                        .trim()
+                        .replace(/[^a-zA-Z0-9]/g, "-")
+                        .replace(/-+/g, "-")}}`}
                     >
                       <img
                         className="relative object-cover h-full w-full  "
@@ -199,41 +205,24 @@ const page = async ({
                       />
                     </Link>
                     <div className=" w-full bg-neutral-900 z-10">
-                      <div className="w-full h-14 grid grid-cols-3 ">
-                        <CardMovieButton
-                          itemId={item.item_id}
-                          mediaType={item.item_type}
-                          name={item.item_name}
-                          funcType={"watched"}
-                          adult={item.item_adult}
-                          imgUrl={item.image_url}
-                          icon={<IoEyeOutline />}
-                        />
-                        <CardMovieButton
-                          itemId={item.item_id}
-                          mediaType={item.item_type}
-                          name={item.item_name}
-                          funcType={"favorite"}
-                          adult={item.item_adult}
-                          imgUrl={item.image_url}
-                          icon={<FcLike />}
-                        />
-                        <CardMovieButton
-                          itemId={item.item_id}
-                          mediaType={item.item_type}
-                          name={item.item_name}
-                          funcType={"watchlater"}
-                          adult={item.item_adult}
-                          imgUrl={item.image_url}
-                          icon={<CiSaveDown1 />}
-                        />
-                      </div>
+                      <ThreePrefrenceBtn
+                        cardId={item.item_id}
+                        cardType={item.item_type}
+                        cardName={item.item_name}
+                        cardAdult={item.item_adult}
+                        cardImg={item.image_url}
+                      />
                       <div
                         title={item.name || item.title}
                         className="w-full flex flex-col gap-2  px-4  bg-indigo-700  text-gray-200 "
                       >
                         <Link
-                          href={`/app/${item.item_type}/${item.item_id}}`}
+                          href={`/app/${item.item_type}/${
+                            item.item_id
+                          }-${item.item_name
+                            .trim()
+                            .replace(/[^a-zA-Z0-9]/g, "-")
+                            .replace(/-+/g, "-")}}`}
                           className="mb-1"
                         >
                           <span className="">
@@ -289,7 +278,12 @@ const page = async ({
                   </div> */}
                     <Link
                       className="h-[270px]"
-                      href={`/app/${item.item_type}/${item.item_id}}`}
+                      href={`/app/${item.item_type}/${
+                        item.item_id
+                      }-${item.item_name
+                        .trim()
+                        .replace(/[^a-zA-Z0-9]/g, "-")
+                        .replace(/-+/g, "-")}}`}
                     >
                       <img
                         className="relative object-cover h-full w-full  "
@@ -299,41 +293,25 @@ const page = async ({
                       />
                     </Link>
                     <div className=" w-full bg-neutral-900 z-10">
-                      <div className="w-full h-14 grid grid-cols-3 ">
-                        <CardMovieButton
-                          itemId={item.item_id}
-                          mediaType={item.item_type}
-                          name={item.item_name}
-                          funcType={"watched"}
-                          adult={item.item_adult}
-                          imgUrl={item.image_url}
-                          icon={<IoEyeOutline />}
-                        />
-                        <CardMovieButton
-                          itemId={item.item_id}
-                          mediaType={item.item_type}
-                          name={item.item_name}
-                          funcType={"favorite"}
-                          adult={item.item_adult}
-                          imgUrl={item.image_url}
-                          icon={<FcLike />}
-                        />
-                        <CardMovieButton
-                          itemId={item.item_id}
-                          mediaType={item.item_type}
-                          name={item.item_name}
-                          funcType={"watchlater"}
-                          adult={item.item_adult}
-                          imgUrl={item.image_url}
-                          icon={<CiSaveDown1 />}
-                        />
-                      </div>
+                      <ThreePrefrenceBtn
+                        cardId={item.item_id}
+                        cardType={item.item_type}
+                        cardName={item.item_name}
+                        cardAdult={item.item_adult}
+                        cardImg={item.image_url}
+                      />
+
                       <div
                         title={item.name || item.title}
                         className="w-full flex flex-col gap-2  px-4  bg-indigo-700  text-gray-200 "
                       >
                         <Link
-                          href={`/app/${item.item_type}/${item.item_id}}`}
+                          href={`/app/${item.item_type}/${
+                            item.item_id
+                          }}-${item.item_name
+                            .trim()
+                            .replace(/[^a-zA-Z0-9]/g, "-")
+                            .replace(/-+/g, "-")}`}
                           className="mb-1"
                         >
                           <span className="">

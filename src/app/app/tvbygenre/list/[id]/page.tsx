@@ -86,7 +86,10 @@ function Page() {
                     )}
                   </div>
                   <Link
-                    href={`/app/tv/${data.id}-${data.name || data.title}`}
+                    href={`/app/tv/${data.id}--${data.title
+                      .trim()
+                      .replace(/[^a-zA-Z0-9]/g, "-")
+                      .replace(/-+/g, "-")}`}
                     className="min-h-[382px] w-full"
                   >
                     <img
@@ -156,7 +159,12 @@ function Page() {
                       className="w-full flex flex-col gap-2  px-4  bg-indigo-700  text-gray-200 "
                     >
                       <Link
-                        href={`/app/${data.media_type}/${data.id}}`}
+                        href={`/app/${data.media_type}/${data.id}--${(
+                          data.name || data.title
+                        )
+                          .trim()
+                          .replace(/[^a-zA-Z0-9]/g, "-")
+                          .replace(/-+/g, "-")}}`}
                         className="mb-1"
                       >
                         <span className="">

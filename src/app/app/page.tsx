@@ -65,7 +65,7 @@ export default async function Home() {
         <div className="flex flex-row overflow-x-scroll vone-scrollbar gap-1 mx-5">
           {genre?.genres.map((genre: any) => (
             <Link
-              href={`/app/moviebygenre/list/${genre.id}`}
+              href={`/app/moviebygenre/list/${genre.id}-${genre.name}`}
               className=" h-24 min-w-32 text-sm border-2 rounded-md border-gray-700 text-white p-2 text-center content-center"
               key={genre.id}
               // onClick={() => setSelectedGenre(genre.id)}
@@ -92,7 +92,12 @@ export default async function Home() {
               </div>
               <Link
                 className="min-h-[330px]  h-full"
-                href={`/app/${item.media_type}/${item.id}`}
+                href={`/app/${item.media_type}/${item.id}-${(
+                  item?.name || item?.title
+                )
+                  .trim()
+                  .replace(/[^a-zA-Z0-9]/g, "-")
+                  .replace(/-+/g, "-")}`}
               >
                 <img
                   className="h-full"
@@ -175,7 +180,12 @@ export default async function Home() {
               </div>
               <Link
                 className="min-h-[330px]  h-full"
-                href={`/app/${item.media_type}/${item.id}`}
+                href={`/app/${item.media_type}/${item.id}-${(
+                  item?.name || item?.title
+                )
+                  .trim()
+                  .replace(/[^a-zA-Z0-9]/g, "-")
+                  .replace(/-+/g, "-")}`}
               >
                 <img
                   className="h-full"
