@@ -86,7 +86,10 @@ const WatchedMoviesList = ({ userId }: any): any => {
                 </div> */}
               <Link
                 className="h-[270px]"
-                href={`/app/${item.item_type}/${item.item_id}}`}
+                href={`/app/${item.item_type}/${item.item_id}-${item.item_name
+                  .trim()
+                  .replace(/[^a-zA-Z0-9]/g, "-")
+                  .replace(/-+/g, "-")}}`}
               >
                 <img
                   className="relative object-cover h-full w-full  "
@@ -130,7 +133,12 @@ const WatchedMoviesList = ({ userId }: any): any => {
                   className="w-full flex flex-col gap-2  px-4  bg-indigo-700  text-gray-200 "
                 >
                   <Link
-                    href={`/app/${item.item_type}/${item.item_id}}`}
+                    href={`/app/${item.item_type}/${
+                      item.item_id
+                    }}-${item.item_name
+                      .trim()
+                      .replace(/[^a-zA-Z0-9]/g, "-")
+                      .replace(/-+/g, "-")}`}
                     className="mb-1"
                   >
                     <span className="">

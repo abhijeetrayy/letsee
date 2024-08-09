@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 // import { Inter } from "next/font/google";
 import localfont from "next/font/local";
 import "../globals.css";
-import Provider from "./storeProvider";
+import UserPrefrenceProvider from "@/app/contextAPI/userPrefrenceProvider";
 import Footbar from "@/components/footbar/foot";
 import Navbar from "@/components/header/navbar";
 import { ToastContainer } from "react-toastify";
@@ -31,7 +31,7 @@ export default function RootLayout({
           Mobile view is not avialable
         </div>
         <div className="hidden  w-full font-inter lg:flex justify-center  bg-neutral-900 text-gray-300">
-          <Provider>
+          <UserPrefrenceProvider>
             <div className=" w-full">
               <div
                 className="w-full h-14 flex justify-center
@@ -43,7 +43,7 @@ export default function RootLayout({
               <Footbar />
             </div>
             <ToastContainer />
-          </Provider>
+          </UserPrefrenceProvider>
         </div>
       </body>
     </html>

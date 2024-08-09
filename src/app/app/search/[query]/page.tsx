@@ -87,9 +87,12 @@ function Page() {
                         )}
                       </div>
                       <Link
-                        href={`/app/${data.media_type}/${data.id}-${
+                        href={`/app/${data.media_type}/${data.id}-${(
                           data.name || data.title
-                        }`}
+                        )
+                          .trim()
+                          .replace(/[^a-zA-Z0-9]/g, "-")
+                          .replace(/-+/g, "-")}`}
                         className="min-h-[382px] w-full"
                       >
                         <img
@@ -159,7 +162,12 @@ function Page() {
                           className="w-full flex flex-col gap-2  px-4  bg-indigo-700  text-gray-200 "
                         >
                           <Link
-                            href={`/app/${data.media_type}/${data.id}}`}
+                            href={`/app/${data.media_type}/${data.id}-${(
+                              data.name || data.title
+                            )
+                              .trim()
+                              .replace(/[^a-zA-Z0-9]/g, "-")
+                              .replace(/-+/g, "-")}`}
                             className="mb-1"
                           >
                             <span className="">
@@ -204,7 +212,10 @@ function Page() {
                         <div className="mb-1">
                           <Link
                             className="group-hover:underline"
-                            href={`/app/person/${data.id}-${data.name}`}
+                            href={`/app/person/${data.id}-${data.name
+                              .trim()
+                              .replace(/[^a-zA-Z0-9]/g, "-")
+                              .replace(/-+/g, "-")}`}
                           >
                             {data.name}
                           </Link>
@@ -227,7 +238,12 @@ function Page() {
                                       className={
                                         " inline-block hover:underline  px-1 "
                                       }
-                                      href={`/app/${item.media_type}/${item.id}`}
+                                      href={`/app/${item.media_type}/${
+                                        item.id
+                                      }-${(data.name || data.title)
+                                        .trim()
+                                        .replace(/[^a-zA-Z0-9]/g, "-")
+                                        .replace(/-+/g, "-")}`}
                                     >
                                       {item.title ||
                                         item.orignal_name ||
@@ -240,7 +256,12 @@ function Page() {
                                       className={
                                         " inline-block hover:underline px-1 "
                                       }
-                                      href={`/app/${item.media_type}/${item.id}`}
+                                      href={`/app/${item.media_type}/${
+                                        item.id
+                                      }-${(data.name || data.title)
+                                        .trim()
+                                        .replace(/[^a-zA-Z0-9]/g, "-")
+                                        .replace(/-+/g, "-")}`}
                                     >
                                       {item.title ||
                                         item.original_name ||

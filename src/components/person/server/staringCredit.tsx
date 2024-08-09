@@ -23,7 +23,10 @@ async function credits({ id, type }: any) {
           {cast?.slice(0, 3).map((item: any, index: number) => (
             <span key={item.id}>
               <Link
-                href={`/app/person/${item.id}`}
+                href={`/app/person/${item.id}-${item.name
+                  .trim()
+                  .replace(/[^a-zA-Z0-9]/g, "-")
+                  .replace(/-+/g, "-")}`}
                 className=" text-xs hover:underline"
               >
                 {item.name}

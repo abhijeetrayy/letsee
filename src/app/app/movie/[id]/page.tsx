@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CiSaveDown1 } from "react-icons/ci";
 import { FcLike } from "react-icons/fc";
 import { IoEyeOutline } from "react-icons/io5";
+import ThreeUserPrefrenceBtn from "@/components/buttons/threePrefrencebtn";
 
 // import { likedButton as LikedButton } from "@/components/buttons/intrectionButton";
 async function getMovieDetails(id: any) {
@@ -79,37 +80,7 @@ const MovieDetails = async ({
                 )}
                 {movie.title}
               </h1>
-              <div className=" w-full bg-neutral-900 rounded-md overflow-hidden my-2">
-                <div className="w-full h-14 grid grid-cols-3 ">
-                  <CardMovieButton
-                    itemId={movie.id}
-                    mediaType={"movie"}
-                    name={movie.name || movie.title}
-                    funcType={"watched"}
-                    adult={movie.adult}
-                    imgUrl={movie.poster_path || movie.backdrop_path}
-                    icon={<IoEyeOutline />}
-                  />
-                  <CardMovieButton
-                    itemId={movie.id}
-                    mediaType={"movie"}
-                    name={movie.name || movie.title}
-                    funcType={"favorite"}
-                    adult={movie.adult}
-                    imgUrl={movie.poster_path || movie.backdrop_path}
-                    icon={<FcLike />}
-                  />
-                  <CardMovieButton
-                    itemId={movie.id}
-                    mediaType={"movie"}
-                    name={movie.name || movie.title}
-                    funcType={"watchlater"}
-                    adult={movie.adult}
-                    imgUrl={movie.poster_path || movie.backdrop_path}
-                    icon={<CiSaveDown1 />}
-                  />
-                </div>
-              </div>
+              <ThreeUserPrefrenceBtn movie={movie} />
               <p className="text-md mb-2 text-neutral-300">
                 {movie.runtime} min.
               </p>
@@ -123,7 +94,10 @@ const MovieDetails = async ({
                   .map((item: any) => (
                     <Link
                       className={"hover:underline"}
-                      href={`/app/person/${item.id}`}
+                      href={`/app/person/${item.id}-${item.name
+                        .trim()
+                        .replace(/[^a-zA-Z0-9]/g, "-")
+                        .replace(/-+/g, "-")}`}
                       key={item.id}
                     >
                       {item.name}
@@ -134,7 +108,10 @@ const MovieDetails = async ({
                 <div className="mb-2 mr-2 inline-block">Genre:</div>
                 {movie?.genres?.map((item: any) => (
                   <Link
-                    href={`/app/moviebygenre/list/${item.id}-${item.name}`}
+                    href={`/app/moviebygenre/list/${item.id}-${item.name
+                      .trim()
+                      .replace(/[^a-zA-Z0-9]/g, "-")
+                      .replace(/-+/g, "-")}`}
                     key={item.id}
                     className="inline-block mr-2 bg-gray-800 hover:bg-gray-700 px-2 py-1 rounded"
                   >
@@ -219,7 +196,10 @@ const MovieDetails = async ({
             <div className="grid grid-cols-7 m-3 rounded-md">
               {credits?.cast.slice(0, 6).map((item: any) => (
                 <Link
-                  href={`/app/person/${item.id}-${item.name}`}
+                  href={`/app/person/${item.id}-${item.name
+                    .trim()
+                    .replace(/[^a-zA-Z0-9]/g, "-")
+                    .replace(/-+/g, "-")}`}
                   className="group hover:bg-indigo-600"
                 >
                   <img

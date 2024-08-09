@@ -21,6 +21,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/page.jsx", "src/app/api/moviegenreList/route.ts", ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/page.jsx", "src/app/api/moviegenreList/route.ts", "src/app/contextAPI/userPrefrence.tsx", ],
   "exclude": ["node_modules"]
 }
