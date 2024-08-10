@@ -17,6 +17,22 @@ async function getShowCredit(id: string) {
   const data = await response.json();
   return data;
 }
+async function getVideos(id: any) {
+  const response = await fetch(
+    `https://api.themoviedb.org/3/tv/${id}/videos?api_key=${process.env.TMDB_API_KEY}`
+  );
+
+  const data = await response.json();
+  return data;
+}
+async function getImages(id: any) {
+  const response = await fetch(
+    `https://api.themoviedb.org/3/tv/${id}/images?api_key=${process.env.TMDB_API_KEY}`
+  );
+
+  const data = await response.json();
+  return data;
+}
 
 const ShowDetails = async ({
   params,
@@ -27,9 +43,10 @@ const ShowDetails = async ({
 }) => {
   const { id } = params;
   const show = await getShowDetails(id);
-  console.log(show);
+
   const { cast, crew } = await getShowCredit(id);
-  console.log(cast, crew);
+  const { results: videos } = await getVideos(id);
+  const { posters: images } = await getImages(id);
 
   return (
     <div className="text-white relative w-full flex flex-col gap-3 items-center justify-center">
@@ -76,7 +93,7 @@ const ShowDetails = async ({
             <div className=" w-full bg-neutral-900 rounded-md overflow-hidden my-2">
               <ThreePrefrenceBtn
                 cardId={show.id}
-                cardType={show.media_type}
+                cardType={"tv"}
                 cardName={show.name || show.title}
                 cardAdult={show.adult}
                 cardImg={show.poster_path || show.backdrop_path}
@@ -167,7 +184,7 @@ const ShowDetails = async ({
 
       <div className="max-w-6xl w-full">
         <div>
-          <h2 className="text-lg">Cast</h2>
+          {cast && <h2 className="text-lg">Cast</h2>}
           <div>
             <div className="grid grid-cols-7 m-3 rounded-md">
               {cast?.slice(0, 6).map((item: any) => (
@@ -195,7 +212,10 @@ const ShowDetails = async ({
 
               <div className="   ml-3">
                 <Link
-                  href={`/app/movie/${id}/cast`}
+                  href={`/app/tv/${id}-${show.name
+                    .trim()
+                    .replace(/[^a-zA-Z0-9]/g, "-")
+                    .replace(/-+/g, "-")}/cast`}
                   className="flex justify-center items-center w-full h-56 border-2 border-neutral-500 hover:border-indigo-600 hover:bg-neutral-800 rounded-md"
                 >
                   more..
@@ -236,6 +256,42 @@ const ShowDetails = async ({
             </div>
           </div>
         ))}
+      </div>
+      <div className="max-w-7xl w-full   ">
+        {videos.filter((item: any) => item.site === "YouTube").length > 0 && (
+          <h1 className="text-lg my-2 ">{show.name}: Media</h1>
+        )}
+
+        <div className="w-full max-w-7xl m-auto flex flex-row overflow-x-scroll vone-scrollbar my-3">
+          {videos
+            .filter((item: any) => item.site === "YouTube")
+            ?.slice(0, 4)
+            .map((item: any) => (
+              <iframe
+                key={item.id} // Add a key to avoid React warnings
+                className="min-w-96 max-w-96 w-full  aspect-video mb-6"
+                src={`https://www.youtube.com/embed/${item.key}`} // Use item.key instead of item.id
+                title={item.name}
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            ))}
+        </div>
+      </div>
+      <div className="max-w-7xl w-full   ">
+        <h1 className="text-lg my-2 ">{show.name}: Posters</h1>
+
+        <div className="w-full max-w-7xl m-auto flex flex-row gap-3 overflow-x-scroll vone-scrollbar my-3">
+          {images?.slice(0, 5).map((item: any) => (
+            <img
+              key={item.id} // Add a key to avoid React warnings
+              className="min-h-96 max-h-96  w-fit mb-6"
+              src={`https://image.tmdb.org/t/p/w185${item.file_path}`} // Use item.key instead of item.id
+              alt={item.name}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

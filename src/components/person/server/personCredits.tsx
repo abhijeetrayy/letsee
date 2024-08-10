@@ -198,61 +198,62 @@ function personCredits({ orginalCast, cast, crew, name }: any) {
       {crew.length >= 1 && (
         <h3 className=" col-span-5 p-3 font-semibold">In prod. ~ crew</h3>
       )}
-
-      {crew?.map((data: any) => (
-        <div className="" key={data.id}>
-          <div className=" relative group flex flex-col  bg-black mr-2.5 w-full h-[320px] text-gray-300 rounded-md  duration-300  hover:scale-105 hover:z-50">
-            <div className="absolute top-0 left-0 z-50">
-              <p className="p-1 bg-black text-white rounded-br-md text-sm">
-                {data.media_type}
-              </p>
-            </div>
-            <div className="absolute top-0 right-0 z-50">
-              <p className="p-1 bg-red-600 text-white rounded-bl-md text-sm">
-                In Prod.
-              </p>
-            </div>
-            <img
-              className="relative rounded-md object-cover w-full h-full group-hover:opacity-20"
-              src={
-                (data.poster_path || data.backdrop_path) && !data.adult
-                  ? `https://image.tmdb.org/t/p/w185${
-                      data.poster_path || data.backdrop_path
-                    }`
-                  : data.adult
-                  ? "/pixeled.jpg"
-                  : "/no-photo.jpg"
-              }
-              alt={data.title}
-            />
-            <span className="opacity-0 flex flex-col gap-3 break-all hlimitSearch px-4 absolute bottom-3  translate-y-0 duration-300 group-hover:opacity-100 group-hover:bottom-24 group-hover:bg-transparent  group-hover:text-gray-200 ">
-              <div className="mb-1">
-                <Link
-                  className="group-hover:underline text-lg"
-                  href={`/app/${data.media_type}/${data.id}-${(
-                    data.name || data.title
-                  )
-                    .trim()
-                    .replace(/[^a-zA-Z0-9]/g, "-")
-                    .replace(/-+/g, "-")}`}
-                >
-                  {data.title || data.name}
-                </Link>
+      <div className="grid grid-cols-5 gap-3 ">
+        {crew?.map((data: any) => (
+          <div className="" key={data.id}>
+            <div className=" relative group flex flex-col  bg-black mr-2.5 w-full h-[320px] text-gray-300 rounded-md  duration-300  hover:scale-105 hover:z-50">
+              <div className="absolute top-0 left-0 z-50">
+                <p className="p-1 bg-black text-white rounded-br-md text-sm">
+                  {data.media_type}
+                </p>
               </div>
-              <p className="text-xs mb-1 ">
-                {data.release_date || data.first_air_date}
-              </p>
+              <div className="absolute top-0 right-0 z-50">
+                <p className="p-1 bg-red-600 text-white rounded-bl-md text-sm">
+                  In Prod.
+                </p>
+              </div>
+              <img
+                className="relative rounded-md object-cover w-full h-full group-hover:opacity-20"
+                src={
+                  (data.poster_path || data.backdrop_path) && !data.adult
+                    ? `https://image.tmdb.org/t/p/w185${
+                        data.poster_path || data.backdrop_path
+                      }`
+                    : data.adult
+                    ? "/pixeled.jpg"
+                    : "/no-photo.jpg"
+                }
+                alt={data.title}
+              />
+              <span className="opacity-0 flex flex-col gap-3 break-all hlimitSearch px-4 absolute bottom-3  translate-y-0 duration-300 group-hover:opacity-100 group-hover:bottom-24 group-hover:bg-transparent  group-hover:text-gray-200 ">
+                <div className="mb-1">
+                  <Link
+                    className="group-hover:underline text-lg"
+                    href={`/app/${data.media_type}/${data.id}-${(
+                      data.name || data.title
+                    )
+                      .trim()
+                      .replace(/[^a-zA-Z0-9]/g, "-")
+                      .replace(/-+/g, "-")}`}
+                  >
+                    {data.title || data.name}
+                  </Link>
+                </div>
+                <p className="text-xs mb-1 ">
+                  {data.release_date || data.first_air_date}
+                </p>
 
-              <p className=" text-xs ">
-                {name}:{" "}
-                <span className="">
-                  {data.department}-{data.job}
-                </span>
-              </p>
-            </span>
+                <p className=" text-xs ">
+                  {name}:{" "}
+                  <span className="">
+                    {data.department}-{data.job}
+                  </span>
+                </p>
+              </span>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }

@@ -5,6 +5,7 @@ import UserPrefrenceContext from "./userPrefrence";
 
 const userPrefrenceProvider = ({ children }: { children: React.ReactNode }) => {
   const [userPrefrence, setUserPrefrence] = useState([]);
+  const [loading, setloading] = useState(true);
 
   useEffect(() => {
     async function handler() {
@@ -17,11 +18,14 @@ const userPrefrenceProvider = ({ children }: { children: React.ReactNode }) => {
       const res = await prefrence.json();
       console.log(res);
       setUserPrefrence(res);
+      setloading(false);
     }
     handler();
   }, []);
   return (
-    <UserPrefrenceContext.Provider value={{ userPrefrence, setUserPrefrence }}>
+    <UserPrefrenceContext.Provider
+      value={{ userPrefrence, setUserPrefrence, loading }}
+    >
       {children}
     </UserPrefrenceContext.Provider>
   );

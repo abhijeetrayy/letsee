@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import React, { useContext } from "react";
 import UserPrefrenceContext from "@/app/contextAPI/userPrefrence";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 interface CardMovieButtonProps {
   icon: React.ReactNode;
@@ -32,7 +33,7 @@ const CardMovieButton: React.FC<CardMovieButtonProps> = ({
   WLstate,
   Favstate,
 }) => {
-  const { setUserPrefrence }: any = useContext(UserPrefrenceContext);
+  const { setUserPrefrence, loading }: any = useContext(UserPrefrenceContext);
 
   async function handleAction(
     funcType: "watched" | "watchlater" | "favorite",
@@ -42,6 +43,9 @@ const CardMovieButton: React.FC<CardMovieButtonProps> = ({
     imgUrl: string,
     adult: boolean
   ) {
+    if (loading) {
+      return;
+    }
     const toastId = toast.loading(state ? "Removing..." : "Adding...");
     let apiUrl = "";
     let apiDeleteUrl = "";
@@ -78,54 +82,97 @@ const CardMovieButton: React.FC<CardMovieButtonProps> = ({
     }
 
     try {
-      if (!Favstate) {
-        const response = await fetch(apiUrl, {
-          method: "DELETE",
+      if (funcType === "watchlater" && !state) {
+        const response = await fetch("/api/watchlistButton", {
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ itemId, name, mediaType, imgUrl, adult }),
         });
-        if (response.ok) {
-          const res = await fetch(apiUrl, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ itemId, name, mediaType, imgUrl, adult }),
-          });
-          if (res.ok) {
-            setUserPrefrence((prev: any) => {
-              const updatedPrefrence = { ...prev };
 
-              // Remove from "watched" if it exists
-              if (updatedPrefrence["watched"]) {
-                updatedPrefrence["watched"] = updatedPrefrence[
-                  "watched"
-                ].filter((item: any) => item.item_id !== itemId);
-              }
+        const data = await response.json();
 
-              // Handle "watchlater"
-              if (!updatedPrefrence["watchlater"]) {
-                updatedPrefrence["watchlater"] = [];
-              }
-
-              const watchlaterIndex = updatedPrefrence["watchlater"].findIndex(
-                (item: any) => item.item_id === itemId
-              );
-
-              if (watchlaterIndex === -1) {
-                // Item doesn't exist in watchlater, so add it
-                updatedPrefrence["watchlater"].push({ item_id: itemId });
-              } else {
-                // Item exists in watchlater, so remove it
-                updatedPrefrence["watchlater"].splice(watchlaterIndex, 1);
-              }
-
-              return updatedPrefrence;
-            });
-          }
+        if (!response.ok) {
+          throw new Error(data.error || "An error occurred");
         }
+
+        setUserPrefrence((prev: any) => {
+          const updatedPrefrence = { ...prev };
+
+          // Always remove from "watched" if it exists
+          if (updatedPrefrence["watched"]) {
+            updatedPrefrence["watched"] = updatedPrefrence["watched"].filter(
+              (item: any) => item.item_id !== itemId
+            );
+          }
+
+          // Handle "watchlater"
+          if (!updatedPrefrence["watchlater"]) {
+            updatedPrefrence["watchlater"] = [];
+          }
+
+          const watchlaterIndex = updatedPrefrence["watchlater"].findIndex(
+            (item: any) => item.item_id === itemId
+          );
+
+          if (data.action === "added") {
+            if (watchlaterIndex === -1) {
+              // Item doesn't exist in watchlater, so add it
+              updatedPrefrence["watchlater"].push({ item_id: itemId });
+            }
+          } else if (data.action === "removed") {
+            if (watchlaterIndex !== -1) {
+              // Item exists in watchlater, so remove it
+              updatedPrefrence["watchlater"].splice(watchlaterIndex, 1);
+            }
+          }
+
+          return updatedPrefrence;
+        });
+
+        toast.update(toastId, {
+          render: data.message,
+          type: "success",
+          isLoading: false,
+          autoClose: 2000,
+        });
+      } else {
+        const url = state ? apiDeleteUrl : apiUrl;
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ itemId, name, mediaType, imgUrl, adult }),
+        });
+
+        const data = await response.json();
+        console.log(data);
+
+        if (!response.ok) {
+          throw new Error(data.error || "An error occurred");
+        }
+
+        setUserPrefrence((prev: any) => {
+          const updatedPrefrence = { ...prev };
+
+          if (state) {
+            // Remove item if it exists
+            updatedPrefrence[funcType] = updatedPrefrence[funcType].filter(
+              (item: any) => item.item_id !== itemId
+            );
+          } else {
+            // Add item if it doesn't exist
+            if (!updatedPrefrence[funcType]) {
+              updatedPrefrence[funcType] = [];
+            }
+            updatedPrefrence[funcType].push({ item_id: itemId });
+          }
+
+          return updatedPrefrence;
+        });
+
         toast.update(toastId, {
           render: successMessage,
           type: "success",
@@ -133,47 +180,6 @@ const CardMovieButton: React.FC<CardMovieButtonProps> = ({
           autoClose: 2000,
         });
       }
-      const url = state ? apiDeleteUrl : apiUrl;
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ itemId, name, mediaType, imgUrl, adult }),
-      });
-
-      const data = await response.json();
-      console.log(data);
-
-      if (!response.ok) {
-        throw new Error(data.error || "An error occurred");
-      }
-
-      setUserPrefrence((prev: any) => {
-        const updatedPrefrence = { ...prev };
-
-        if (state) {
-          // Remove item if it exists
-          updatedPrefrence[funcType] = updatedPrefrence[funcType].filter(
-            (item: any) => item.item_id !== itemId
-          );
-        } else {
-          // Add item if it doesn't exist
-          if (!updatedPrefrence[funcType]) {
-            updatedPrefrence[funcType] = [];
-          }
-          updatedPrefrence[funcType].push({ item_id: itemId });
-        }
-
-        return updatedPrefrence;
-      });
-
-      toast.update(toastId, {
-        render: successMessage,
-        type: "success",
-        isLoading: false,
-        autoClose: 2000,
-      });
     } catch (error: any) {
       toast.update(toastId, {
         render: error.message || "An error occurred",
@@ -193,7 +199,13 @@ const CardMovieButton: React.FC<CardMovieButtonProps> = ({
       title={funcType}
       className="h-full w-full flex items-center justify-center text-2xl bg-neutral-800 text-neutral-200 hover:bg-neutral-700"
     >
-      {icon}
+      {loading ? (
+        <div className="w-fit m-auto animate-spin">
+          <AiOutlineLoading3Quarters />
+        </div>
+      ) : (
+        icon
+      )}
     </button>
   );
 };
