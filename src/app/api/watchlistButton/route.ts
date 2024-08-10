@@ -19,80 +19,65 @@ export async function POST(req: NextRequest) {
 
   const userId = data.user.id;
 
-  const { error: insertError } = await supabase.from("user_watchlist").insert({
-    user_id: userId,
-    item_name: name,
-    item_id: itemId,
-    item_type: mediaType,
-    item_img: imgUrl,
-    item_adult: adult,
-  });
-  if (insertError) {
-    if (
-      insertError.code === "23505" // PostgreSQL unique violation error code
-    ) {
-      console.log("Duplicate item:", insertError);
-      return NextResponse.json(
-        { error: "already in watchlist" },
-        { status: 409 }
-      );
-    } else {
-      console.log("Error inserting item:", insertError);
-      return NextResponse.json(
-        { error: "Error inserting item" },
-        { status: 500 }
-      );
-    }
-  }
-
-  return NextResponse.json({ message: "Added" }, { status: 200 });
-}
-
-export async function DELETE(req: NextRequest) {
-  const requestClone = req.clone();
-  const body = await requestClone.json();
-  const { itemId, name, mediaType, imgUrl, adult } = body;
-
-  const supabase = createClient();
-
-  const { data, error } = await supabase.auth.getUser();
-  if (error || !data?.user) {
-    console.log("User isn't logged in");
-    return NextResponse.json(
-      { error: "User isn't logged in" },
-      { status: 401 }
-    );
-  }
-
-  const userId = data.user.id;
-
-  // Check if the item exists before attempting to delete it
-  const { data: existingItem, error: fetchError } = await supabase
+  // First, delete from watched_items if it exists
+  await supabase
     .from("watched_items")
+    .delete()
+    .eq("user_id", userId)
+    .eq("item_id", itemId);
+
+  // Check if it's in user_watchlist
+  const { data: existingItem } = await supabase
+    .from("user_watchlist")
     .select()
     .eq("user_id", userId)
     .eq("item_id", itemId)
     .single();
 
-  // Proceed to delete the item
-  if (existingItem && !fetchError) {
+  if (existingItem) {
+    // If it exists in watchlist, delete it
     const { error: deleteError } = await supabase
-      .from("watched_items")
+      .from("user_watchlist")
       .delete()
       .eq("user_id", userId)
       .eq("item_id", itemId);
 
     if (deleteError) {
-      console.log("Error deleting item:", deleteError);
-      return NextResponse.json({ error: "Error " }, { status: 500 });
+      console.log("Error deleting item from watchlist:", deleteError);
+      return NextResponse.json(
+        { error: "Error deleting item from watchlist" },
+        { status: 500 }
+      );
     }
-  }
-  if (fetchError) {
+
     return NextResponse.json(
-      { message: "Fetch Error Try again" },
-      { status: 500 }
+      { message: "Removed from watchlist", action: "removed" },
+      { status: 200 }
+    );
+  } else {
+    // If it doesn't exist in watchlist, insert it
+    const { error: insertError } = await supabase
+      .from("user_watchlist")
+      .insert({
+        user_id: userId,
+        item_name: name,
+        item_id: itemId,
+        item_type: mediaType,
+        item_img: imgUrl,
+        item_adult: adult,
+      });
+
+    if (insertError) {
+      console.log("Error inserting item to watchlist:", insertError);
+      return NextResponse.json(
+        { error: "Error inserting item to watchlist" },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json(
+      { message: "Added to watchlist", action: "added" },
+      { status: 200 }
     );
   }
-
-  return NextResponse.json({ message: "Cleared.." }, { status: 200 });
 }

@@ -23,6 +23,23 @@ async function getCredit(id: any) {
   const data = await response.json();
   return data;
 }
+async function getVideos(id: any) {
+  const response = await fetch(
+    `https://api.themoviedb.org/3/movie/${id}/videos?api_key=${process.env.TMDB_API_KEY}`
+  );
+
+  const data = await response.json();
+  return data;
+}
+async function getImages(id: any) {
+  const response = await fetch(
+    `https://api.themoviedb.org/3/movie/${id}/images
+?api_key=${process.env.TMDB_API_KEY}`
+  );
+
+  const data = await response.json();
+  return data;
+}
 
 const MovieDetails = async ({
   params,
@@ -34,6 +51,8 @@ const MovieDetails = async ({
   const { id }: any = params;
   const movie = await getMovieDetails(id);
   const credits = await getCredit(id);
+  const { results: videos } = await getVideos(id);
+  const { posters: images } = await getImages(id);
 
   return (
     <div className="flex flex-col items-center justify-center text-white relative  w-full">
@@ -235,6 +254,42 @@ const MovieDetails = async ({
               </div>
             </div>
           </div>
+        </div>
+      </div>
+      <div className="max-w-7xl w-full   ">
+        {videos.filter((item: any) => item.site === "YouTube").length > 0 && (
+          <h1 className="text-lg my-2 ">{movie.title}: Media</h1>
+        )}
+
+        <div className="w-full max-w-7xl m-auto flex flex-row overflow-x-scroll vone-scrollbar my-3">
+          {videos
+            .filter((item: any) => item.site === "YouTube")
+            ?.slice(0, 4)
+            .map((item: any) => (
+              <iframe
+                key={item.id} // Add a key to avoid React warnings
+                className="min-w-96 max-w-96 w-full  aspect-video mb-6"
+                src={`https://www.youtube.com/embed/${item.key}`} // Use item.key instead of item.id
+                title={item.name}
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            ))}
+        </div>
+      </div>
+      <div className="max-w-7xl w-full   ">
+        <h1 className="text-lg my-2 ">{movie.title}: Posters</h1>
+
+        <div className="w-full max-w-7xl m-auto flex flex-row gap-3 overflow-x-scroll vone-scrollbar my-3">
+          {images?.slice(0, 5).map((item: any) => (
+            <img
+              key={item.id} // Add a key to avoid React warnings
+              className="min-h-96 w-full mb-6"
+              src={`https://image.tmdb.org/t/p/w185${item.file_path}`} // Use item.key instead of item.id
+              alt={item.name}
+            />
+          ))}
         </div>
       </div>
     </div>

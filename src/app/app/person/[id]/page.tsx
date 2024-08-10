@@ -4,6 +4,8 @@ import { lazy, Suspense } from "react";
 import { IoEyeOutline } from "react-icons/io5";
 
 import PersonCredits from "@/components/person/server/personCredits";
+import { FaInstagram, FaXTwitter } from "react-icons/fa6";
+import Link from "next/link";
 
 async function fetchPersonData(id: any) {
   const response = await fetch(
@@ -11,6 +13,16 @@ async function fetchPersonData(id: any) {
   );
   if (!response.ok) {
     throw new Error("Failed to fetch person details");
+  }
+  return response.json();
+}
+
+async function external_ids(id: any) {
+  const response = await fetch(
+    ` https://api.themoviedb.org/3/person/${id}/external_ids?api_key=${process.env.TMDB_API_KEY}&language=en-US`
+  );
+  if (!response.ok) {
+    throw new Error("Failed to fetch person credits");
   }
   return response.json();
 }
@@ -23,7 +35,6 @@ async function fetchPersonCredits(id: any) {
   }
   return response.json();
 }
-
 const PersonList = async ({
   params,
   searchParams,
@@ -33,6 +44,7 @@ const PersonList = async ({
 }) => {
   const person = await fetchPersonData(params.id);
   const { cast, crew } = await fetchPersonCredits(params.id);
+  const person_ids = await external_ids(params.id);
 
   return (
     <div className="text-white w-full flex justify-center">
@@ -55,6 +67,26 @@ const PersonList = async ({
           </div>
           <div className="flex-[2]">
             <h1 className="mt-4 text-2xl font-bold">{person.name}</h1>
+            <div className="flex flex-row gap-3 my-2">
+              {person_ids?.twitter_id && (
+                <Link
+                  className="py-2 px-3  text-xl  border border-gray-100 rounded-md hover:bg-neutral-950"
+                  target="_blank"
+                  href={`https://x.com/${person_ids.twitter_id}`}
+                >
+                  <FaXTwitter />
+                </Link>
+              )}
+              {person_ids?.instagram_id && (
+                <Link
+                  className="py-2 px-3  text-xl border border-gray-100 rounded-md hover:bg-neutral-950"
+                  target="_blank"
+                  href={`https://instagram.com/${person_ids.instagram_id}`}
+                >
+                  <FaInstagram />
+                </Link>
+              )}
+            </div>
 
             <p className="mt-2 text-sm text-gray-400">{person.birthday}</p>
             <p className="mt-2 text-sm text-gray-400">
