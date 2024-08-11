@@ -46,7 +46,7 @@ const ShowDetails = async ({
 
   const { cast, crew } = await getShowCredit(id);
   const { results: videos } = await getVideos(id);
-  const { posters: images } = await getImages(id);
+  const { posters: Pimages, backdrops: Bimages } = await getImages(id);
 
   return (
     <div className="text-white relative w-full flex flex-col gap-3 items-center justify-center">
@@ -257,42 +257,53 @@ const ShowDetails = async ({
           </div>
         ))}
       </div>
-      <div className="max-w-7xl w-full   ">
-        {videos.filter((item: any) => item.site === "YouTube").length > 0 && (
+      {videos.filter((item: any) => item.site === "YouTube").length > 0 && (
+        <div className="max-w-7xl w-full   ">
           <h1 className="text-lg my-2 ">{show.name}: Media</h1>
-        )}
 
-        <div className="w-full max-w-7xl m-auto flex flex-row overflow-x-scroll vone-scrollbar my-3">
-          {videos
-            .filter((item: any) => item.site === "YouTube")
-            ?.slice(0, 4)
-            .map((item: any) => (
-              <iframe
-                key={item.id} // Add a key to avoid React warnings
-                className="min-w-96 max-w-96 w-full  aspect-video mb-6"
-                src={`https://www.youtube.com/embed/${item.key}`} // Use item.key instead of item.id
-                title={item.name}
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            ))}
+          <div className="w-full max-w-7xl m-auto flex flex-row overflow-x-scroll vone-scrollbar my-3">
+            {videos
+              .filter((item: any) => item.site === "YouTube")
+              ?.slice(0, 4)
+              .map((item: any) => (
+                <iframe
+                  key={item.id} // Add a key to avoid React warnings
+                  className="min-w-96 max-w-96 w-full  aspect-video mb-6"
+                  src={`https://www.youtube.com/embed/${item.key}`} // Use item.key instead of item.id
+                  title={item.name}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              ))}
+          </div>
         </div>
-      </div>
-      <div className="max-w-7xl w-full   ">
-        <h1 className="text-lg my-2 ">{show.name}: Posters</h1>
+      )}
+      {(Bimages.length > 0 || Pimages.length > 0) && (
+        <div className="max-w-7xl w-full   ">
+          <h1 className="text-lg my-2 ">{show.name}: Images</h1>
 
-        <div className="w-full max-w-7xl m-auto flex flex-row gap-3 overflow-x-scroll vone-scrollbar my-3">
-          {images?.slice(0, 5).map((item: any) => (
-            <img
-              key={item.id} // Add a key to avoid React warnings
-              className="min-h-96 max-h-96  w-fit mb-6"
-              src={`https://image.tmdb.org/t/p/w185${item.file_path}`} // Use item.key instead of item.id
-              alt={item.name}
-            />
-          ))}
+          <div className="w-full max-w-7xl m-auto flex flex-row gap-3 overflow-x-scroll vone-scrollbar my-3">
+            {Bimages.length > 0
+              ? Bimages?.slice(0, 15).map((item: any) => (
+                  <img
+                    key={item.id} // Add a key to avoid React warnings
+                    className="max-h-96 min-h-64 h-full w-fit"
+                    src={`https://image.tmdb.org/t/p/w300${item.file_path}`} // Use item.key instead of item.id
+                    alt={item.name}
+                  />
+                ))
+              : Pimages?.slice(0, 15).map((item: any) => (
+                  <img
+                    key={item.id} // Add a key to avoid React warnings
+                    className="max-h-96 min-h-64 h-full w-fit"
+                    src={`https://image.tmdb.org/t/p/w185${item.file_path}`} // Use item.key instead of item.id
+                    alt={item.name}
+                  />
+                ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

@@ -17,59 +17,49 @@ function threePrefrencebtn({
 }: any) {
   const { userPrefrence }: any = useContext(UserPrefrenceContext);
   const isItemWatched = (itemId: number): boolean => {
-    if (Array.isArray(userPrefrence.watched)) {
-      return userPrefrence.watched.some((pref: any) => pref.item_id === itemId);
-    } else if (
-      typeof userPrefrence.watched === "object" &&
-      userPrefrence.watched !== null
-    ) {
-      // If userPrefrence.userPrefrence is an object, check if it has the item_id as a key
-      return Object.keys(userPrefrence.watched).includes(itemId.toString());
-    } else {
-      console.error(
-        "Unexpected userPrefrence.userPrefrence type:",
-        typeof userPrefrence.watched
-      );
+    if (!userPrefrence || !userPrefrence.watched) {
       return false;
     }
+
+    if (Array.isArray(userPrefrence.watched)) {
+      return userPrefrence.watched.some((pref: any) => pref.item_id === itemId);
+    } else if (typeof userPrefrence.watched === "object") {
+      return Object.keys(userPrefrence.watched).includes(itemId.toString());
+    }
+
+    return false;
   };
+
   const isItemPreferred = (itemId: number): boolean => {
+    if (!userPrefrence || !userPrefrence.favorite) {
+      return false;
+    }
+
     if (Array.isArray(userPrefrence.favorite)) {
       return userPrefrence.favorite.some(
         (pref: any) => pref.item_id === itemId
       );
-    } else if (
-      typeof userPrefrence.favorite === "object" &&
-      userPrefrence.favorite !== null
-    ) {
-      // If userPrefrence.userPrefrence is an object, check if it has the item_id as a key
+    } else if (typeof userPrefrence.favorite === "object") {
       return Object.keys(userPrefrence.favorite).includes(itemId.toString());
-    } else {
-      console.error(
-        "Unexpected userPrefrence.userPrefrence type:",
-        typeof userPrefrence.favorite
-      );
+    }
+
+    return false;
+  };
+
+  const isItemInWatchLater = (itemId: number): boolean => {
+    if (!userPrefrence || !userPrefrence.watchlater) {
       return false;
     }
-  };
-  const isItemInWatchLater = (itemId: number): boolean => {
+
     if (Array.isArray(userPrefrence.watchlater)) {
       return userPrefrence.watchlater.some(
         (pref: any) => pref.item_id === itemId
       );
-    } else if (
-      typeof userPrefrence.watchlater === "object" &&
-      userPrefrence.watchlater !== null
-    ) {
-      // If userPrefrence.userPrefrence is an object, check if it has the item_id as a key
+    } else if (typeof userPrefrence.watchlater === "object") {
       return Object.keys(userPrefrence.watchlater).includes(itemId.toString());
-    } else {
-      console.error(
-        "Unexpected userPrefrence.userPrefrence type:",
-        typeof userPrefrence.watchlater
-      );
-      return false;
     }
+
+    return false;
   };
 
   return (
