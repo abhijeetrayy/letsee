@@ -11,7 +11,7 @@ async function navbar() {
     redirect(`/app/search/${formData.get("searchtext")}`);
   }
   const supabase = createClient();
-  const { error } = await supabase.auth.getUser();
+  const { data, error } = await supabase.auth.getUser();
   return (
     <div className="w-full flex flex-row items-center justify-between text-white max-w-7xl h-full z-50">
       <div className="">
@@ -19,6 +19,9 @@ async function navbar() {
       </div>
 
       <div className="flex flex-row gap-3  items-center">
+        <div className="px-4 py-1  rounded-md bg-neutral-600 hover:bg-neutral-500">
+          <Link href={`/app/profile`}>User's</Link>
+        </div>
         <div>
           <form className="flex flex-row items-center gap-2" action="">
             <input
@@ -78,7 +81,7 @@ async function navbar() {
               </div>
             </div>
           </div> */}
-          <DropdownMenu />
+          <DropdownMenu user={data} />
         </div>
       </div>
     </div>

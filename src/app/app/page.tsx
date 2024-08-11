@@ -53,11 +53,11 @@ export default async function Home() {
   const data = await getTrending();
   const TrendingTv = await getTrendingTV();
   return (
-    <div className="flex flex-col items-center gap-7">
+    <div className="max-w-7xl w-full m-auto">
       <div className="w-full">
         <SearchForm />
       </div>
-      <div className="w-full max-w-7xl">
+      <div className="w-full max-w-7xl my-3">
         <h1 className="text-lg font-semibold mb-2">Movie Genres</h1>
         <div className="flex flex-row overflow-x-scroll vone-scrollbar gap-1 mx-5">
           {genre?.genres.map((genre: any) => (
@@ -77,18 +77,18 @@ export default async function Home() {
           <MovieCard key={genre.id} genre={genre} />
         ))}
       </div> */}
-      <div>
+      <div className="my-3">
         <h2 className="text-2xl my-4 font-bold">Weekly Top 20</h2>
-        <div className="grid grid-cols-5 gap-4 max-w-6xl w-full">
+        <div className="grid grid-cols-5 gap-4 max-w-6xl w-full m-auto">
           {data?.results.map((item: any) => (
-            <div className="group relative w-full">
+            <div className="group relative w-full min-h-[330px]">
               <div className="absolute top-0 left-0">
                 <p className="px-1 py-1 bg-neutral-950  text-white rounded-br-md">
                   {item.media_type}
                 </p>
               </div>
               <Link
-                className="min-h-[330px]  h-full"
+                className="min-h-[330px] w-64  object-cover h-full"
                 href={`/app/${item.media_type}/${item.id}-${(
                   item?.name || item?.title
                 )
@@ -97,7 +97,7 @@ export default async function Home() {
                   .replace(/-+/g, "-")}`}
               >
                 <img
-                  className="h-full"
+                  className="h-full w-full"
                   src={`https://image.tmdb.org/t/p/w342${item.poster_path}`}
                   alt={item.name}
                 />
@@ -128,7 +128,7 @@ export default async function Home() {
           ))}
         </div>
       </div>
-      <div className="w-full max-w-7xl">
+      <div className="w-full max-w-7xl my-3">
         <h1 className="text-lg font-semibold mb-2">Tv Show Genres</h1>
         <div className="flex flex-row overflow-x-scroll vone-scrollbar gap-1 mx-5">
           {tvGenres?.genres.map((genre: any) => (
@@ -143,18 +143,18 @@ export default async function Home() {
           ))}
         </div>
       </div>
-      <div>
+      <div className="w-full my-3 ">
         <h2 className="text-2xl my-4 font-bold">Trending Tv Show's</h2>
-        <div className="grid grid-cols-5 gap-4 max-w-6xl w-full">
+        <div className="grid grid-cols-5 gap-4 max-w-6xl w-full m-auto">
           {TrendingTv?.results.map((item: any) => (
-            <div className="group relative w-full">
+            <div className="group relative w-full min-h-[330px]">
               <div className="absolute top-0 left-0">
                 <p className="px-1 py-1 bg-neutral-950  text-white rounded-br-md">
                   {item.media_type}
                 </p>
               </div>
               <Link
-                className="min-h-[330px]  h-full"
+                className="min-h-[330px] w-64  object-cover h-full"
                 href={`/app/${item.media_type}/${item.id}-${(
                   item?.name || item?.title
                 )
@@ -163,9 +163,9 @@ export default async function Home() {
                   .replace(/-+/g, "-")}`}
               >
                 <img
-                  className="h-full"
+                  className="h-full w-full"
                   src={`https://image.tmdb.org/t/p/w342${item.poster_path}`}
-                  alt={item.id}
+                  alt={item.name}
                 />
               </Link>
               <div className="absolute bottom-0 w-full opacity-0 group-hover:opacity-100">
