@@ -8,10 +8,10 @@ import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
 function personCredits({ orginalCast, cast, crew, name }: any) {
   return (
     <div>
-      <div className="flex flex-row gap-5 overflow-x-scroll vone-scrollbar ">
-        {orginalCast?.slice(0, 7).map((data: any) => (
+      <div className="w-full flex flex-row gap-5 overflow-x-scroll vone-scrollbar ">
+        {orginalCast?.slice(0, 17).map((data: any) => (
           <div
-            className="relative bg-black rounded-md overflow-hidden"
+            className="relative min-w-fit bg-black rounded-md overflow-hidden"
             key={data.id}
           >
             <div className=" relative group flex flex-col  bg-black  text-gray-300 ">
@@ -35,7 +35,7 @@ function personCredits({ orginalCast, cast, crew, name }: any) {
                 )}
               </div>
               <Link
-                className="h-[330px] max-w-[211px]"
+                className="h-[330px] max-w-56 w-full  "
                 href={`/app/${data.media_type}/${data.id}-${(
                   data.name || data.title
                 )

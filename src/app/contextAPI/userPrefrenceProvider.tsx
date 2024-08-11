@@ -4,7 +4,11 @@ import React, { useEffect, useState } from "react";
 import UserPrefrenceContext from "./userPrefrence";
 
 const userPrefrenceProvider = ({ children }: { children: React.ReactNode }) => {
-  const [userPrefrence, setUserPrefrence] = useState([]);
+  const [userPrefrence, setUserPrefrence] = useState({
+    watched: [],
+    favorite: [],
+    watchlater: [],
+  });
   const [loading, setloading] = useState(true);
 
   useEffect(() => {
