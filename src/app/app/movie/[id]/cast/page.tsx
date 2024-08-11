@@ -30,9 +30,23 @@ async function page({
   return (
     <div>
       <div className="relative flex flex-col items-center justify-center w-full min-h-[550px] h-full">
-        <div className="absolute flex justify-center  bg-black top-0 left-0 w-full h-full z-0 overflow-y-clip">
+        <div className="absolute w-full  h-full overflow-hidden">
+          <div
+            className="absolute inset-0 z-10 bg-gradient-to-r from-neutral-900 via-transparent to-neutral-900"
+            style={{
+              background:
+                "linear-gradient(to left,  #171717, transparent 60%, #171717, #171717)",
+            }}
+          ></div>
+          <div
+            className="absolute inset-0 z-10 bg-gradient-to-l from-neutral-900 via-transparent to-neutral-900"
+            style={{
+              background:
+                "linear-gradient(to right,  #171717, transparent 60%, #171717, #171717)",
+            }}
+          ></div>
           <img
-            className="object-cover opacity-20 w-full max-w-[2100px] h-full "
+            className="object-cover max-w-[2100px] w-full h-full  m-auto opacity-20"
             src={`${
               movie.backdrop_path && !movie.adult
                 ? `https://image.tmdb.org/t/p/w300${movie.backdrop_path}`
@@ -43,6 +57,7 @@ async function page({
             alt=""
           />
         </div>
+
         <div className="max-w-6xl w-full relative  z-10  flex flex-row  gap-5">
           <div className=" flex-1 ">
             <img

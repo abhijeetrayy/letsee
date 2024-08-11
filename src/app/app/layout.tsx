@@ -39,7 +39,7 @@ export default function RootLayout({
               >
                 <Navbar />
               </div>
-              <div className="">{children}</div>
+              <div className="min-h-screen">{children}</div>
               <Footbar />
             </div>
             <ToastContainer />
