@@ -235,7 +235,7 @@ const ShowDetails = async ({
 
               <div className="   ml-3">
                 <Link
-                  href={`/app/movie/${id}/cast`}
+                  href={`/app/tv/${id}/cast`}
                   className="flex justify-center items-center w-full h-56 border-2 border-neutral-500 hover:border-indigo-600 hover:bg-neutral-800 rounded-md"
                 >
                   more..
