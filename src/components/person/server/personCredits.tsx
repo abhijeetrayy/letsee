@@ -10,8 +10,11 @@ function personCredits({ orginalCast, cast, crew, name }: any) {
     <div>
       <div className="flex flex-row gap-5 overflow-x-scroll vone-scrollbar ">
         {orginalCast?.slice(0, 7).map((data: any) => (
-          <div className="w-full" key={data.id}>
-            <div className=" relative group flex flex-col rounded-md bg-black mr-2.5 min-w-44 w-full  text-gray-300 overflow-hidden ">
+          <div
+            className="relative bg-black rounded-md overflow-hidden"
+            key={data.id}
+          >
+            <div className=" relative group flex flex-col  bg-black  text-gray-300 ">
               <div className="absolute top-0 left-0 z-10 opacity-0 group-hover:opacity-100">
                 {data.adult ? (
                   <p className="p-1 bg-red-600 text-white rounded-br-md text-sm">
@@ -32,7 +35,7 @@ function personCredits({ orginalCast, cast, crew, name }: any) {
                 )}
               </div>
               <Link
-                className="h-[320px] w-full"
+                className="h-[330px] max-w-[211px]"
                 href={`/app/${data.media_type}/${data.id}-${(
                   data.name || data.title
                 )
@@ -41,7 +44,7 @@ function personCredits({ orginalCast, cast, crew, name }: any) {
                   .replace(/-+/g, "-")}`}
               >
                 <img
-                  className="relative object-cover min-w-full h-full "
+                  className="w-full h-full object-cover"
                   src={
                     (data.poster_path || data.backdrop_path) && !data.adult
                       ? `https://image.tmdb.org/t/p/w342${
