@@ -183,39 +183,45 @@ const ShowDetails = async ({
       </div>
 
       <div className="max-w-6xl w-full">
-        <div>
-          {cast && <h2 className="text-lg">Cast</h2>}
+        <div className="mt-7">
+          <h2 className="text-lg ">Cast</h2>
           <div>
-            <div className="grid grid-cols-7 m-3 rounded-md">
-              {cast?.slice(0, 6).map((item: any) => (
+            <div className="grid grid-cols-7 gap-3 m-3 rounded-md">
+              {cast.slice(0, 6).map((item: any) => (
                 <Link
+                  title={item.name}
+                  key={item.id}
                   href={`/app/person/${item.id}-${item.name
                     .trim()
                     .replace(/[^a-zA-Z0-9]/g, "-")
                     .replace(/-+/g, "-")}`}
-                  className="group hover:bg-indigo-600"
+                  className="group rounded-md  hover:bg-indigo-600"
                 >
                   <img
-                    className="w-52 h-56 object-cover"
+                    className="w-52 h-56 rounded-md object-cover"
                     src={
                       item.profile_path
                         ? `https://image.tmdb.org/t/p/w185${item.profile_path}`
                         : "/avatar.svg"
                     }
-                    alt=""
+                    alt={item.name}
                   />
-                  <p className=" opacity-0 group-hover:opacity-100 ml-2">
-                    {item.name}
-                  </p>
+
+                  {item.name.length > 14 ? (
+                    <p className="break-words opacity-0 group-hover:opacity-100 ml-2">
+                      {item.name.slice(0, 13)}..
+                    </p>
+                  ) : (
+                    <p className=" opacity-0 group-hover:opacity-100 ml-2">
+                      {item.name}
+                    </p>
+                  )}
                 </Link>
               ))}
 
               <div className="   ml-3">
                 <Link
-                  href={`/app/tv/${id}-${show.name
-                    .trim()
-                    .replace(/[^a-zA-Z0-9]/g, "-")
-                    .replace(/-+/g, "-")}/cast`}
+                  href={`/app/movie/${id}/cast`}
                   className="flex justify-center items-center w-full h-56 border-2 border-neutral-500 hover:border-indigo-600 hover:bg-neutral-800 rounded-md"
                 >
                   more..
