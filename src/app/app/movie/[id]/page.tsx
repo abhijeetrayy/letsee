@@ -60,9 +60,23 @@ const MovieDetails = async ({
 
       {/* Content */}
       <div className="relative flex flex-col items-center justify-center w-full min-h-[550px] h-full">
-        <div className="absolute flex justify-center  bg-black top-0 left-0 w-full h-full z-0 overflow-y-clip">
+        <div className="absolute w-full  h-full overflow-hidden">
+          <div
+            className="absolute inset-0 z-10 bg-gradient-to-r from-neutral-900 via-transparent to-neutral-900"
+            style={{
+              background:
+                "linear-gradient(to left,  #171717, transparent 60%, #171717, #171717)",
+            }}
+          ></div>
+          <div
+            className="absolute inset-0 z-10 bg-gradient-to-l from-neutral-900 via-transparent to-neutral-900"
+            style={{
+              background:
+                "linear-gradient(to right,  #171717, transparent 60%, #171717, #171717)",
+            }}
+          ></div>
           <img
-            className="object-cover opacity-20 w-full max-w-[2100px] h-full "
+            className="object-cover w-full h-full opacity-20"
             src={`${
               movie.backdrop_path && !movie.adult
                 ? `https://image.tmdb.org/t/p/w300${movie.backdrop_path}`
@@ -106,7 +120,7 @@ const MovieDetails = async ({
                 cardAdult={movie.adult}
                 cardImg={movie.poster_path || movie.backdrop_path}
               />
-              <p className="text-md mb-2 text-neutral-300">
+              <p className="text-md my-2 text-neutral-300">
                 {movie.runtime} min.
               </p>
               <p className="text-base mb-2" text-neutral-300>
@@ -144,34 +158,6 @@ const MovieDetails = async ({
                   </Link>
                 ))}
               </div>
-              {/* <div className="mb-4 flex flex-row gap-1">
-                <span>Cast: </span>
-                <div className="">
-                  {credits?.cast?.slice(0, 5).map((item: any, index: number) =>
-                    credits?.cast?.slice(0, 5).length - 1 > index ? (
-                      <Link
-                        key={item.id}
-                        className={
-                          " inline-block hover:underline  px-1 whitespace-nowrap"
-                        }
-                        href={`/app/person/${item.id}`}
-                      >
-                        {item.name},
-                      </Link>
-                    ) : (
-                      <Link
-                        key={item.id}
-                        className={
-                          " inline-block hover:underline px-1 whitespace-nowrap"
-                        }
-                        href={`/app/person/${item.id}`}
-                      >
-                        {item.name}
-                      </Link>
-                    )
-                  )}
-                </div>
-              </div> */}
 
               <div className="mb-4 flex flex-row gap-1 text-neutral-300">
                 <span>Production: </span>
@@ -181,25 +167,19 @@ const MovieDetails = async ({
                     .map((item: any, index: number) =>
                       movie?.production_companies?.slice(0, 5).length - 1 >
                       index ? (
-                        <Link
+                        <div
                           key={item.id}
-                          className={
-                            " inline-block hover:underline  px-1 whitespace-nowrap"
-                          }
-                          href={""}
+                          className={" inline-block  px-1 whitespace-nowrap"}
                         >
                           {item.name},
-                        </Link>
+                        </div>
                       ) : (
-                        <Link
+                        <div
                           key={item.id}
-                          className={
-                            " inline-block hover:underline px-1 whitespace-nowrap"
-                          }
-                          href={""}
+                          className={" inline-block px-1 whitespace-nowrap"}
                         >
                           {item.name}
-                        </Link>
+                        </div>
                       )
                     )}
                 </div>

@@ -54,21 +54,35 @@ const ShowDetails = async ({
 
       {/* Content */}
       <div className="relative w-full flex flex-col  overflow-y-clip justify-center items-center min-h-[590px]">
-        <div className="absolute top-0 left-0 h-auto z-0 w-full flex justify-center  bg-black">
+        <div className="absolute w-full  h-full overflow-hidden">
+          <div
+            className="absolute inset-0 z-10 bg-gradient-to-r from-neutral-900 via-transparent to-neutral-900"
+            style={{
+              background:
+                "linear-gradient(to left,  #171717, transparent 60%, #171717, #171717)",
+            }}
+          ></div>
+          <div
+            className="absolute inset-0 z-10 bg-gradient-to-l from-neutral-900 via-transparent to-neutral-900"
+            style={{
+              background:
+                "linear-gradient(to right,  #171717, transparent 60%, #171717, #171717)",
+            }}
+          ></div>
           <img
-            className="object-cover opacity-20 max-w-[2100px] h-ful w-full"
+            className="object-cover max-w-[2100px] w-full h-full  m-auto opacity-20"
             src={`${
-              show.backdrop_path
-                ? show.adult
-                  ? "/pixeled.jpg"
-                  : `https://image.tmdb.org/t/p/w300${show.backdrop_path}`
+              show.backdrop_path && !show.adult
+                ? `https://image.tmdb.org/t/p/w300${show.backdrop_path}`
                 : "/backgroundjpeg.jpeg"
             }`}
-            alt={show.name}
+            width={300}
+            height={300}
+            alt=""
           />
         </div>
 
-        <div className="relative flex flex-row gap-5 py-3 px-6 w-full max-w-6xl">
+        <div className="relative flex flex-row gap-5 py-3 px-6 w-full max-w-6xl z-10">
           <div className="flex-1">
             <img
               className="min-h[500px] rounded-md"
