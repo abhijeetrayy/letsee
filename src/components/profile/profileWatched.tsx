@@ -172,9 +172,10 @@ const WatchedMoviesList = ({ userId }: any): any => {
                     className="mb-1"
                   >
                     <span className="">
-                      {item?.item_name && item.item_name.length > 15
-                        ? item.item_name?.slice(0, 15) + ".."
-                        : item.item_name}
+                      {item?.item_name &&
+                        (item.item_name.length > 16
+                          ? item.item_name?.slice(0, 14) + ".."
+                          : item.item_name)}
                     </span>
                   </Link>
                   {/* <p className="text-xs mb-2 ">

@@ -217,7 +217,7 @@ const page = async ({
                         >
                           <span className="">
                             {item?.item_name &&
-                              (item.item_name.length > 14
+                              (item.item_name.length > 16
                                 ? item.item_name?.slice(0, 14) + ".."
                                 : item.item_name)}
                           </span>
@@ -296,9 +296,10 @@ const page = async ({
                           className="mb-1"
                         >
                           <span className="">
-                            {item?.item_name && item.item_name.length > 13
-                              ? item.item_name?.slice(0, 13) + ".."
-                              : item.item_name}
+                            {item?.item_name &&
+                              (item.item_name.length > 16
+                                ? item.item_name?.slice(0, 14) + ".."
+                                : item.item_name)}
                           </span>
                         </Link>
                         {/* <p className="text-xs mb-2 ">
