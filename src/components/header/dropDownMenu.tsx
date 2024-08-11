@@ -5,7 +5,7 @@ import Link from "next/link";
 import React, { useState, useEffect, useRef } from "react";
 import SignOut from "../buttons/signOut";
 
-const DropdownMenu = () => {
+const DropdownMenu = ({ user }: any) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -51,7 +51,7 @@ const DropdownMenu = () => {
             <Link
               onClick={() => setIsOpen(!isOpen)}
               className="w-full text-left px-2 py-1 rounded-sm bg-neutral-200 hover:bg-neutral-100"
-              href={`/app/profile`}
+              href={`/app/profile/${user?.user?.id}`}
             >
               Profile
             </Link>
