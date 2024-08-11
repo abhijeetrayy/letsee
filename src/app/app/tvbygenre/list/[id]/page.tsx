@@ -107,7 +107,7 @@ function Page() {
                   <div className="absolute bottom-0 w-full bg-neutral-900 opacity-0 group-hover:opacity-100 z-10">
                     <ThreePrefrenceBtn
                       cardId={data.id}
-                      cardType={data.media_type}
+                      cardType={"tv"}
                       cardName={data.name || data.title}
                       cardAdult={data.adult}
                       cardImg={data.poster_path || data.backdrop_path}

@@ -89,7 +89,7 @@ const Page: React.FC<PageProps> = async ({ params, searchParams }) => {
                 <div className="absolute bottom-0 w-full bg-neutral-900 opacity-0 group-hover:opacity-100 z-10">
                   <ThreeUserPrefrenceBtn
                     cardId={data.id}
-                    cardType={data.media_type}
+                    cardType={"movie"}
                     cardName={data.name || data.title}
                     cardAdult={data.adult}
                     cardImg={data.poster_path || data.backdrop_path}

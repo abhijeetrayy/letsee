@@ -137,6 +137,62 @@ const CardMovieButton: React.FC<CardMovieButtonProps> = ({
           isLoading: false,
           autoClose: 2000,
         });
+      }
+      if (funcType === "watched" && !state) {
+        const response = await fetch("/api/watchedButton", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ itemId, name, mediaType, imgUrl, adult }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "An error occurred");
+        }
+
+        setUserPrefrence((prev: any) => {
+          const updatedPrefrence = { ...prev };
+
+          // Always remove from "watched" if it exists
+          if (updatedPrefrence["watchlater"]) {
+            updatedPrefrence["watchlater"] = updatedPrefrence[
+              "watchlater"
+            ].filter((item: any) => item.item_id !== itemId);
+          }
+
+          // Handle "watchlater"
+          if (!updatedPrefrence["watched"]) {
+            updatedPrefrence["watched"] = [];
+          }
+
+          const watchlaterIndex = updatedPrefrence["watched"].findIndex(
+            (item: any) => item.item_id === itemId
+          );
+
+          if (data.action === "added") {
+            if (watchlaterIndex === -1) {
+              // Item doesn't exist in watchlater, so add it
+              updatedPrefrence["watched"].push({ item_id: itemId });
+            }
+          } else if (data.action === "removed") {
+            if (watchlaterIndex !== -1) {
+              // Item exists in watchlater, so remove it
+              updatedPrefrence["watched"].splice(watchlaterIndex, 1);
+            }
+          }
+
+          return updatedPrefrence;
+        });
+
+        toast.update(toastId, {
+          render: data.message,
+          type: "success",
+          isLoading: false,
+          autoClose: 2000,
+        });
       } else {
         const url = state ? apiDeleteUrl : apiUrl;
         const response = await fetch(url, {

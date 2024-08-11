@@ -101,7 +101,7 @@ const MovieDetails = async ({
               </h1>
               <ThreeUserPrefrenceBtn
                 cardId={movie.id}
-                cardType={movie.media_type}
+                cardType={"movie"}
                 cardName={movie.name || movie.title}
                 cardAdult={movie.adult}
                 cardImg={movie.poster_path || movie.backdrop_path}

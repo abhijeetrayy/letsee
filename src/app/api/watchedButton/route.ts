@@ -19,32 +19,63 @@ export async function POST(req: NextRequest) {
 
   const userId = data.user.id;
 
-  const { error: insertError } = await supabase.from("watched_items").insert({
-    user_id: userId,
-    item_name: name,
-    item_id: itemId,
-    item_type: mediaType,
-    image_url: imgUrl,
-    item_adult: adult,
-  });
+  // First, delete from watched_items if it exists
+  await supabase
+    .from("user_watchlist")
+    .delete()
+    .eq("user_id", userId)
+    .eq("item_id", itemId);
 
-  if (insertError) {
-    if (
-      insertError.code === "23505" // PostgreSQL unique violation error code
-    ) {
-      console.log("Duplicate item:", insertError);
+  // Check if it's in user_watchlist
+  const { data: existingItem } = await supabase
+    .from("watched_items")
+    .select()
+    .eq("user_id", userId)
+    .eq("item_id", itemId)
+    .single();
+
+  if (existingItem) {
+    // If it exists in watchlist, delete it
+    const { error: deleteError } = await supabase
+      .from("watched_items")
+      .delete()
+      .eq("user_id", userId)
+      .eq("item_id", itemId);
+
+    if (deleteError) {
+      console.log("Error deleting item from watched:", deleteError);
       return NextResponse.json(
-        { error: "already marked watched" },
-        { status: 409 }
-      );
-    } else {
-      console.log("Error inserting item:", insertError);
-      return NextResponse.json(
-        { error: "Error inserting item" },
+        { error: "Error deleting item from watched" },
         { status: 500 }
       );
     }
-  }
 
-  return NextResponse.json({ message: "Added" }, { status: 200 });
+    return NextResponse.json(
+      { message: "Removed from watched", action: "removed" },
+      { status: 200 }
+    );
+  } else {
+    // If it doesn't exist in watchlist, insert it
+    const { error: insertError } = await supabase.from("watched_items").insert({
+      user_id: userId,
+      item_name: name,
+      item_id: itemId,
+      item_type: mediaType,
+      item_img: imgUrl,
+      item_adult: adult,
+    });
+
+    if (insertError) {
+      console.log("Error inserting item to watched:", insertError);
+      return NextResponse.json(
+        { error: "Error inserting item to watched" },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json(
+      { message: "Added to watched", action: "added" },
+      { status: 200 }
+    );
+  }
 }
