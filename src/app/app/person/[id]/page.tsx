@@ -49,14 +49,14 @@ const PersonList = async ({
   return (
     <div className="text-white w-full flex justify-center">
       <div className=" flex flex-col gap-4 p-4 max-w-6xl  w-full">
-        <div className="flex flex-row gap-4 z-10">
-          <div className="w-full flex-1 ">
+        <div className="flex flex-col max-w-5xl w-full m-auto md:flex-row gap-2 z-10">
+          <div className="w-full">
             {person.profile_path ? (
               <img
                 src={`https://image.tmdb.org/t/p/h632${person.profile_path}`}
                 width={300}
                 height={450}
-                className="object-contain rounded-md w-full min-h-full"
+                className="  w-fit   max-h-64  md:max-h-96 rounded-md"
                 alt={person.name}
               />
             ) : (
@@ -65,7 +65,7 @@ const PersonList = async ({
               </div>
             )}
           </div>
-          <div className="flex-[2]">
+          <div className="">
             <h1 className="mt-4 text-2xl font-bold">{person.name}</h1>
             <div className="flex flex-row gap-3 my-2">
               {person_ids?.twitter_id && (

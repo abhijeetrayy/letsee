@@ -81,14 +81,14 @@ export default async function Home() {
         <h2 className="text-2xl my-4 font-bold">Weekly Top 20</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 max-w-6xl w-full m-auto">
           {data?.results.map((item: any) => (
-            <div className="group relative w-full min-h-[330px]">
+            <div className="group relative w-full h-full  ">
               <div className="absolute top-0 left-0">
                 <p className="px-1 py-1 bg-neutral-950  text-white rounded-br-md">
                   {item.media_type}
                 </p>
               </div>
               <Link
-                className="min-h-[330px] w-64  object-cover h-full"
+                className="w-full  h-full"
                 href={`/app/${item.media_type}/${item.id}-${(
                   item?.name || item?.title
                 )
@@ -97,12 +97,12 @@ export default async function Home() {
                   .replace(/-+/g, "-")}`}
               >
                 <img
-                  className="h-full w-full"
+                  className="h-fit w-full"
                   src={`https://image.tmdb.org/t/p/w342${item.poster_path}`}
                   alt={item.name}
                 />
               </Link>
-              <div className="absolute bottom-0 w-full opacity-0 group-hover:opacity-100">
+              <div className="lg:absolute lg:bottom-0  w-full lg:opacity-0 lg:group-hover:opacity-100">
                 <div className="  bg-neutral-900 ">
                   <ThreePrefrenceBtn
                     cardId={item.id}
@@ -147,14 +147,14 @@ export default async function Home() {
         <h2 className="text-2xl my-4 font-bold">Trending Tv Show's</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 max-w-6xl w-full m-auto">
           {TrendingTv?.results.map((item: any) => (
-            <div className="group relative w-full min-h-[330px]">
+            <div className="group relative w-full h-full">
               <div className="absolute top-0 left-0">
                 <p className="px-1 py-1 bg-neutral-950  text-white rounded-br-md">
                   {item.media_type}
                 </p>
               </div>
               <Link
-                className="min-h-[330px] w-64  object-cover h-full"
+                className="h-full w-full"
                 href={`/app/${item.media_type}/${item.id}-${(
                   item?.name || item?.title
                 )
@@ -163,12 +163,12 @@ export default async function Home() {
                   .replace(/-+/g, "-")}`}
               >
                 <img
-                  className="h-full w-full"
+                  className="h-fit w-full"
                   src={`https://image.tmdb.org/t/p/w342${item.poster_path}`}
                   alt={item.name}
                 />
               </Link>
-              <div className="absolute bottom-0 w-full opacity-0 group-hover:opacity-100">
+              <div className="lg:absolute bottom-0 w-full lg:opacity-0 group-hover:opacity-100">
                 <div className="  bg-neutral-900 ">
                   <ThreePrefrenceBtn
                     cardId={item.id}

@@ -113,7 +113,7 @@ const WatchedMoviesList = ({ userId }: any): any => {
 
   return (
     <div>
-      <div className="grid grid-cols-6 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-3">
         {movies?.map((item: any) => (
           <div className="" key={item.id}>
             <div className=" relative group flex flex-col rounded-md bg-black mr-2.5 w-full  text-gray-300 overflow-hidden duration-300  hover:scale-105 ">
