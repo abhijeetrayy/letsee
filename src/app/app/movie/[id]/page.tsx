@@ -4,6 +4,7 @@ import { CiSaveDown1 } from "react-icons/ci";
 import { FcLike } from "react-icons/fc";
 import { IoEyeOutline } from "react-icons/io5";
 import ThreeUserPrefrenceBtn from "@/components/buttons/threePrefrencebtn";
+import { Countrydata } from "@/staticData/countryName";
 
 // import { likedButton as LikedButton } from "@/components/buttons/intrectionButton";
 async function getMovieDetails(id: any) {
@@ -53,6 +54,9 @@ const MovieDetails = async ({
   const credits = await getCredit(id);
   const { results: videos } = await getVideos(id);
   const { posters: Pimages, backdrops: Bimages } = await getImages(id);
+  const CountryName: any = Countrydata.filter(
+    (item: any) => item.iso_3166_1 == movie.origin_country
+  );
 
   return (
     <div className="flex flex-col items-center justify-center text-white relative  w-full">
@@ -60,7 +64,7 @@ const MovieDetails = async ({
 
       {/* Content */}
       <div className="relative flex flex-col items-center justify-center w-full min-h-[550px] h-full">
-        <div className="absolute w-full  h-full overflow-hidden">
+        <div className="md:absolute w-full  h-full overflow-hidden">
           <div
             className="absolute inset-0 z-10 bg-gradient-to-r from-neutral-900 via-transparent to-neutral-900"
             style={{
@@ -76,7 +80,7 @@ const MovieDetails = async ({
             }}
           ></div>
           <img
-            className="object-cover w-full h-full opacity-20"
+            className="hidden md:flex object-cover w-full h-full opacity-20"
             src={`${
               movie.backdrop_path && !movie.adult
                 ? `https://image.tmdb.org/t/p/w300${movie.backdrop_path}`
@@ -87,7 +91,7 @@ const MovieDetails = async ({
             alt=""
           />
         </div>
-        <div className="max-w-6xl w-full relative  z-10  flex flex-row  gap-5">
+        <div className="max-w-6xl w-full relative  z-10  flex flex-col md:flex-row  gap-5">
           <div className=" flex-1 ">
             <img
               className="rounded-md object-cover h-full max-h-[500px]"
@@ -113,6 +117,9 @@ const MovieDetails = async ({
                 )}
                 {movie.title}
               </h1>
+              <p className="my-2 text-sm">
+                country: {CountryName[0].english_name}
+              </p>
               <ThreeUserPrefrenceBtn
                 cardId={movie.id}
                 cardType={"movie"}
@@ -197,8 +204,8 @@ const MovieDetails = async ({
       <div className="max-w-6xl w-full">
         <div className="mt-7">
           <h2 className="text-lg ">Cast</h2>
-          <div>
-            <div className="grid grid-cols-7 gap-3 m-3 rounded-md">
+          <div className="overflow-x-scroll">
+            <div className="flex flex-row gap-3 m-3 rounded-md">
               {credits?.cast.slice(0, 6).map((item: any) => (
                 <Link
                   title={item.name}
@@ -207,10 +214,10 @@ const MovieDetails = async ({
                     .trim()
                     .replace(/[^a-zA-Z0-9]/g, "-")
                     .replace(/-+/g, "-")}`}
-                  className="group rounded-md  hover:bg-indigo-600"
+                  className="group rounded-md h-full max-w-44 lg:max-w-56 w-full  bg-indigo-600 lg:bg-inherit lg:hover:bg-indigo-600"
                 >
                   <img
-                    className="w-52 h-56 rounded-md object-cover"
+                    className=" min-w-44 lg:min-w-52 h-56 rounded-md object-cover"
                     src={
                       item.profile_path
                         ? `https://image.tmdb.org/t/p/w185${item.profile_path}`
@@ -220,11 +227,11 @@ const MovieDetails = async ({
                   />
 
                   {item.name.length > 14 ? (
-                    <p className="break-words opacity-0 group-hover:opacity-100 ml-2">
+                    <p className="break-words lg:opacity-0 group-hover:opacity-100 ml-2">
                       {item.name.slice(0, 13)}..
                     </p>
                   ) : (
-                    <p className=" opacity-0 group-hover:opacity-100 ml-2">
+                    <p className=" lg:opacity-0 group-hover:opacity-100 ml-2">
                       {item.name}
                     </p>
                   )}
@@ -234,7 +241,7 @@ const MovieDetails = async ({
               <div className="   ml-3">
                 <Link
                   href={`/app/movie/${id}/cast`}
-                  className="flex justify-center items-center w-full h-56 border-2 border-neutral-500 hover:border-indigo-600 hover:bg-neutral-800 rounded-md"
+                  className="flex justify-center items-center w-44   h-56 border-2 border-neutral-500 hover:border-indigo-600 hover:bg-neutral-800 rounded-md"
                 >
                   more..
                 </Link>
@@ -246,7 +253,7 @@ const MovieDetails = async ({
       </div>
       {videos.filter((item: any) => item.site === "YouTube").length > 0 && (
         <div className="max-w-7xl w-full   ">
-          <h1 className="text-lg my-2 ">{movie.title}: Media</h1>
+          <h1 className="text-sm lg:text-lg my-2 ">{movie.title}: Media</h1>
 
           <div className="w-full max-w-7xl m-auto flex flex-row overflow-x-scroll vone-scrollbar my-3">
             {videos
@@ -276,7 +283,11 @@ const MovieDetails = async ({
                   <img
                     key={item.id} // Add a key to avoid React warnings
                     className="max-h-96 min-h-64 h-full w-fit"
-                    src={`https://image.tmdb.org/t/p/w300${item.file_path}`} // Use item.key instead of item.id
+                    src={
+                      movie.adult
+                        ? "/pixeled.jpg"
+                        : `https://image.tmdb.org/t/p/w300${item.file_path}`
+                    } // Use item.key instead of item.id
                     alt={item.name}
                   />
                 ))
@@ -284,7 +295,11 @@ const MovieDetails = async ({
                   <img
                     key={item.id} // Add a key to avoid React warnings
                     className="max-h-96 min-h-64 h-full w-fit"
-                    src={`https://image.tmdb.org/t/p/w185${item.file_path}`} // Use item.key instead of item.id
+                    src={
+                      movie.adult
+                        ? "/pixeled.jpg"
+                        : `https://image.tmdb.org/t/p/w185${item.file_path}`
+                    } // Use item.key instead of item.id
                     alt={item.name}
                   />
                 ))}

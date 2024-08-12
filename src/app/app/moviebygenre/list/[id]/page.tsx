@@ -86,7 +86,7 @@ const Page: React.FC<PageProps> = async ({ params, searchParams }) => {
                     alt={data.title}
                   />
                 </Link>
-                <div className="absolute bottom-0 w-full bg-neutral-900 opacity-0 group-hover:opacity-100 z-10">
+                <div className="lg:absolute bottom-0 w-full bg-neutral-900 lg:opacity-0 lg:group-hover:opacity-100 z-10">
                   <ThreeUserPrefrenceBtn
                     cardId={data.id}
                     cardType={"movie"}
