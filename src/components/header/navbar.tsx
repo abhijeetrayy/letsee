@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import { CiSearch } from "react-icons/ci";
 import DropdownMenu from "./dropDownMenu";
 import { createClient } from "@/utils/supabase/server";
+import { RxHamburgerMenu } from "react-icons/rx";
+import BurgerMenu from "./BurgerMenu";
 
 async function navbar() {
   async function search(formData: FormData) {
@@ -13,12 +15,14 @@ async function navbar() {
   const supabase = createClient();
   const { data, error } = await supabase.auth.getUser();
   return (
-    <div className="w-full flex flex-row items-center justify-between text-white max-w-7xl h-full z-50">
+    <div className="w-full flex flex-row items-center justify-between text-white max-w-7xl p-3 h-full z-50">
       <div className="">
         <Link href={"/app"}>Let's see</Link>
       </div>
-
-      <div className="flex flex-row gap-3  items-center">
+      <div>
+        <BurgerMenu userID={data?.user?.id} />
+      </div>
+      <div className="hidden md:flex flex-row gap-3  items-center">
         <div className="px-4 py-1  rounded-md bg-neutral-600 hover:bg-neutral-500">
           <Link href={`/app/profile`}>User's</Link>
         </div>

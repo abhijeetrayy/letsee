@@ -34,6 +34,15 @@ async function getImages(id: any) {
   return data;
 }
 
+async function getIMDBRating(imdbID: any) {
+  const response = await fetch(
+    `https://www.omdbapi.com/?i=${imdbID}&apikey=YOUR_OMDB_API_KEY`
+  );
+
+  const data = await response.json();
+  return data.imdbRating;
+}
+
 const ShowDetails = async ({
   params,
   searchParams,
@@ -44,6 +53,9 @@ const ShowDetails = async ({
   const { id } = params;
   const show = await getShowDetails(id);
 
+  const ImdbRating = await getIMDBRating(show.imdb_id);
+  console.log(ImdbRating);
+
   const { cast, crew } = await getShowCredit(id);
   const { results: videos } = await getVideos(id);
   const { posters: Pimages, backdrops: Bimages } = await getImages(id);
@@ -53,8 +65,8 @@ const ShowDetails = async ({
       {/* Poster Image as Background */}
 
       {/* Content */}
-      <div className="relative w-full flex flex-col  overflow-y-clip justify-center items-center min-h-[590px]">
-        <div className="absolute w-full  h-full overflow-hidden">
+      <div className="relative flex flex-col items-center justify-center w-full min-h-[550px] h-full">
+        <div className="md:absolute w-full  h-full overflow-hidden">
           <div
             className="absolute inset-0 z-10 bg-gradient-to-r from-neutral-900 via-transparent to-neutral-900"
             style={{
@@ -70,7 +82,7 @@ const ShowDetails = async ({
             }}
           ></div>
           <img
-            className="object-cover max-w-[2100px] w-full h-full  m-auto opacity-20"
+            className="hidden md:flex object-cover w-full h-full opacity-20"
             src={`${
               show.backdrop_path && !show.adult
                 ? `https://image.tmdb.org/t/p/w300${show.backdrop_path}`
@@ -82,7 +94,7 @@ const ShowDetails = async ({
           />
         </div>
 
-        <div className="relative flex flex-row gap-5 py-3 px-6 w-full max-w-6xl z-10">
+        <div className="max-w-6xl w-full relative  z-10  flex flex-col md:flex-row  gap-5">
           <div className="flex-1">
             <img
               className="min-h[500px] rounded-md"
@@ -199,8 +211,8 @@ const ShowDetails = async ({
       <div className="max-w-6xl w-full">
         <div className="mt-7">
           <h2 className="text-lg ">Cast</h2>
-          <div>
-            <div className="grid grid-cols-7 gap-3 m-3 rounded-md">
+          <div className="overflow-x-scroll">
+            <div className="flex flex-row gap-3 m-3 rounded-md">
               {cast.slice(0, 6).map((item: any) => (
                 <Link
                   title={item.name}
@@ -209,10 +221,10 @@ const ShowDetails = async ({
                     .trim()
                     .replace(/[^a-zA-Z0-9]/g, "-")
                     .replace(/-+/g, "-")}`}
-                  className="group rounded-md  hover:bg-indigo-600"
+                  className="group rounded-md h-full max-w-44 lg:max-w-56 w-full  bg-indigo-600 lg:bg-inherit lg:hover:bg-indigo-600"
                 >
                   <img
-                    className="w-52 h-56 rounded-md object-cover"
+                    className=" min-w-44 lg:min-w-52 h-56 rounded-md object-cover"
                     src={
                       item.profile_path
                         ? `https://image.tmdb.org/t/p/w185${item.profile_path}`
@@ -222,11 +234,11 @@ const ShowDetails = async ({
                   />
 
                   {item.name.length > 14 ? (
-                    <p className="break-words opacity-0 group-hover:opacity-100 ml-2">
+                    <p className="break-words lg:opacity-0 group-hover:opacity-100 ml-2">
                       {item.name.slice(0, 13)}..
                     </p>
                   ) : (
-                    <p className=" opacity-0 group-hover:opacity-100 ml-2">
+                    <p className=" lg:opacity-0 group-hover:opacity-100 ml-2">
                       {item.name}
                     </p>
                   )}
@@ -236,7 +248,7 @@ const ShowDetails = async ({
               <div className="   ml-3">
                 <Link
                   href={`/app/tv/${id}/cast`}
-                  className="flex justify-center items-center w-full h-56 border-2 border-neutral-500 hover:border-indigo-600 hover:bg-neutral-800 rounded-md"
+                  className="flex justify-center items-center w-44 h-56 border-2 border-neutral-500 hover:border-indigo-600 hover:bg-neutral-800 rounded-md"
                 >
                   more..
                 </Link>
@@ -309,7 +321,11 @@ const ShowDetails = async ({
                   <img
                     key={item.id} // Add a key to avoid React warnings
                     className="max-h-96 min-h-64 h-full w-fit"
-                    src={`https://image.tmdb.org/t/p/w300${item.file_path}`} // Use item.key instead of item.id
+                    src={
+                      show.adult
+                        ? "/pixeled.jpg"
+                        : `https://image.tmdb.org/t/p/w300${item.file_path}`
+                    } // Use item.key instead of item.id
                     alt={item.name}
                   />
                 ))
@@ -317,7 +333,7 @@ const ShowDetails = async ({
                   <img
                     key={item.id} // Add a key to avoid React warnings
                     className="max-h-96 min-h-64 h-full w-fit"
-                    src={`https://image.tmdb.org/t/p/w185${item.file_path}`} // Use item.key instead of item.id
+                    src={`show.adult ? "/pixeled.jpg" : https://image.tmdb.org/t/p/w185${item.file_path}`} // Use item.key instead of item.id
                     alt={item.name}
                   />
                 ))}

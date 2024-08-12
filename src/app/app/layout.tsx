@@ -27,10 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="">
       <body className={inter.variable}>
-        <div className="absolute top-0 min-h-screen w-screen flex justify-center items-center lg:hidden">
-          Mobile view is not avialable
-        </div>
-        <div className="hidden  w-full font-inter lg:flex justify-center  bg-neutral-900 text-gray-300">
+        <div className=" w-full font-inter flex justify-center  bg-neutral-900 text-gray-300">
           <UserPrefrenceProvider>
             <div className=" w-full">
               <div
@@ -39,7 +36,7 @@ export default function RootLayout({
               >
                 <Navbar />
               </div>
-              <div className="min-h-screen">{children}</div>
+              <div className="min-h-screen px-3">{children}</div>
               <Footbar />
             </div>
             <ToastContainer />

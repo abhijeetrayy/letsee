@@ -113,7 +113,7 @@ const MovieSearch = () => {
                     className="min-h-[342px] h-full w-full"
                   >
                     <img
-                      className="relative object-cover max-w-full h-full "
+                      className="relative object-cover w-full h-full "
                       src={
                         data.poster_path || data.backdrop_path
                           ? `https://image.tmdb.org/t/p/w342${
@@ -127,7 +127,7 @@ const MovieSearch = () => {
                     />
                   </Link>
 
-                  <div className="absolute bottom-0 w-full bg-neutral-900 opacity-0 group-hover:opacity-100 ">
+                  <div className="lg:absolute bottom-0 w-full bg-neutral-900 lg:opacity-0 lg:group-hover:opacity-100 ">
                     <ThreePrefrenceBtn
                       cardId={data.id}
                       cardType={data.media_type}

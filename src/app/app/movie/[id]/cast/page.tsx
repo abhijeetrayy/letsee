@@ -90,7 +90,7 @@ async function page({
       </div>
       <div className="max-w-5xl w-full m-auto my-3">
         <h2>Cast ~</h2>
-        <div className="grid grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {cast.map((item: any) => (
             <Link
               className="border border-neutral-900 bg-neutral-800 py-2 px-2 rounded-md hover:border-indigo-600"
@@ -99,7 +99,7 @@ async function page({
                 .replace(/[^a-zA-Z0-9]/g, "-")
                 .replace(/-+/g, "-")}}`}
             >
-              <div className="flex flex-row gap-4 mb-4 ">
+              <div className="flex flex-col md:flex-row gap-4 mb-4 ">
                 <img
                   className="max-w-[100px] object-cover rounded-md h-full"
                   src={
@@ -110,9 +110,9 @@ async function page({
                   alt=""
                 />
 
-                <h1>{item.name}</h1>
-                <span>-</span>
-                <p>{item.character}</p>
+                <div className="flex flex-row gap-2">
+                  <h1>{item.name}</h1> <span> - </span> <p>{item.character}</p>
+                </div>
               </div>
             </Link>
           ))}
@@ -126,9 +126,9 @@ async function page({
                 .replace(/[^a-zA-Z0-9]/g, "-")
                 .replace(/-+/g, "-")}}`}
             >
-              <div className="flex flex-row gap-4 mb-4">
+              <div className="flex flex-col md:flex-row gap-4 mb-4">
                 <img
-                  className="max-w-[120px] min-h-44 h-full object-cover rounded-md"
+                  className="w-32 md:max-w-[120px] md:min-h-44 h-full object-cover rounded-md"
                   src={
                     item.profile_path
                       ? `https://image.tmdb.org/t/p/w92${item.profile_path}`
@@ -136,10 +136,9 @@ async function page({
                   }
                   alt=""
                 />
-
-                <h1>{item.name}</h1>
-                <span>-</span>
-                <p>{item.department}</p>
+                <div className="flex flex-row gap-2">
+                  <h1>{item.name}</h1> <span> - </span> <p>{item.department}</p>
+                </div>
               </div>
             </Link>
           ))}

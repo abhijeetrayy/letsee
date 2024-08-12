@@ -68,15 +68,15 @@ function Page() {
       ) : (
         <div>
           <div className="text-white  w-full   p-8">
-            <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            <div className="w-fit m-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
               {Sresults?.results?.map(
                 (data: any) =>
                   data?.media_type !== "person" && (
                     <div
                       key={data.id}
-                      className=" overflow-hidden relative group flex flex-col  bg-black mr-2.5 w-full h-full text-gray-300 rounded-sm   duration-300  hover:scale-105 hover:z-50"
+                      className="relative group flex flex-col bg-black w-full h-full text-gray-300 rounded-sm duration-300 hover:scale-105 hover:z-10"
                     >
-                      <div className="absolute  top-0 left-0 flex flex-row justify-between w-full z-10">
+                      <div className="absolute top-0 left-0 flex flex-row justify-between w-full z-10">
                         <p className="p-1 bg-black text-white rounded-br-md text-sm">
                           {data.media_type}
                         </p>
@@ -94,10 +94,10 @@ function Page() {
                           .trim()
                           .replace(/[^a-zA-Z0-9]/g, "-")
                           .replace(/-+/g, "-")}`}
-                        className="min-h-[382px] w-full"
+                        className="h-full w-full"
                       >
                         <img
-                          className="relative rounded-md object-cover max-w-full h-full "
+                          className="w-full h-full object-cover"
                           src={
                             data.poster_path || data.backdrop_path
                               ? `https://image.tmdb.org/t/p/w342${
@@ -105,30 +105,11 @@ function Page() {
                                 }`
                               : "/no-photo.jpg"
                           }
-                          width={400}
-                          height={400}
                           alt={data.title}
                         />
                       </Link>
-                      {/* <span className="opacity-0 flex flex-col gap-3   hlimitSearch px-4 absolute bottom-3  translate-y-0 duration-300 group-hover:opacity-100 group-hover:bottom-24 group-hover:bg-transparent  group-hover:text-gray-200 ">
-              <div className="mb-1">
-              <Link
-                  className="group-hover:underline"
-                  href={
-                    data.media_type == "tv"
-                    ? `/app/tv/${data.id}`
-                    : `/app/movie/${data.id}`
-                    }
-                    >
-                    {data.title || data.name}
-                    </Link>
-                    </div>
-                    <p className="text-xs mb-1 ">
-                    {data.release_date || data.first_air_date}
-                    </p>
-                    <p className=" text-xs ">{data.overview}</p>
-                    </span> */}
-                      <div className="absolute bottom-0 w-full bg-neutral-900 opacity-0 group-hover:opacity-100 z-10">
+
+                      <div className=" lg:absolute lg:bottom-0 w-full bg-neutral-900 lg:opacity-0 lg:group-hover:opacity-100">
                         <ThreePrefrenceBtn
                           cardId={data.id}
                           cardType={data.media_type}
@@ -139,7 +120,7 @@ function Page() {
 
                         <div
                           title={data.name || data.title}
-                          className="w-full flex flex-col gap-2  px-4  bg-indigo-700  text-gray-200 "
+                          className="w-full flex flex-col gap-2 px-4 bg-indigo-700 text-gray-200 lg:opacity-0 lg:group-hover:opacity-100"
                         >
                           <Link
                             href={`/app/${data.media_type}/${data.id}-${(
@@ -170,26 +151,34 @@ function Page() {
                   data?.media_type == "person" && (
                     <div
                       key={data.id}
-                      className="overflow-hidden relative group flex flex-col  bg-black mr-2.5 w-full h-full text-gray-300 rounded-sm   duration-300  hover:scale-105 hover:z-50"
+                      className="relative group flex flex-col bg-black w-full h-full text-gray-300 rounded-sm duration-300 hover:scale-105 hover:z-50"
                     >
-                      <div className="absolute top-0 left-0 z-10">
+                      <div className="absolute top-0 left-0 flex flex-row justify-between w-full z-10">
                         <p className="p-1 bg-black text-white rounded-br-md text-sm">
                           {data.media_type}
                         </p>
                       </div>
-                      <img
-                        className="relative rounded-md object-cover max-w-full min-h-[382px] group-hover:opacity-20"
-                        src={
-                          data.profile_path
-                            ? `https://image.tmdb.org/t/p/h632${data.profile_path}`
-                            : "/no-photo.jpg"
-                        }
-                        width={400}
-                        height={400}
-                        alt={data.title}
-                      />
-                      <span className="opacity-0 flex flex-col gap-3   hlimitSearch px-4 absolute bottom-3  translate-y-0 duration-300 group-hover:opacity-100 group-hover:bottom-24 group-hover:bg-transparent  group-hover:text-gray-200 ">
-                        <div className="mb-1">
+                      <Link
+                        className="h-full w-full"
+                        href={`/app/person/${data.id}-${data.name
+                          .trim()
+                          .replace(/[^a-zA-Z0-9]/g, "-")
+                          .replace(/-+/g, "-")}`}
+                      >
+                        <img
+                          className="w-full h-full object-cover "
+                          src={
+                            data.profile_path
+                              ? `https://image.tmdb.org/t/p/h632${data.profile_path}`
+                              : "/no-photo.jpg"
+                          }
+                          width={400}
+                          height={400}
+                          alt={data.title}
+                        />
+                      </Link>
+                      <span className="bg-indigo-600  flex flex-col gap-3   hlimitSearch p-2 text-gray-300 ">
+                        <div className="">
                           <Link
                             className="group-hover:underline"
                             href={`/app/person/${data.id}-${data.name
@@ -197,17 +186,19 @@ function Page() {
                               .replace(/[^a-zA-Z0-9]/g, "-")
                               .replace(/-+/g, "-")}`}
                           >
-                            {data.name}
+                            {data.name.length > 16
+                              ? data.name.slice(0, 14) + ".."
+                              : data.name}
                           </Link>
                         </div>
-                        <p className="text-xs mb-1 ">
-                          {data.release_date || data.first_air_date}
-                        </p>
-                        <p className=" text-xs ">{data.known_for_department}</p>
-                        {data?.known_for && (
-                          <div className="mb-4 flex flex-row gap-1 text-xs">
-                            <span>Works: </span>
-                            <div className="">
+
+                        <div className=" text-xs underline ">
+                          {data.known_for_department}
+                        </div>
+                        {/* {data?.known_for && (
+                          <div className="mb-4 flex flex-row  text-xs">
+                            <div className="flex-1">Known for: </div>
+                            <div className=" flex-[2]">
                               {data.known_for
                                 .slice(0, 5)
                                 .map((item: any, index: number) =>
@@ -251,7 +242,7 @@ function Page() {
                                 )}
                             </div>
                           </div>
-                        )}
+                        )} */}
                       </span>
                       <div className="p-4 flex flex-row gap-5 absolute bottom-4 right-3 transform  opacity-0 group-hover:-translate-x-32 group-hover:opacity-100 transition-transform duration-500">
                         {/* <CardMovieButton

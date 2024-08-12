@@ -79,7 +79,7 @@ export default async function Home() {
       </div> */}
       <div className="my-3">
         <h2 className="text-2xl my-4 font-bold">Weekly Top 20</h2>
-        <div className="grid grid-cols-5 gap-4 max-w-6xl w-full m-auto">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 max-w-6xl w-full m-auto">
           {data?.results.map((item: any) => (
             <div className="group relative w-full min-h-[330px]">
               <div className="absolute top-0 left-0">
@@ -145,7 +145,7 @@ export default async function Home() {
       </div>
       <div className="w-full my-3 ">
         <h2 className="text-2xl my-4 font-bold">Trending Tv Show's</h2>
-        <div className="grid grid-cols-5 gap-4 max-w-6xl w-full m-auto">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 max-w-6xl w-full m-auto">
           {TrendingTv?.results.map((item: any) => (
             <div className="group relative w-full min-h-[330px]">
               <div className="absolute top-0 left-0">
