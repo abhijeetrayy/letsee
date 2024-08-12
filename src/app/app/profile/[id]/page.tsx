@@ -87,7 +87,7 @@ const page = async ({
             My Profile
           </p>
         )}
-        <div className=" w-full flex flex-row  p-6  ">
+        <div className=" w-full flex flex-col lg:flex-row  p-6  ">
           <div className="flex-1 flex flex-col">
             <img
               width={300}
@@ -129,7 +129,7 @@ const page = async ({
                 sapien, eu bibendum leo turpis non risus.
               </p>
             </div> */}
-            <div className="w-full flex flex-row max-h-64 h-full">
+            <div className="w-full flex flex-col md:flex-row min-h-64 h-full">
               <div className="group flex-1 flex justify-center items-center flex-col rounded-l-md border border-gray-500 hover:flex-[2] duration-300">
                 <Link
                   href={""}
@@ -165,10 +165,10 @@ const page = async ({
             <div className="my-3">
               <div>Favorites "{favoriteCount}"</div>
             </div>
-            <div className="w-full grid grid-cols-6 gap-3">
+            <div className="w-full flex flex-row overflow-x-scroll vone-scrollbar gap-3">
               {favorates?.map((item: any) => (
                 <div className="" key={item.id}>
-                  <div className=" relative group flex flex-col rounded-md bg-black mr-2.5 w-full  text-gray-300 overflow-hidden duration-300  hover:scale-105 ">
+                  <div className=" relative group flex flex-col rounded-md bg-black mr-2.5 w-full  text-gray-300 overflow-hidden  ">
                     <div className="absolute top-0 left-0 z-10 opacity-0 group-hover:opacity-100">
                       {item.item_adult ? (
                         <p className="p-1 bg-red-600 text-white rounded-br-md text-sm">
@@ -189,11 +189,11 @@ const page = async ({
                   )}
                   </div> */}
                     <Link
-                      className="h-[270px]"
+                      className="h-[270px] w-[200px]"
                       href={`/app/${item.item_type}/${item.item_id}`}
                     >
                       <img
-                        className="relative object-cover h-full w-full  "
+                        className="  h-full w-full  object-cover  "
                         src={`https://image.tmdb.org/t/p/w185/${item.image_url}`}
                         loading="lazy"
                         alt={item.item_name}
@@ -244,10 +244,10 @@ const page = async ({
             <div className="my-3">
               <div>WatchLater "{watchlistCount}"</div>
             </div>
-            <div className="w-full grid grid-cols-6 gap-3">
+            <div className="w-full flex flex-row overflow-x-scroll vone-scrollbar gap-3">
               {watchlist?.map((item: any) => (
                 <div className="" key={item.id}>
-                  <div className=" relative group flex flex-col rounded-md bg-black mr-2.5 w-full  text-gray-300 overflow-hidden duration-300  hover:scale-105 ">
+                  <div className=" relative group flex flex-col rounded-md bg-black mr-2.5 w-full  text-gray-300 overflow-hidden  ">
                     <div className="absolute top-0 left-0 z-10 opacity-0 group-hover:opacity-100">
                       {item.item_adult ? (
                         <p className="p-1 bg-red-600 text-white rounded-br-md text-sm">
@@ -268,11 +268,11 @@ const page = async ({
                   )}
                   </div> */}
                     <Link
-                      className="h-[270px]"
+                      className="h-[270px] w-[200px]"
                       href={`/app/${item.item_type}/${item.item_id}`}
                     >
                       <img
-                        className="relative object-cover h-full w-full  "
+                        className=" h-full w-full object-cover "
                         src={`https://image.tmdb.org/t/p/w185/${item.item_img}`}
                         loading="lazy"
                         alt={item.item_name}

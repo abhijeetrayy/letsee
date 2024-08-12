@@ -25,6 +25,10 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID }) => {
     router.push(`/app/search/${searchText}`);
     setIsOpen(!isOpen);
   }
+  function link(link: string) {
+    router.push(`${link}`);
+    setIsOpen(!isOpen);
+  }
 
   return (
     <div className="relative">
@@ -78,17 +82,28 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID }) => {
             </div>
           </li>
           <li>
-            <Link href={`/app`} className="text-2xl hover:text-gray-400">
+            <button
+              onClick={() => link("/app")}
+              className="text-2xl hover:text-gray-400"
+            >
               Let's see
-            </Link>
+            </button>
           </li>
           <li>
-            <Link
-              href={`/app/profile/${userID}`}
+            <button
+              onClick={() => link(`/app/profile`)}
               className="text-2xl hover:text-gray-400"
             >
               User's
-            </Link>
+            </button>
+          </li>
+          <li>
+            <button
+              onClick={() => link(`/app/profile/${userID}`)}
+              className="text-2xl hover:text-gray-400"
+            >
+              My Profile
+            </button>
           </li>
           <li>
             <div className="text-2xl hover:text-gray-400">

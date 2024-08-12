@@ -98,7 +98,7 @@ function personCredits({ orginalCast, cast, crew, name }: any) {
       </div>
       <div>
         <h1 className="my-3">Timeline - </h1>
-        <div className="grid grid-cols-5 gap-3 ">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 ">
           {cast
             ?.sort((a: any, b: any) => {
               // Get the dates, defaulting to a very old date if not present
@@ -135,7 +135,7 @@ function personCredits({ orginalCast, cast, crew, name }: any) {
                     )}
                   </div>
                   <Link
-                    className="h-[320px] "
+                    className="   w-full  h-[336px] md:w-56 md:h-72  "
                     href={`/app/${data.media_type}/${data.id}-${(
                       data.name || data.title
                     )
@@ -144,7 +144,7 @@ function personCredits({ orginalCast, cast, crew, name }: any) {
                       .replace(/-+/g, "-")}`}
                   >
                     <img
-                      className="relative object-cover w-full h-full "
+                      className=" h-full w-full object-cover"
                       src={
                         (data.poster_path || data.backdrop_path) && !data.adult
                           ? `https://image.tmdb.org/t/p/w342${
@@ -158,7 +158,7 @@ function personCredits({ orginalCast, cast, crew, name }: any) {
                       alt={data.title}
                     />
                   </Link>
-                  <div className="absolute bottom-0 w-full bg-neutral-900 opacity-0 group-hover:opacity-100 z-10">
+                  <div className="lg:absolute bottom-0 w-full bg-neutral-900 lg:opacity-0 lg:group-hover:opacity-100 z-10">
                     <ThreePrefrenceBtn
                       cardId={data.id}
                       cardType={data.media_type}
@@ -169,7 +169,7 @@ function personCredits({ orginalCast, cast, crew, name }: any) {
 
                     <div
                       title={data.name || data.title}
-                      className="w-full flex flex-col gap-2  px-4  bg-indigo-700  text-gray-200 "
+                      className="w-full h-12 lg:h-fit flex flex-col gap-2  px-4  bg-indigo-700  text-gray-200 "
                     >
                       <Link
                         href={`/app/${data.media_type}/${data.id}-${(
@@ -178,7 +178,7 @@ function personCredits({ orginalCast, cast, crew, name }: any) {
                           .trim()
                           .replace(/[^a-zA-Z0-9]/g, "-")
                           .replace(/-+/g, "-")}`}
-                        className="mb-1"
+                        className="h-full"
                       >
                         <span className="">
                           {data?.title
@@ -201,7 +201,7 @@ function personCredits({ orginalCast, cast, crew, name }: any) {
       {crew.length >= 1 && (
         <h3 className=" col-span-5 p-3 font-semibold">In prod. ~ crew</h3>
       )}
-      <div className="grid grid-cols-5 gap-3 ">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 ">
         {crew?.map((data: any) => (
           <div className="" key={data.id}>
             <div className=" relative group flex flex-col  bg-black mr-2.5 w-full h-[320px] text-gray-300 rounded-md  duration-300  hover:scale-105 hover:z-50">
