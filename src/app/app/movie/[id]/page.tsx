@@ -54,8 +54,9 @@ const MovieDetails = async ({
   const credits = await getCredit(id);
   const { results: videos } = await getVideos(id);
   const { posters: Pimages, backdrops: Bimages } = await getImages(id);
-  const CountryName: any = Countrydata.filter(
-    (item: any) => item.iso_3166_1 == movie.origin_country
+  console.log(movie.origin_country);
+  const CountryName: any = movie.origin_country.map((name: any) =>
+    Countrydata.filter((item: any) => item.iso_3166_1 == name)
   );
 
   return (
@@ -117,9 +118,14 @@ const MovieDetails = async ({
                 )}
                 {movie.title}
               </h1>
-              <p className="my-2 text-sm">
-                country: {CountryName[0].english_name}
-              </p>
+              <div className=" flex flex-row gap-2 my-2">
+                <div>Country: </div>
+                <div>
+                  {CountryName.slice(0, 2).map((item: any) => (
+                    <p className=" text-sm">{item[0].english_name}</p>
+                  ))}
+                </div>
+              </div>
               <ThreeUserPrefrenceBtn
                 cardId={movie.id}
                 cardType={"movie"}
