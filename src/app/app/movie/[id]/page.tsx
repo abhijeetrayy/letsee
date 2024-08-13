@@ -210,7 +210,7 @@ const MovieDetails = async ({
         </div>
       </div>
 
-      <div className="max-w-6xl w-full">
+      <div className="max-w-6xl w-full ">
         <div className="mt-7">
           <h2 className="text-lg ">Cast</h2>
           <div className="overflow-x-scroll vone-scrollbar">
@@ -261,7 +261,7 @@ const MovieDetails = async ({
         </div>
       </div>
       {videos.filter((item: any) => item.site === "YouTube").length > 0 && (
-        <div className="max-w-7xl w-full   ">
+        <div className="max-w-7xl w-full  mt-10 ">
           <h1 className="text-sm lg:text-lg my-2 ">{movie.title}: Media</h1>
 
           <div className="w-full max-w-7xl m-auto flex flex-row overflow-x-scroll vone-scrollbar my-3">
@@ -283,7 +283,7 @@ const MovieDetails = async ({
         </div>
       )}
       {(Bimages.length > 0 || Pimages.length > 0) && (
-        <div className="max-w-7xl w-full   ">
+        <div className="max-w-7xl w-full  my-7">
           <h1 className="text-md md:text-lg my-2 ">{movie.title}: Images</h1>
 
           <div className="w-full max-w-7xl m-auto flex flex-row gap-3 overflow-x-scroll vone-scrollbar my-3">
