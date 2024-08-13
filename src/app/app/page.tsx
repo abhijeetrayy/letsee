@@ -59,11 +59,11 @@ export default async function Home() {
       </div>
       <div className="w-full max-w-7xl my-3">
         <h1 className="text-lg font-semibold mb-2">Movie Genres</h1>
-        <div className="flex flex-row overflow-x-scroll vone-scrollbar gap-1">
+        <div className="flex flex-row  overflow-x-scroll vone-scrollbar gap-1">
           {genre?.genres.map((genre: any) => (
             <Link
               href={`/app/moviebygenre/list/${genre.id}-${genre.name}`}
-              className=" h-24 min-w-32 text-sm border-2 rounded-md border-gray-700 text-white p-2 text-center content-center"
+              className=" h-24 min-w-32 text-sm border-2 rounded-md border-gray-700 text-white p-2 flex items-center justify-center"
               key={genre.id}
               // onClick={() => setSelectedGenre(genre.id)}
             >
@@ -130,11 +130,11 @@ export default async function Home() {
       </div>
       <div className="w-full max-w-7xl my-3">
         <h1 className="text-lg font-semibold mb-2">Tv Show Genres</h1>
-        <div className="flex flex-row overflow-x-scroll vone-scrollbar gap-1 ">
+        <div className="flex flex-row  overflow-x-scroll vone-scrollbar gap-1 ">
           {tvGenres?.genres.map((genre: any) => (
             <Link
               href={`/app/tvbygenre/list/${genre.id}-${genre.name}`}
-              className=" h-24 min-w-32 text-sm border-2 rounded-md border-gray-700 text-white p-2 text-center content-center"
+              className=" h-24 min-w-32 text-sm border-2 rounded-md border-gray-700 text-white p-2 flex items-center justify-center"
               key={genre.id}
               // onClick={() => setSelectedGenre(genre.id)}
             >
