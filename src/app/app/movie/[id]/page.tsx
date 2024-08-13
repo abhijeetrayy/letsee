@@ -204,7 +204,7 @@ const MovieDetails = async ({
       <div className="max-w-6xl w-full">
         <div className="mt-7">
           <h2 className="text-lg ">Cast</h2>
-          <div className="overflow-x-scroll">
+          <div className="overflow-x-scroll vone-scrollbar">
             <div className="flex flex-row gap-3 m-3 rounded-md">
               {credits?.cast.slice(0, 6).map((item: any) => (
                 <Link
@@ -275,7 +275,7 @@ const MovieDetails = async ({
       )}
       {(Bimages.length > 0 || Pimages.length > 0) && (
         <div className="max-w-7xl w-full   ">
-          <h1 className="text-lg my-2 ">{movie.title}: Images</h1>
+          <h1 className="text-md md:text-lg my-2 ">{movie.title}: Images</h1>
 
           <div className="w-full max-w-7xl m-auto flex flex-row gap-3 overflow-x-scroll vone-scrollbar my-3">
             {Bimages.length > 0
