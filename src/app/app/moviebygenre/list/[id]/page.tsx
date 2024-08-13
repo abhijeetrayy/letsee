@@ -73,7 +73,7 @@ const Page: React.FC<PageProps> = async ({ params, searchParams }) => {
                   className=" w-full"
                 >
                   <img
-                    className="relative rounded-md object-cover max-w-full h-fit"
+                    className="relative object-cover max-w-full h-[270px] sm:h-[300px] md:h-[330px]"
                     src={
                       data.poster_path || data.backdrop_path
                         ? `https://image.tmdb.org/t/p/w342${
@@ -86,7 +86,7 @@ const Page: React.FC<PageProps> = async ({ params, searchParams }) => {
                     alt={data.title}
                   />
                 </Link>
-                <div className="lg:absolute bottom-0 w-full bg-neutral-900 lg:opacity-0 lg:group-hover:opacity-100 z-10">
+                <div className="lg:absolute bottom-0 w-full bg-indigo-700 lg:opacity-0 lg:group-hover:opacity-100 z-10">
                   <ThreeUserPrefrenceBtn
                     cardId={data.id}
                     cardType={"movie"}

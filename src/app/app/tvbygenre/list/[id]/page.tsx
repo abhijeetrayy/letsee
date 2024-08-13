@@ -69,7 +69,7 @@ function Page() {
               {Sresults?.results?.map((data: any) => (
                 <div
                   key={data.id}
-                  className=" overflow-hidden relative group flex flex-col  w-full h-full text-gray-300 rounded-sm   duration-300  lg:hover:scale-105 hover:z-20"
+                  className=" overflow-hidden relative group flex flex-col  w-full h-full text-gray-300 bg-indigo-700 rounded-sm   duration-300  lg:hover:scale-105 hover:z-20"
                 >
                   <div className="absolute  top-0 left-0 flex flex-row justify-between w-full z-20">
                     <p className="p-1 bg-black text-white rounded-br-md text-sm">
@@ -90,7 +90,7 @@ function Page() {
                     className=" w-full"
                   >
                     <img
-                      className="relative rounded-md object-cover max-w-full h-fit "
+                      className="relative  object-cover max-w-full h-[270px] sm:h-[300px] md:h-[330px] "
                       src={
                         data.poster_path || data.backdrop_path
                           ? `https://image.tmdb.org/t/p/w342${
@@ -104,7 +104,7 @@ function Page() {
                     />
                   </Link>
 
-                  <div className="lg:absolute bottom-0 w-full bg-neutral-900 lg:opacity-0 lg:group-hover:opacity-100 z-10">
+                  <div className="lg:absolute bottom-0 w-full bg-indigo-700 lg:opacity-0 lg:group-hover:opacity-100 z-10">
                     <ThreePrefrenceBtn
                       cardId={data.id}
                       cardType={"tv"}

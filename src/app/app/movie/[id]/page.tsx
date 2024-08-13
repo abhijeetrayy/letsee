@@ -157,20 +157,22 @@ const MovieDetails = async ({
                     </Link>
                   ))}
               </div>
-              <div className=" mb-4 text-neutral-300">
-                <div className="mb-2 mr-2 inline-block">Genre:</div>
-                {movie?.genres?.map((item: any) => (
-                  <Link
-                    href={`/app/moviebygenre/list/${item.id}-${item.name
-                      .trim()
-                      .replace(/[^a-zA-Z0-9]/g, "-")
-                      .replace(/-+/g, "-")}`}
-                    key={item.id}
-                    className="inline-block mr-2 bg-gray-800 hover:bg-gray-700 px-2 py-1 rounded"
-                  >
-                    {item.name}
-                  </Link>
-                ))}
+              <div className="flex flex-row gap-2 my-4 text-neutral-300">
+                <div className="">Genre:</div>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                  {movie?.genres?.map((item: any) => (
+                    <Link
+                      href={`/app/moviebygenre/list/${item.id}-${item.name
+                        .trim()
+                        .replace(/[^a-zA-Z0-9]/g, "-")
+                        .replace(/-+/g, "-")}`}
+                      key={item.id}
+                      className="inline-block mr-2 bg-gray-800 hover:bg-gray-700 px-2 py-1 rounded"
+                    >
+                      {item.name}
+                    </Link>
+                  ))}
+                </div>
               </div>
 
               <div className="mb-4 flex flex-row gap-1 text-neutral-300">
