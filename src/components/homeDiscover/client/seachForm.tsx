@@ -204,18 +204,6 @@ const MovieSearch = () => {
                     </p>
                     <p className=" text-xs ">{data.known_for_department}</p>
                   </span>
-                  <div className="p-4 flex flex-row gap-5 absolute bottom-4 right-3 transform  opacity-0 group-hover:-translate-x-32 group-hover:opacity-100 transition-transform duration-500">
-                    {/* <CardMovieButton
-                    movieId={data.id}
-                    text={"watched"}
-                    icon={<FcLike />}
-                  />
-                  <CardMovieButton
-                    movieId={data.id}
-                    text={"save"}
-                    icon={<CiSaveDown1 />}
-                  /> */}
-                  </div>
                 </div>
               )
           )}

@@ -115,6 +115,7 @@ const ShowDetails = async ({
                 </span>
               )}
               {show.name}
+              <span className="text-sm ml-1">-Tv</span>
             </h1>
             <div className=" w-full bg-neutral-900 rounded-md overflow-hidden my-2">
               <ThreePrefrenceBtn

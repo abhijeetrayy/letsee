@@ -25,7 +25,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
   };
 
   return (
-    <div className="w-full min-h-screen flex flex-col justify-center items-center bg-neutral-900">
+    <div className="w-full min-h-screen flex flex-col p-2 justify-center items-center bg-neutral-900">
       <div className="w-full z-10">
         <div
           className={
