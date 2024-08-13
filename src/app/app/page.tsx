@@ -59,7 +59,7 @@ export default async function Home() {
       </div>
       <div className="w-full max-w-7xl my-3">
         <h1 className="text-lg font-semibold mb-2">Movie Genres</h1>
-        <div className="flex flex-row overflow-x-scroll vone-scrollbar gap-1 mx-5">
+        <div className="flex flex-row overflow-x-scroll vone-scrollbar gap-1">
           {genre?.genres.map((genre: any) => (
             <Link
               href={`/app/moviebygenre/list/${genre.id}-${genre.name}`}
@@ -81,7 +81,7 @@ export default async function Home() {
         <h2 className="text-2xl my-4 font-bold">Weekly Top 20</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 max-w-6xl w-full m-auto">
           {data?.results.map((item: any) => (
-            <div className="group relative w-full h-full  ">
+            <div className="group relative w-full h-full bg-indigo-700  ">
               <div className="absolute top-0 left-0">
                 <p className="px-1 py-1 bg-neutral-950  text-white rounded-br-md">
                   {item.media_type}
@@ -112,7 +112,7 @@ export default async function Home() {
                     cardImg={item.poster_path || item.backdrop_path}
                   />
                 </div>
-                <div className=" min-h-14 flex flex-col justify-center px-3 pb-1   w-full bg-indigo-600 text-gray-100 ">
+                <div className=" min-h-14 flex flex-col justify-center px-3 pb-1   w-full bg-indigo-700 text-gray-100 ">
                   <p className="">
                     {item.name?.length > 40 || item.title?.length > 40 ? (
                       <span>
@@ -130,7 +130,7 @@ export default async function Home() {
       </div>
       <div className="w-full max-w-7xl my-3">
         <h1 className="text-lg font-semibold mb-2">Tv Show Genres</h1>
-        <div className="flex flex-row overflow-x-scroll vone-scrollbar gap-1 mx-5">
+        <div className="flex flex-row overflow-x-scroll vone-scrollbar gap-1 ">
           {tvGenres?.genres.map((genre: any) => (
             <Link
               href={`/app/tvbygenre/list/${genre.id}-${genre.name}`}
@@ -147,7 +147,7 @@ export default async function Home() {
         <h2 className="text-2xl my-4 font-bold">Trending Tv Show's</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 max-w-6xl w-full m-auto">
           {TrendingTv?.results.map((item: any) => (
-            <div className="group relative w-full h-full">
+            <div className="group relative  w-full h-full bg-indigo-700">
               <div className="absolute top-0 left-0">
                 <p className="px-1 py-1 bg-neutral-950  text-white rounded-br-md">
                   {item.media_type}
@@ -178,7 +178,7 @@ export default async function Home() {
                     cardImg={item.poster_path || item.backdrop_path}
                   />
                 </div>
-                <div className=" min-h-14 flex flex-col justify-center px-3 pb-1   w-full bg-indigo-600 text-gray-100 ">
+                <div className=" min-h-14 flex flex-col justify-center px-3 pb-1   w-full bg-indigo-700 text-gray-100 ">
                   <p className="">
                     {item.name?.length > 40 || item.title?.length > 40 ? (
                       <span>

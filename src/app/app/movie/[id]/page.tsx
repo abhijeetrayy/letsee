@@ -117,12 +117,13 @@ const MovieDetails = async ({
                   </span>
                 )}
                 {movie.title}
+                <span className="text-sm ml-1">-movie</span>
               </h1>
-              <div className=" flex flex-row gap-2 my-2">
+              <div className=" flex flex-row gap-2 my-2 text-sm ">
                 <div>Country: </div>
                 <div>
                   {CountryName.slice(0, 2).map((item: any) => (
-                    <p className=" text-sm">{item[0].english_name}</p>
+                    <p className=" ">{item[0].english_name}</p>
                   ))}
                 </div>
               </div>
