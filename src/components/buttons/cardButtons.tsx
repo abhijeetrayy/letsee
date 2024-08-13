@@ -59,7 +59,7 @@ const CardMovieButton: React.FC<CardMovieButtonProps> = ({
         break;
       case "watchlater":
         apiUrl = "/api/watchlistButton";
-        apiDeleteUrl = "/api/deletewatchlaterButton";
+        apiDeleteUrl = "/api/deletewatchlistButton";
         successMessage = state
           ? "Removed from Watch Later"
           : "Saved to Watch Later";

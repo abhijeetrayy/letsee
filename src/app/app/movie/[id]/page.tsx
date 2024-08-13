@@ -111,7 +111,7 @@ const MovieDetails = async ({
             <div>
               <h1 className="text-4xl font-bold  mb-4">
                 {movie?.adult && (
-                  <span className="text-sm px-3 py-1 rounded-md m-2 bg-red-600 text-white z-50">
+                  <span className="text-sm px-3 py-1 rounded-md m-2 bg-red-600 text-white z-20">
                     Adult
                   </span>
                 )}

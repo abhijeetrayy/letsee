@@ -19,7 +19,7 @@ async function page({ children }: { children: React.ReactNode }) {
     <div>
       <div className="w-full max-w-7xl my-3 m-auto">
         <h1 className="text-lg font-semibold mb-2">Movie's Genre</h1>
-        <div className="flex flex-row overflow-x-scroll vone-scrollbar gap-1 mx-5">
+        <div className="flex flex-row overflow-x-scroll vone-scrollbar gap-1 ">
           {genrelist?.map((genre: any) => (
             <Link
               href={`/app/moviebygenre/list/${genre.id}-${genre.name}`}

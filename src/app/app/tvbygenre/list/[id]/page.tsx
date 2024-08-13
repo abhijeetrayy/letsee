@@ -64,14 +64,14 @@ function Page() {
         </div>
       ) : (
         <div>
-          <div className="text-white  w-full   p-8">
-            <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          <div className="text-white  w-full my-4">
+            <div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
               {Sresults?.results?.map((data: any) => (
                 <div
                   key={data.id}
-                  className=" overflow-hidden relative group flex flex-col  bg-black mr-2.5 w-full h-full text-gray-300 rounded-sm   duration-300  hover:scale-105 hover:z-50"
+                  className=" overflow-hidden relative group flex flex-col  w-full h-full text-gray-300 rounded-sm   duration-300  hover:scale-105 hover:z-20"
                 >
-                  <div className="absolute  top-0 left-0 flex flex-row justify-between w-full z-50">
+                  <div className="absolute  top-0 left-0 flex flex-row justify-between w-full z-20">
                     <p className="p-1 bg-black text-white rounded-br-md text-sm">
                       Tv
                     </p>
@@ -87,10 +87,10 @@ function Page() {
                       .trim()
                       .replace(/[^a-zA-Z0-9]/g, "-")
                       .replace(/-+/g, "-")}`}
-                    className="min-h-[382px] w-full"
+                    className=" w-full"
                   >
                     <img
-                      className="relative rounded-md object-cover max-w-full h-full "
+                      className="relative rounded-md object-cover max-w-full h-fit "
                       src={
                         data.poster_path || data.backdrop_path
                           ? `https://image.tmdb.org/t/p/w342${

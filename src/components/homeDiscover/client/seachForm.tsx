@@ -63,7 +63,7 @@ const MovieSearch = () => {
     setLoading(false);
   };
   return (
-    <div className="text-white max-w-7xl w-full min-h-64 mx-auto p-8">
+    <div className="text-white max-w-7xl w-full min-h-64 mx-auto my-4">
       <form onSubmit={handleSearch} className="mb-8">
         <input
           type="text"
@@ -84,15 +84,15 @@ const MovieSearch = () => {
           loading..
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
           {results?.results?.map(
             (data: any) =>
               data?.media_type !== "person" && (
                 <div
                   key={data.id}
-                  className=" overflow-hidden relative group flex flex-col  bg-black w-full text-gray-300 rounded-md   duration-300  hover:scale-105 hover:z-50"
+                  className=" overflow-hidden relative group flex flex-col  bg-black w-full text-gray-300 rounded-md   duration-300  hover:scale-105 hover:z-30"
                 >
-                  <div className="absolute  top-0 left-0 flex flex-row justify-between w-full z-50">
+                  <div className="absolute  top-0 left-0 flex flex-row justify-between w-full z-20">
                     <p className="p-1 bg-black text-white rounded-br-md text-sm">
                       {data.media_type}
                     </p>
@@ -110,10 +110,10 @@ const MovieSearch = () => {
                       .trim()
                       .replace(/[^a-zA-Z0-9]/g, "-")
                       .replace(/-+/g, "-")}`}
-                    className="min-h-[342px] h-full w-full"
+                    className=" h-full w-full"
                   >
                     <img
-                      className="relative object-cover w-full h-full "
+                      className="relative object-cover w-full h-[230px] md:h-[300px] lg:h-full "
                       src={
                         data.poster_path || data.backdrop_path
                           ? `https://image.tmdb.org/t/p/w342${
@@ -169,15 +169,15 @@ const MovieSearch = () => {
               data?.media_type == "person" && (
                 <div
                   key={data.id}
-                  className=" relative group flex flex-col  bg-black mr-2.5  text-gray-300 rounded-md   duration-300  hover:scale-105 hover:z-50"
+                  className=" relative group flex flex-col  bg-indigo-700   text-gray-300 rounded-md hover:z-30"
                 >
-                  <div className="absolute top-0 left-0 z-50">
+                  <div className="absolute top-0 left-0 z-40">
                     <p className="p-1 bg-black text-white rounded-br-md text-sm">
                       {data.media_type}
                     </p>
                   </div>
                   <img
-                    className="relative rounded-md object-cover min-h-[342px] h-full w-full  group-hover:opacity-20"
+                    className="relative rounded-md object-cover h-[230px] md:h-[300px] w-full  "
                     src={
                       data.profile_path
                         ? `https://image.tmdb.org/t/p/h632${data.profile_path}`
@@ -187,7 +187,7 @@ const MovieSearch = () => {
                     height={400}
                     alt={data.title}
                   />
-                  <span className="opacity-0 flex flex-col gap-3   hlimitSearch px-4 absolute bottom-3  translate-y-0 duration-300 group-hover:opacity-100 group-hover:bottom-24 group-hover:bg-transparent  group-hover:text-gray-200 ">
+                  <span className=" flex flex-col gap-3  py-2 hlimitSearch px-4 bg-indigo-700">
                     <div className="mb-1">
                       <Link
                         className="group-hover:underline"
@@ -203,51 +203,6 @@ const MovieSearch = () => {
                       {data.release_date || data.first_air_date}
                     </p>
                     <p className=" text-xs ">{data.known_for_department}</p>
-                    {data?.known_for && (
-                      <div className="mb-4 flex flex-row gap-1 text-xs">
-                        <span>Works: </span>
-                        <div className="">
-                          {data.known_for
-                            .slice(0, 5)
-                            .map((item: any, index: number) =>
-                              data.known_for.slice(0, 5).length - 1 > index ? (
-                                <Link
-                                  key={item.id}
-                                  className={
-                                    " inline-block hover:underline  px-1 "
-                                  }
-                                  href={`/app/${item.media_type}/${item.id}-${(
-                                    item.name || item.title
-                                  )
-                                    .trim()
-                                    .replace(/[^a-zA-Z0-9]/g, "-")
-                                    .replace(/-+/g, "-")}`}
-                                >
-                                  {item.title || item.orignal_name || item.name}
-                                  ,
-                                </Link>
-                              ) : (
-                                <Link
-                                  key={item.id}
-                                  className={
-                                    " inline-block hover:underline px-1 "
-                                  }
-                                  href={`/app/${item.media_type}/${item.id}-${(
-                                    item.name || item.title
-                                  )
-                                    .trim()
-                                    .replace(/[^a-zA-Z0-9]/g, "-")
-                                    .replace(/-+/g, "-")}`}
-                                >
-                                  {item.title ||
-                                    item.original_name ||
-                                    item.name}
-                                </Link>
-                              )
-                            )}
-                        </div>
-                      </div>
-                    )}
                   </span>
                   <div className="p-4 flex flex-row gap-5 absolute bottom-4 right-3 transform  opacity-0 group-hover:-translate-x-32 group-hover:opacity-100 transition-transform duration-500">
                     {/* <CardMovieButton

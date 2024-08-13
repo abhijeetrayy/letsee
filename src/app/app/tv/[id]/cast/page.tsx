@@ -75,7 +75,7 @@ async function page({
             <h1 className="text-4xl font-bold mb-4">
               {" "}
               {show?.adult && (
-                <span className="text-sm px-3 py-1 rounded-md m-2 bg-red-600 text-white z-50">
+                <span className="text-sm px-3 py-1 rounded-md m-2 bg-red-600 text-white z-20">
                   Adult
                 </span>
               )}

@@ -5,6 +5,7 @@ export async function POST(req: NextRequest) {
   const requestClone = req.clone();
   const body = await requestClone.json();
   const { itemId, name, mediaType, imgUrl, adult } = body;
+  console.log(body, "body");
 
   const supabase = createClient();
 
@@ -36,6 +37,7 @@ export async function POST(req: NextRequest) {
 
   if (existingItem) {
     // If it exists in watchlist, delete it
+    console.log(existingItem, "wl exist");
     const { error: deleteError } = await supabase
       .from("user_watchlist")
       .delete()
@@ -49,35 +51,31 @@ export async function POST(req: NextRequest) {
         { status: 500 }
       );
     }
+  }
+  // If it doesn't exist in watchlist, insert it
+  const { data: insertData, error: insertError } = await supabase
+    .from("user_watchlist")
+    .insert({
+      user_id: userId,
+      item_name: name,
+      item_id: itemId,
+      item_type: mediaType,
+      item_img: imgUrl,
+      item_adult: adult,
+    });
+  console.log(insertData);
 
+  console.log(insertError, "wlist ins errr");
+  if (insertError) {
+    console.log("Error inserting item to watchlist:", insertError);
     return NextResponse.json(
-      { message: "Removed from watchlist", action: "removed" },
-      { status: 200 }
-    );
-  } else {
-    // If it doesn't exist in watchlist, insert it
-    const { error: insertError } = await supabase
-      .from("user_watchlist")
-      .insert({
-        user_id: userId,
-        item_name: name,
-        item_id: itemId,
-        item_type: mediaType,
-        item_img: imgUrl,
-        item_adult: adult,
-      });
-
-    if (insertError) {
-      console.log("Error inserting item to watchlist:", insertError);
-      return NextResponse.json(
-        { error: "Error inserting item to watchlist" },
-        { status: 500 }
-      );
-    }
-
-    return NextResponse.json(
-      { message: "Added to watchlist", action: "added" },
-      { status: 200 }
+      { error: "Error inserting item to watchlist" },
+      { status: 500 }
     );
   }
+
+  return NextResponse.json(
+    { message: "Added to watchlist", action: "added" },
+    { status: 200 }
+  );
 }
