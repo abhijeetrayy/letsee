@@ -23,7 +23,7 @@ async function page({ children }: { children: React.ReactNode }) {
           {genrelist?.map((genre: any) => (
             <Link
               href={`/app/moviebygenre/list/${genre.id}-${genre.name}`}
-              className=" h-24 min-w-32 text-sm border-2 rounded-md border-gray-700 text-white p-2 text-center content-center"
+              className=" h-24 min-w-32 text-sm border-2 rounded-md border-gray-700 text-white p-2 flex items-center justify-center"
               key={genre.id}
               // onClick={() => setSelectedGenre(genre.id)}
             >

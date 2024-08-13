@@ -64,7 +64,7 @@ function threePrefrencebtn({
 
   return (
     <div>
-      <div className=" w-full bg-neutral-900 rounded-md overflow-hidden ">
+      <div className=" w-full bg-neutral-900 overflow-hidden ">
         <div className="w-full h-14 grid grid-cols-3 ">
           <CardMovieButton
             itemId={cardId}
