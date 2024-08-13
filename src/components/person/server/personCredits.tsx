@@ -114,7 +114,7 @@ function personCredits({ orginalCast, cast, crew, name }: any) {
             })
             .map((data: any) => (
               <div className="" key={data.id}>
-                <div className=" relative group flex flex-col rounded-md bg-black mr-2.5 w-full  text-gray-300 overflow-hidden duration-300  lg:hover:scale-105 ">
+                <div className=" relative group flex flex-col rounded-md bg-black  w-full  text-gray-300 overflow-hidden duration-300  lg:hover:scale-105 ">
                   <div className="absolute top-0 left-0 z-10 opacity-0 group-hover:opacity-100">
                     {data.adult ? (
                       <p className="p-1 bg-red-600 text-white rounded-br-md text-sm">

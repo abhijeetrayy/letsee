@@ -48,8 +48,8 @@ const PersonList = async ({
 
   return (
     <div className="text-white w-full flex justify-center">
-      <div className=" flex flex-col gap-4 p-4 max-w-6xl  w-full">
-        <div className="flex flex-col max-w-5xl w-full m-auto md:flex-row gap-2 z-10">
+      <div className=" flex flex-col gap-4  max-w-6xl  w-full">
+        <div className="flex flex-col p-3 max-w-5xl w-full m-auto md:flex-row gap-2 z-10">
           <div className="w-full">
             {person.profile_path ? (
               <img
