@@ -20,17 +20,6 @@ export async function POST(req: NextRequest) {
   const userId = data.user.id;
 
   // Check if the item exists before attempting to delete it
-  const { data: existingItem, error: fetchError } = await supabase
-    .from("user_watchlist")
-    .select("item_id")
-    .eq("user_id", userId)
-    .eq("item_id", itemId)
-    .single();
-
-  if (fetchError || !existingItem) {
-    console.log("Item not found in the database:", fetchError);
-    return NextResponse.json({ error: "Item not found" }, { status: 404 });
-  }
 
   // Proceed to delete the item
   const { error: deleteError } = await supabase

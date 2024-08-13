@@ -204,13 +204,13 @@ function personCredits({ orginalCast, cast, crew, name }: any) {
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 ">
         {crew?.map((data: any) => (
           <div className="" key={data.id}>
-            <div className=" relative group flex flex-col  bg-black mr-2.5 w-full h-[320px] text-gray-300 rounded-md  duration-300  hover:scale-105 hover:z-50">
-              <div className="absolute top-0 left-0 z-50">
+            <div className=" relative group flex flex-col  bg-black mr-2.5 w-full h-[320px] text-gray-300 rounded-md  duration-300  hover:scale-105 hover:z-40">
+              <div className="absolute top-0 left-0 z-30">
                 <p className="p-1 bg-black text-white rounded-br-md text-sm">
                   {data.media_type}
                 </p>
               </div>
-              <div className="absolute top-0 right-0 z-50">
+              <div className="absolute top-0 right-0 z-30">
                 <p className="p-1 bg-red-600 text-white rounded-bl-md text-sm">
                   In Prod.
                 </p>

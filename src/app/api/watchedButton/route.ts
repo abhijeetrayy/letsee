@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
       item_name: name,
       item_id: itemId,
       item_type: mediaType,
-      item_img: imgUrl,
+      image_url: imgUrl,
       item_adult: adult,
     });
 

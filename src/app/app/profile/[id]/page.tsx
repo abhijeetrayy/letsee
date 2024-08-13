@@ -169,7 +169,7 @@ const page = async ({
               {favorates?.map((item: any) => (
                 <div className="" key={item.id}>
                   <div className=" relative group flex flex-col rounded-md bg-black mr-2.5 w-full  text-gray-300 overflow-hidden  ">
-                    <div className="absolute top-0 left-0 z-10 opacity-0 group-hover:opacity-100">
+                    <div className="absolute top-0 left-0 z-10 lg:opacity-0 lg:group-hover:opacity-100">
                       {item.item_adult ? (
                         <p className="p-1 bg-red-600 text-white rounded-br-md text-sm">
                           Adult
@@ -194,7 +194,11 @@ const page = async ({
                     >
                       <img
                         className="  h-full w-full  object-cover  "
-                        src={`https://image.tmdb.org/t/p/w185/${item.image_url}`}
+                        src={
+                          item.item_adult
+                            ? "/pixeled.jpg"
+                            : `https://image.tmdb.org/t/p/w185/${item.image_url}`
+                        }
                         loading="lazy"
                         alt={item.item_name}
                       />
@@ -248,7 +252,7 @@ const page = async ({
               {watchlist?.map((item: any) => (
                 <div className="" key={item.id}>
                   <div className=" relative group flex flex-col rounded-md bg-black mr-2.5 w-full  text-gray-300 overflow-hidden  ">
-                    <div className="absolute top-0 left-0 z-10 opacity-0 group-hover:opacity-100">
+                    <div className="absolute top-0 left-0 z-10 lg:opacity-0 lg:group-hover:opacity-100">
                       {item.item_adult ? (
                         <p className="p-1 bg-red-600 text-white rounded-br-md text-sm">
                           Adult
@@ -273,7 +277,11 @@ const page = async ({
                     >
                       <img
                         className=" h-full w-full object-cover "
-                        src={`https://image.tmdb.org/t/p/w185/${item.item_img}`}
+                        src={
+                          item.item_adult
+                            ? "/pixeled.jpg"
+                            : `https://image.tmdb.org/t/p/w185/${item.item_img}`
+                        }
                         loading="lazy"
                         alt={item.item_name}
                       />

@@ -42,7 +42,7 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID }) => {
 
       {/* Menu */}
       <div
-        className={`z-10 fixed top-0 left-0 w-full h-full bg-neutral-800 transition-transform transform ${
+        className={`z-50 fixed top-0 left-0 w-full h-full bg-neutral-800 transition-transform transform ${
           isOpen ? "translate-x-0" : "-translate-x-full hidden"
         } md:hidden`}
       >

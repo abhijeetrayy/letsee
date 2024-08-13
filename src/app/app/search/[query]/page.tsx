@@ -67,14 +67,14 @@ function Page() {
         </div>
       ) : (
         <div>
-          <div className="text-white  w-full   p-8">
-            <div className="w-fit m-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          <div className="text-white  w-full   my-4">
+            <div className="w-fit m-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
               {Sresults?.results?.map(
                 (data: any) =>
                   data?.media_type !== "person" && (
                     <div
                       key={data.id}
-                      className="relative group flex flex-col bg-black w-full h-full text-gray-300 rounded-sm duration-300 hover:scale-105 hover:z-10"
+                      className="relative group flex flex-col bg-indigo-700 w-full h-full text-gray-300 rounded-sm duration-300 hover:scale-105 hover:z-10"
                     >
                       <div className="absolute top-0 left-0 flex flex-row justify-between w-full z-10">
                         <p className="p-1 bg-black text-white rounded-br-md text-sm">
@@ -97,7 +97,7 @@ function Page() {
                         className="h-full w-full"
                       >
                         <img
-                          className="w-full h-full object-cover"
+                          className="relative object-cover w-full h-[230px] md:h-[300px] lg:h-full "
                           src={
                             data.poster_path || data.backdrop_path
                               ? `https://image.tmdb.org/t/p/w342${
@@ -109,7 +109,7 @@ function Page() {
                         />
                       </Link>
 
-                      <div className=" lg:absolute lg:bottom-0 w-full bg-neutral-900 lg:opacity-0 lg:group-hover:opacity-100">
+                      <div className=" lg:absolute lg:bottom-0 w-full py-2 bg-neutral-900 lg:opacity-0 lg:group-hover:opacity-100">
                         <ThreePrefrenceBtn
                           cardId={data.id}
                           cardType={data.media_type}
@@ -151,7 +151,7 @@ function Page() {
                   data?.media_type == "person" && (
                     <div
                       key={data.id}
-                      className="relative group flex flex-col bg-black w-full h-full text-gray-300 rounded-sm duration-300 hover:scale-105 hover:z-50"
+                      className="relative group flex flex-col bg-indigo-700 w-full h-full pb-2 text-gray-300 rounded-sm duration-300 lg:hover:scale-105 hover:z-20"
                     >
                       <div className="absolute top-0 left-0 flex flex-row justify-between w-full z-10">
                         <p className="p-1 bg-black text-white rounded-br-md text-sm">
@@ -166,7 +166,7 @@ function Page() {
                           .replace(/-+/g, "-")}`}
                       >
                         <img
-                          className="w-full h-full object-cover "
+                          className="relative rounded-md object-cover h-[230px] md:h-[300px] w-full  "
                           src={
                             data.profile_path
                               ? `https://image.tmdb.org/t/p/h632${data.profile_path}`
@@ -177,7 +177,7 @@ function Page() {
                           alt={data.title}
                         />
                       </Link>
-                      <span className="bg-indigo-600  flex flex-col gap-3   hlimitSearch p-2 text-gray-300 ">
+                      <span className="bg-indigo-700  flex flex-col gap-3 py-2  hlimitSearch px-2 text-gray-300 ">
                         <div className="">
                           <Link
                             className="group-hover:underline"
@@ -195,67 +195,7 @@ function Page() {
                         <div className=" text-xs underline ">
                           {data.known_for_department}
                         </div>
-                        {/* {data?.known_for && (
-                          <div className="mb-4 flex flex-row  text-xs">
-                            <div className="flex-1">Known for: </div>
-                            <div className=" flex-[2]">
-                              {data.known_for
-                                .slice(0, 5)
-                                .map((item: any, index: number) =>
-                                  data.known_for.slice(0, 5).length - 1 >
-                                  index ? (
-                                    <Link
-                                      key={item.id}
-                                      className={
-                                        " inline-block hover:underline  px-1 "
-                                      }
-                                      href={`/app/${item.media_type}/${
-                                        item.id
-                                      }-${(data.name || data.title)
-                                        .trim()
-                                        .replace(/[^a-zA-Z0-9]/g, "-")
-                                        .replace(/-+/g, "-")}`}
-                                    >
-                                      {item.title ||
-                                        item.orignal_name ||
-                                        item.name}
-                                      ,
-                                    </Link>
-                                  ) : (
-                                    <Link
-                                      key={item.id}
-                                      className={
-                                        " inline-block hover:underline px-1 "
-                                      }
-                                      href={`/app/${item.media_type}/${
-                                        item.id
-                                      }-${(data.name || data.title)
-                                        .trim()
-                                        .replace(/[^a-zA-Z0-9]/g, "-")
-                                        .replace(/-+/g, "-")}`}
-                                    >
-                                      {item.title ||
-                                        item.original_name ||
-                                        item.name}
-                                    </Link>
-                                  )
-                                )}
-                            </div>
-                          </div>
-                        )} */}
                       </span>
-                      <div className="p-4 flex flex-row gap-5 absolute bottom-4 right-3 transform  opacity-0 group-hover:-translate-x-32 group-hover:opacity-100 transition-transform duration-500">
-                        {/* <CardMovieButton
-                movieId={data.id}
-                text={"watched"}
-                icon={<FcLike />}
-                />
-                <CardMovieButton
-                movieId={data.id}
-                text={"save"}
-                icon={<CiSaveDown1 />}
-                /> */}
-                      </div>
                     </div>
                   )
               )}
