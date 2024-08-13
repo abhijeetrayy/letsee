@@ -114,7 +114,7 @@ function personCredits({ orginalCast, cast, crew, name }: any) {
             })
             .map((data: any) => (
               <div className="" key={data.id}>
-                <div className=" relative group flex flex-col rounded-md bg-black mr-2.5 w-full  text-gray-300 overflow-hidden duration-300  hover:scale-105 ">
+                <div className=" relative group flex flex-col rounded-md bg-black mr-2.5 w-full  text-gray-300 overflow-hidden duration-300  lg:hover:scale-105 ">
                   <div className="absolute top-0 left-0 z-10 opacity-0 group-hover:opacity-100">
                     {data.adult ? (
                       <p className="p-1 bg-red-600 text-white rounded-br-md text-sm">
@@ -204,7 +204,7 @@ function personCredits({ orginalCast, cast, crew, name }: any) {
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 ">
         {crew?.map((data: any) => (
           <div className="" key={data.id}>
-            <div className=" relative group flex flex-col  bg-black mr-2.5 w-full h-[320px] text-gray-300 rounded-md  duration-300  hover:scale-105 hover:z-40">
+            <div className=" relative group flex flex-col  bg-black mr-2.5 w-full h-[320px] text-gray-300 rounded-md  duration-300  lg:hover:scale-105 hover:z-40">
               <div className="absolute top-0 left-0 z-30">
                 <p className="p-1 bg-black text-white rounded-br-md text-sm">
                   {data.media_type}

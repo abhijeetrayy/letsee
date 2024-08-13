@@ -90,7 +90,7 @@ const MovieSearch = () => {
               data?.media_type !== "person" && (
                 <div
                   key={data.id}
-                  className=" overflow-hidden relative group flex flex-col  bg-black w-full text-gray-300 rounded-md   duration-300  hover:scale-105 hover:z-30"
+                  className=" overflow-hidden relative group flex flex-col  bg-black w-full text-gray-300 rounded-md   duration-300  lg:hover:scale-105 hover:z-30"
                 >
                   <div className="absolute  top-0 left-0 flex flex-row justify-between w-full z-20">
                     <p className="p-1 bg-black text-white rounded-br-md text-sm">

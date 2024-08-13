@@ -116,7 +116,7 @@ const WatchedMoviesList = ({ userId }: any): any => {
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-3">
         {movies?.map((item: any) => (
           <div className="" key={item.id}>
-            <div className=" relative group flex flex-col rounded-md bg-black mr-2.5 w-full  text-gray-300 overflow-hidden duration-300  hover:scale-105 ">
+            <div className=" relative group flex flex-col rounded-md bg-black mr-2.5 w-full  text-gray-300 overflow-hidden duration-300  lg:hover:scale-105 ">
               <div className="absolute top-0 left-0 z-10 lg:opacity-0 lg:group-hover:opacity-100">
                 {item.item_adult ? (
                   <p className="p-1 bg-red-600 text-white rounded-br-md text-sm">

@@ -74,7 +74,7 @@ function Page() {
                   data?.media_type !== "person" && (
                     <div
                       key={data.id}
-                      className="relative group flex flex-col bg-indigo-700 w-full h-full text-gray-300 rounded-sm duration-300 hover:scale-105 hover:z-10"
+                      className="relative group flex flex-col bg-indigo-700 w-full h-full text-gray-300 rounded-sm duration-300 lg:hover:scale-105 hover:z-10"
                     >
                       <div className="absolute top-0 left-0 flex flex-row justify-between w-full z-10">
                         <p className="p-1 bg-black text-white rounded-br-md text-sm">
