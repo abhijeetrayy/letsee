@@ -95,7 +95,7 @@ const ShowDetails = async ({
         </div>
 
         <div className="max-w-6xl w-full relative  z-10  flex flex-col md:flex-row  gap-5">
-          <div className="flex-1">
+          <div className="md:flex-1 w-fit m-auto">
             <img
               className="min-h[500px] rounded-md"
               src={
@@ -106,7 +106,7 @@ const ShowDetails = async ({
               alt={show.name}
             />
           </div>
-          <div className="flex-[2]">
+          <div className="md:flex-[2]">
             <h1 className="text-4xl font-bold mb-4">
               {" "}
               {show?.adult && (
@@ -139,18 +139,20 @@ const ShowDetails = async ({
             <p className=" text-gray-400 mb-2">
               Number of Episodes: {show.number_of_episodes}
             </p>
-            <div className="mb-4  text-gray-400">
-              <span>Genres: </span>
-              {show.genres.map((genre: any, index: number) => (
-                <Link
-                  className="px-2 py-1 bg-neutral-600 hover:bg-neutral-500 mr-2 rounded-md"
-                  href={`/app/tvbygenre/list/${genre.id}-${genre.name}`}
-                  key={genre.id}
-                >
-                  {genre.name}
-                  {/* {index < show.genres.length - 1 && ", "} */}
-                </Link>
-              ))}
+            <div className="mb-4 flex flex-row gap-2 text-gray-400">
+              <div>Genres: </div>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                {show.genres.map((genre: any) => (
+                  <Link
+                    className="px-2 py-1  bg-neutral-600 hover:bg-neutral-500  rounded-md"
+                    href={`/app/tvbygenre/list/${genre.id}-${genre.name}`}
+                    key={genre.id}
+                  >
+                    {genre.name}
+                    {/* {index < show.genres.length - 1 && ", "} */}
+                  </Link>
+                ))}
+              </div>
             </div>
             {/* <div className="mb-4  text-gray-400">
               <span>Staring: </span>
@@ -211,7 +213,7 @@ const ShowDetails = async ({
       <div className="max-w-6xl w-full">
         <div className="mt-7">
           <h2 className="text-lg ">Cast</h2>
-          <div className="overflow-x-scroll">
+          <div className="overflow-x-scroll vone-scrollbar">
             <div className="flex flex-row gap-3 m-3 rounded-md">
               {cast.slice(0, 6).map((item: any) => (
                 <Link
@@ -258,40 +260,43 @@ const ShowDetails = async ({
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-4 my-9 w-full max-w-5xl">
-        {show.seasons.map((season: any) => (
-          <div key={season.id} className="flex flex-row gap-4">
-            <img
-              src={`${
-                season.poster_path
-                  ? show.adult
-                    ? "/pixeled.jpg"
-                    : `https://image.tmdb.org/t/p/w185${season.poster_path}`
-                  : "/no-photo.jpg"
-              }`}
-              width={150}
-              height={225}
-              alt={season.name}
-            />
-            <div>
-              <h2 className="text-xl font-bold">{season.name}</h2>
-              <p className="text- text-gray-400">
+      <div className="flex flex-row gap-4 my-2 w-full max-w-5xl overflow-x-scroll vone-scrollbar">
+        {show.seasons
+          .filter((item: any) => item.name !== "Specials")
+          .map((season: any) => (
+            <div key={season.id} className="flex flex-col gap-4">
+              <img
+                src={`${
+                  season.poster_path
+                    ? show.adult
+                      ? "/pixeled.jpg"
+                      : `https://image.tmdb.org/t/p/w185${season.poster_path}`
+                    : "/no-photo.jpg"
+                }`}
+                className="min-w-full h-full"
+                alt={season.name}
+              />
+              <div>
+                <h2 className="text-sm md:text-base font-bold">
+                  {season.name}
+                </h2>
+                {/* <p className="text- text-gray-400">
                 {season.overview.slice(0, 200)} ..
-              </p>
-              <p className="text- text-gray-400">Air Date: {season.air_date}</p>
-              <p className="text- text-gray-400">
-                Episode Count: {season.episode_count}
-              </p>
-              <p className="text- text-gray-400">
+              </p> */}
+                <p className="text-sm text-gray-400">{season.air_date}</p>
+                <p className="text-sm text-gray-400">
+                  Ep: {season.episode_count}
+                </p>
+                {/* <p className="text- text-gray-400">
                 Average Vote: {season.vote_average}
-              </p>
+              </p> */}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
       {videos.filter((item: any) => item.site === "YouTube").length > 0 && (
         <div className="max-w-7xl w-full   ">
-          <h1 className="text-lg my-2 ">{show.name}: Media</h1>
+          <h1 className="text-md md:text-lg my-2 ">{show.name}: Media</h1>
 
           <div className="w-full max-w-7xl m-auto flex flex-row overflow-x-scroll vone-scrollbar my-3">
             {videos
@@ -313,14 +318,14 @@ const ShowDetails = async ({
       )}
       {(Bimages.length > 0 || Pimages.length > 0) && (
         <div className="max-w-7xl w-full   ">
-          <h1 className="text-lg my-2 ">{show.name}: Images</h1>
+          <h1 className="text-md md:text-lg my-2 ">{show.name}: Images</h1>
 
           <div className="w-full max-w-7xl m-auto flex flex-row gap-3 overflow-x-scroll vone-scrollbar my-3">
             {Bimages.length > 0
               ? Bimages?.slice(0, 15).map((item: any) => (
                   <img
                     key={item.id} // Add a key to avoid React warnings
-                    className="max-h-96 min-h-64 h-full w-fit"
+                    className="max-h-96  h-full object-cover"
                     src={
                       show.adult
                         ? "/pixeled.jpg"
@@ -332,7 +337,7 @@ const ShowDetails = async ({
               : Pimages?.slice(0, 15).map((item: any) => (
                   <img
                     key={item.id} // Add a key to avoid React warnings
-                    className="max-h-96 min-h-64 h-full w-fit"
+                    className="max-h-96  h-full object-cover w"
                     src={`show.adult ? "/pixeled.jpg" : https://image.tmdb.org/t/p/w185${item.file_path}`} // Use item.key instead of item.id
                     alt={item.name}
                   />
