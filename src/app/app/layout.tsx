@@ -6,6 +6,7 @@ import UserPrefrenceProvider from "@/app/contextAPI/userPrefrenceProvider";
 import Footbar from "@/components/footbar/foot";
 import Navbar from "@/components/header/navbar";
 import { ToastContainer } from "react-toastify";
+import { SearchProvider } from "../contextAPI/searchContext";
 
 // const inter = Inter({ subsets: ["latin"] });
 
@@ -29,17 +30,19 @@ export default function RootLayout({
       <body className={inter.variable}>
         <div className=" w-full font-inter flex justify-center  bg-neutral-900 text-gray-300">
           <UserPrefrenceProvider>
-            <div className=" w-full">
-              <div
-                className="w-full h-14 flex justify-center
-             z-50"
-              >
-                <Navbar />
+            <SearchProvider>
+              <div className=" w-full">
+                <div
+                  className="w-full h-14 flex justify-center
+                z-50"
+                >
+                  <Navbar />
+                </div>
+                <div className="min-h-screen px-3">{children}</div>
+                <Footbar />
               </div>
-              <div className="min-h-screen px-3">{children}</div>
-              <Footbar />
-            </div>
-            <ToastContainer />
+              <ToastContainer />
+            </SearchProvider>
           </UserPrefrenceProvider>
         </div>
       </body>

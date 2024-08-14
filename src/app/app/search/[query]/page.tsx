@@ -2,15 +2,17 @@
 import CardMovieButton from "@/components/buttons/cardButtons";
 import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { CiSaveDown1 } from "react-icons/ci";
 import { FcLike } from "react-icons/fc";
 import { IoEyeOutline } from "react-icons/io5";
 import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
+import { useSearch } from "@/app/contextAPI/searchContext";
 
 function Page() {
   const [Sresults, setSResults] = useState([]) as any;
   const [loading, setLoading] = useState(false);
+  const { setIsSearchLoading } = useSearch();
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -22,6 +24,7 @@ function Page() {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+
       try {
         const response = await fetch("/api/search", {
           method: "POST",
@@ -39,12 +42,14 @@ function Page() {
         setSResults(data);
       } catch (error) {
         console.error("Error fetching data:", error);
+      } finally {
+        setIsSearchLoading(false);
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     fetchData();
-  }, [query, page]);
+  }, [query, page, setIsSearchLoading]);
 
   const changePage = (newPage: number) => {
     setLoading(true);

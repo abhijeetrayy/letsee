@@ -244,10 +244,10 @@ const MovieDetails = async ({
                     .trim()
                     .replace(/[^a-zA-Z0-9]/g, "-")
                     .replace(/-+/g, "-")}`}
-                  className="group rounded-md h-full max-w-44 lg:max-w-56 w-full  bg-indigo-600 lg:bg-inherit lg:hover:bg-indigo-600"
+                  className="group rounded-md h-full max-w-44  w-full  bg-indigo-600 lg:bg-inherit lg:hover:bg-indigo-600"
                 >
                   <img
-                    className=" min-w-44 lg:min-w-52 h-56 rounded-md object-cover"
+                    className=" min-w-44  h-56 rounded-md object-cover"
                     src={
                       item.profile_path
                         ? `https://image.tmdb.org/t/p/w185${item.profile_path}`
