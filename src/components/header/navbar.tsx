@@ -6,12 +6,10 @@ import DropdownMenu from "./dropDownMenu";
 import { createClient } from "@/utils/supabase/server";
 import { RxHamburgerMenu } from "react-icons/rx";
 import BurgerMenu from "./BurgerMenu";
+import SearchBar from "./searchBar";
+import { SearchProvider } from "@/app/contextAPI/searchContext";
 
 async function navbar() {
-  async function search(formData: FormData) {
-    "use server";
-    redirect(`/app/search/${formData.get("searchtext")}`);
-  }
   const supabase = createClient();
   const { data, error } = await supabase.auth.getUser();
   return (
@@ -27,20 +25,7 @@ async function navbar() {
           <Link href={`/app/profile`}>User's</Link>
         </div>
         <div>
-          <form className="flex flex-row items-center gap-2" action="">
-            <input
-              className="pl-3 ring-2 ring-gray-200 outline-0 rounded-sm  focus:bg-neutral-200 bg-gray-200 text-gray-900"
-              name="searchtext"
-              type="text"
-              placeholder="Search"
-            />
-            <button
-              className="px-4 py-2  rounded-md bg-neutral-600 hover:bg-neutral-500"
-              formAction={search}
-            >
-              <CiSearch />
-            </button>
-          </form>
+          <SearchBar />
         </div>
 
         {/* <div>Notify</div> */}
