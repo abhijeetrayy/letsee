@@ -5,6 +5,8 @@ import { FcLike } from "react-icons/fc";
 import { IoEyeOutline } from "react-icons/io5";
 import ThreeUserPrefrenceBtn from "@/components/buttons/threePrefrencebtn";
 import { Countrydata } from "@/staticData/countryName";
+import { FaImdb } from "react-icons/fa";
+import { LiaImdb } from "react-icons/lia";
 
 // import { likedButton as LikedButton } from "@/components/buttons/intrectionButton";
 async function getMovieDetails(id: any) {
@@ -134,6 +136,25 @@ const MovieDetails = async ({
                 cardAdult={movie.adult}
                 cardImg={movie.poster_path || movie.backdrop_path}
               />
+              {movie?.popularity && (
+                <div className="my-2">
+                  Popularity:{" "}
+                  <span className="text-green-600 font-bold">
+                    {movie.popularity}
+                  </span>
+                </div>
+              )}
+              {movie?.imdb_id && (
+                <div className="flex flex-row items-center gap-2">
+                  <LiaImdb className="text-4xl" />:
+                  <Link
+                    target="_blank"
+                    href={`https://imdb.com/title/${movie.imdb_id}`}
+                  >
+                    {movie.title}
+                  </Link>
+                </div>
+              )}
               <p className="text-md my-2 text-neutral-300">
                 {movie.runtime} min.
               </p>
@@ -159,7 +180,7 @@ const MovieDetails = async ({
               </div>
               <div className="flex flex-row gap-2 my-4 text-neutral-300">
                 <div className="">Genre:</div>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                <div className="grid grid-cols-2 gap-2 md:grid-cols-3 lg:flex lg:flex-row lg:gap-1">
                   {movie?.genres?.map((item: any) => (
                     <Link
                       href={`/app/moviebygenre/list/${item.id}-${item.name
@@ -283,7 +304,7 @@ const MovieDetails = async ({
         </div>
       )}
       {(Bimages.length > 0 || Pimages.length > 0) && (
-        <div className="max-w-7xl w-full  my-7">
+        <div className="max-w-7xl w-full  my-4">
           <h1 className="text-md md:text-lg my-2 ">{movie.title}: Images</h1>
 
           <div className="w-full max-w-7xl m-auto flex flex-row gap-3 overflow-x-scroll vone-scrollbar my-3">

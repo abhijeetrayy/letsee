@@ -168,7 +168,7 @@ const page = async ({
             <div className="w-full flex flex-row overflow-x-scroll vone-scrollbar gap-3">
               {favorates?.map((item: any) => (
                 <div className="" key={item.id}>
-                  <div className=" relative group flex flex-col rounded-md bg-black mr-2.5 w-full  text-gray-300 overflow-hidden  ">
+                  <div className=" relative group flex flex-col rounded-md bg-black  w-full  text-gray-300 overflow-hidden  ">
                     <div className="absolute top-0 left-0 z-10 lg:opacity-0 lg:group-hover:opacity-100">
                       {item.item_adult ? (
                         <p className="p-1 bg-red-600 text-white rounded-br-md text-sm">
@@ -251,7 +251,7 @@ const page = async ({
             <div className="w-full flex flex-row overflow-x-scroll vone-scrollbar gap-3">
               {watchlist?.map((item: any) => (
                 <div className="" key={item.id}>
-                  <div className=" relative group flex flex-col rounded-md bg-black mr-2.5 w-full  text-gray-300 overflow-hidden  ">
+                  <div className=" relative group flex flex-col rounded-md bg-black  w-full  text-gray-300 overflow-hidden  ">
                     <div className="absolute top-0 left-0 z-10 lg:opacity-0 lg:group-hover:opacity-100">
                       {item.item_adult ? (
                         <p className="p-1 bg-red-600 text-white rounded-br-md text-sm">
@@ -272,7 +272,7 @@ const page = async ({
                   )}
                   </div> */}
                     <Link
-                      className="h-[270px] w-[200px]"
+                      className="h-[270px] w-[200px] "
                       href={`/app/${item.item_type}/${item.item_id}`}
                     >
                       <img
@@ -292,7 +292,7 @@ const page = async ({
                         cardType={item.item_type}
                         cardName={item.item_name}
                         cardAdult={item.item_adult}
-                        cardImg={item.image_url}
+                        cardImg={item.item_img}
                       />
 
                       <div
