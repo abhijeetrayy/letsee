@@ -160,7 +160,7 @@ const WatchedMoviesList = ({ userId }: any): any => {
                   cardType={item.item_type}
                   cardName={item.item_name}
                   cardAdult={item.item_adult}
-                  cardImg={item.item_img}
+                  cardImg={item.image_url}
                 />
                 <div
                   title={item.name || item.title}

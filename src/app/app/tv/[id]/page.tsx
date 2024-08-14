@@ -1,5 +1,6 @@
 import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
 import Link from "next/link";
+import { LiaImdb } from "react-icons/lia";
 
 async function getShowDetails(id: string) {
   const response = await fetch(
@@ -34,15 +35,6 @@ async function getImages(id: any) {
   return data;
 }
 
-async function getIMDBRating(imdbID: any) {
-  const response = await fetch(
-    `https://www.omdbapi.com/?i=${imdbID}&apikey=YOUR_OMDB_API_KEY`
-  );
-
-  const data = await response.json();
-  return data.imdbRating;
-}
-
 const ShowDetails = async ({
   params,
   searchParams,
@@ -52,9 +44,6 @@ const ShowDetails = async ({
 }) => {
   const { id } = params;
   const show = await getShowDetails(id);
-
-  const ImdbRating = await getIMDBRating(show.imdb_id);
-  console.log(ImdbRating);
 
   const { cast, crew } = await getShowCredit(id);
   const { results: videos } = await getVideos(id);
@@ -126,6 +115,13 @@ const ShowDetails = async ({
                 cardImg={show.poster_path || show.backdrop_path}
               />
             </div>
+            <div className="my-3">
+              Popularity:{" "}
+              <span className="text-green-600 font-bold">
+                {show.popularity}
+              </span>
+            </div>
+
             <p className=" mb-4 text-gray-400">{show.overview}</p>
             <p className=" text-gray-400 mb-2">
               First Air Date: {show.first_air_date}
@@ -318,7 +314,7 @@ const ShowDetails = async ({
         </div>
       )}
       {(Bimages.length > 0 || Pimages.length > 0) && (
-        <div className="max-w-7xl w-full  mt-7 ">
+        <div className="max-w-7xl w-full  mt-4 ">
           <h1 className="text-md md:text-lg my-2 ">{show.name}: Images</h1>
 
           <div className="w-full max-w-7xl m-auto flex flex-row gap-3 overflow-x-scroll vone-scrollbar my-3">

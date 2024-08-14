@@ -53,7 +53,7 @@ const DropdownMenu = ({ user }: any) => {
               className="w-full text-left px-2 py-1 rounded-sm bg-neutral-200 hover:bg-neutral-100"
               href={`/app/profile/${user?.user?.id}`}
             >
-              Profile
+              My Profile
             </Link>
 
             <div className="w-full text-left px-2 py-1 rounded-sm bg-neutral-200 hover:bg-neutral-100">
