@@ -223,7 +223,7 @@ const ShowDetails = async ({
                   className="group rounded-md h-full max-w-44 lg:max-w-56 w-full  bg-indigo-600 lg:bg-inherit lg:hover:bg-indigo-600"
                 >
                   <img
-                    className=" min-w-44 lg:min-w-52 h-56 rounded-md object-cover"
+                    className=" min-w-44 max-w-44 lg:min-w-52 h-56 rounded-md object-cover"
                     src={
                       item.profile_path
                         ? `https://image.tmdb.org/t/p/w185${item.profile_path}`
@@ -270,7 +270,7 @@ const ShowDetails = async ({
                       : `https://image.tmdb.org/t/p/w185${season.poster_path}`
                     : "/no-photo.jpg"
                 }`}
-                className="min-w-full h-full"
+                className="min-w-44 max-w-44 h-full object-cover"
                 alt={season.name}
               />
               <div>

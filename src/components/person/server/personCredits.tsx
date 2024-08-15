@@ -225,7 +225,7 @@ function personCredits({ orginalCast, cast, crew, name }: any) {
                   .replace(/-+/g, "-")}`}
               >
                 <img
-                  className="relative  object-cover w-full min-h-[270px] sm:min-h-[290px] md:min-h-[322px] "
+                  className="relative  object-cover w-full min-h-[270px] sm:min-h-[290px] md:min-h-[322px] lg:group-hover:opacity-70"
                   src={
                     (data.poster_path || data.backdrop_path) && !data.adult
                       ? `https://image.tmdb.org/t/p/w185${
@@ -238,7 +238,16 @@ function personCredits({ orginalCast, cast, crew, name }: any) {
                   alt={data.title}
                 />
               </Link>
-              <span className=" flex flex-col gap-3  hlimitSearch px-2 text-gray-200 bg-purple-600 h-full py-2 ">
+              <div className="lg:absolute bottom-0 w-full bg-neutral-900 lg:opacity-0 lg:group-hover:opacity-100 z-10">
+                <ThreePrefrenceBtn
+                  cardId={data.id}
+                  cardType={data.media_type}
+                  cardName={data.name || data.title}
+                  cardAdult={data.adult}
+                  cardImg={data.poster_path || data.backdrop_path}
+                />
+              </div>
+              <span className=" flex flex-col gap-3  hlimitSearch px-2 text-gray-200 bg-purple-600 h-full py-2  lg:group-hover:opacity-70">
                 <div className="mb-1">
                   <Link
                     className="group-hover:underline text-lg font-semibold"
