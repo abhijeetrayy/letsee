@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest, res: NextResponse) {
   const requestClone = req.clone();
   const body = await requestClone.json();
-  const { userID, page = 1, limit = 7 } = body;
+  const { userID, page = 1, limit = 30 } = body;
   console.log(userID);
   const supabase = createClient();
 
