@@ -58,7 +58,7 @@ function personCredits({ orginalCast, cast, crew, name }: any) {
                   alt={data.title}
                 />
               </Link>
-              <div className="absolute bottom-0 w-full bg-neutral-900 opacity-0 group-hover:opacity-100 z-10">
+              <div className="lg:absolute bottom-0 w-full bg-neutral-900 lg:opacity-0 lg:group-hover:opacity-100 z-10">
                 <ThreePrefrenceBtn
                   cardId={data.id}
                   cardType={data.media_type}
@@ -135,7 +135,7 @@ function personCredits({ orginalCast, cast, crew, name }: any) {
                     )}
                   </div>
                   <Link
-                    className="   w-full  h-[336px] md:w-56 md:h-72  "
+                    className="   w-full  h-[266px] md:w-56 md:h-80   "
                     href={`/app/${data.media_type}/${data.id}-${(
                       data.name || data.title
                     )
@@ -203,8 +203,8 @@ function personCredits({ orginalCast, cast, crew, name }: any) {
       )}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 ">
         {crew?.map((data: any) => (
-          <div className="" key={data.id}>
-            <div className=" relative group flex flex-col  bg-black mr-2.5 w-full h-[320px] text-gray-300 rounded-md  duration-300  lg:hover:scale-105 hover:z-40">
+          <div className="rounded-md overflow-hidden" key={data.id}>
+            <div className=" relative group flex flex-col  bg-black w-full h-full text-gray-300 ">
               <div className="absolute top-0 left-0 z-30">
                 <p className="p-1 bg-black text-white rounded-br-md text-sm">
                   {data.media_type}
@@ -215,23 +215,33 @@ function personCredits({ orginalCast, cast, crew, name }: any) {
                   In Prod.
                 </p>
               </div>
-              <img
-                className="relative rounded-md object-cover w-full h-full group-hover:opacity-20"
-                src={
-                  (data.poster_path || data.backdrop_path) && !data.adult
-                    ? `https://image.tmdb.org/t/p/w185${
-                        data.poster_path || data.backdrop_path
-                      }`
-                    : data.adult
-                    ? "/pixeled.jpg"
-                    : "/no-photo.jpg"
-                }
-                alt={data.title}
-              />
-              <span className="opacity-0 flex flex-col gap-3 break-all hlimitSearch px-4 absolute bottom-3  translate-y-0 duration-300 group-hover:opacity-100 group-hover:bottom-24 group-hover:bg-transparent  group-hover:text-gray-200 ">
+              <Link
+                className="group-hover:underline text-lg"
+                href={`/app/${data.media_type}/${data.id}-${(
+                  data.name || data.title
+                )
+                  .trim()
+                  .replace(/[^a-zA-Z0-9]/g, "-")
+                  .replace(/-+/g, "-")}`}
+              >
+                <img
+                  className="relative  object-cover w-full min-h-[270px] sm:min-h-[290px] md:min-h-[322px] "
+                  src={
+                    (data.poster_path || data.backdrop_path) && !data.adult
+                      ? `https://image.tmdb.org/t/p/w185${
+                          data.poster_path || data.backdrop_path
+                        }`
+                      : data.adult
+                      ? "/pixeled.jpg"
+                      : "/no-photo.jpg"
+                  }
+                  alt={data.title}
+                />
+              </Link>
+              <span className=" flex flex-col gap-3  hlimitSearch px-2 text-gray-200 bg-purple-600 h-full py-2 ">
                 <div className="mb-1">
                   <Link
-                    className="group-hover:underline text-lg"
+                    className="group-hover:underline text-lg font-semibold"
                     href={`/app/${data.media_type}/${data.id}-${(
                       data.name || data.title
                     )
@@ -248,7 +258,7 @@ function personCredits({ orginalCast, cast, crew, name }: any) {
 
                 <p className=" text-xs ">
                   {name}:{" "}
-                  <span className="">
+                  <span className="font-bold">
                     {data.department}-{data.job}
                   </span>
                 </p>

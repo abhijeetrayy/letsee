@@ -169,25 +169,33 @@ const MovieSearch = () => {
               data?.media_type == "person" && (
                 <div
                   key={data.id}
-                  className=" relative group flex flex-col  bg-indigo-700   text-gray-300 rounded-md hover:z-30"
+                  className=" relative group flex flex-col   text-gray-300 rounded-md hover:z-30"
                 >
                   <div className="absolute top-0 left-0 z-40">
                     <p className="p-1 bg-black text-white rounded-br-md text-sm">
                       {data.media_type}
                     </p>
                   </div>
-                  <img
-                    className="relative rounded-md object-cover h-[230px] md:h-[300px] w-full  "
-                    src={
-                      data.profile_path
-                        ? `https://image.tmdb.org/t/p/h632${data.profile_path}`
-                        : "/no-photo.jpg"
-                    }
-                    width={400}
-                    height={400}
-                    alt={data.title}
-                  />
-                  <span className=" flex flex-col gap-3  py-2 hlimitSearch px-4 bg-indigo-700">
+                  <Link
+                    className="group-hover:underline"
+                    href={`/app/person/${data.id}-${data.name
+                      .trim()
+                      .replace(/[^a-zA-Z0-9]/g, "-")
+                      .replace(/-+/g, "-")}`}
+                  >
+                    <img
+                      className="relative rounded-md object-cover h-[230px] md:h-[300px] w-full  "
+                      src={
+                        data.profile_path
+                          ? `https://image.tmdb.org/t/p/h632${data.profile_path}`
+                          : "/no-photo.jpg"
+                      }
+                      width={400}
+                      height={400}
+                      alt={data.title}
+                    />
+                  </Link>
+                  <span className=" flex flex-col gap-3  py-2 hlimitSearch px-4 h-full bg-indigo-700">
                     <div className="mb-1">
                       <Link
                         className="group-hover:underline"
