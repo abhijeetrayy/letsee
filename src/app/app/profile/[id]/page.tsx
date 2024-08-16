@@ -21,7 +21,8 @@ const getUserData = async (id: any) => {
   const { data: watchlist } = await supabase
     .from("user_watchlist")
     .select()
-    .eq("user_id", id);
+    .eq("user_id", id)
+    .order("id", { ascending: false });
   const { count: watchlistCount } = await supabase
     .from("user_watchlist")
     .select("*", { count: "exact", head: true })
@@ -33,7 +34,8 @@ const getUserData = async (id: any) => {
   const { data: favorates } = await supabase
     .from("favorite_items")
     .select()
-    .eq("user_id", id);
+    .eq("user_id", id)
+    .order("id", { ascending: false });
   return { watchlistCount, watchedCount, favoriteCount, favorates, watchlist };
 };
 

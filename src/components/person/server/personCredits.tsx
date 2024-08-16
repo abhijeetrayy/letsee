@@ -215,42 +215,45 @@ function personCredits({ orginalCast, cast, crew, name }: any) {
                   In Prod.
                 </p>
               </div>
-              <Link
-                className="group-hover:underline text-lg"
-                href={`/app/${data.media_type}/${data.id}-${(
-                  data.name || data.title
-                )
-                  .trim()
-                  .replace(/[^a-zA-Z0-9]/g, "-")
-                  .replace(/-+/g, "-")}`}
-              >
-                <img
-                  className="relative  object-cover w-full min-h-[270px] sm:min-h-[290px] md:min-h-[322px] lg:group-hover:opacity-70"
-                  src={
-                    (data.poster_path || data.backdrop_path) && !data.adult
-                      ? `https://image.tmdb.org/t/p/w185${
-                          data.poster_path || data.backdrop_path
-                        }`
-                      : data.adult
-                      ? "/pixeled.jpg"
-                      : "/no-photo.jpg"
-                  }
-                  alt={data.title}
-                />
-              </Link>
-              <div className="lg:absolute bottom-0 w-full bg-neutral-900 lg:opacity-0 lg:group-hover:opacity-100 z-10">
-                <ThreePrefrenceBtn
-                  cardId={data.id}
-                  cardType={data.media_type}
-                  cardName={data.name || data.title}
-                  cardAdult={data.adult}
-                  cardImg={data.poster_path || data.backdrop_path}
-                />
+              <div className="relative">
+                <Link
+                  className=""
+                  href={`/app/${data.media_type}/${data.id}-${(
+                    data.name || data.title
+                  )
+                    .trim()
+                    .replace(/[^a-zA-Z0-9]/g, "-")
+                    .replace(/-+/g, "-")}`}
+                >
+                  <img
+                    className="relative  object-cover w-full min-h-[270px] sm:min-h-[290px] md:min-h-[322px] duration-300 lg:group-hover:opacity-70"
+                    src={
+                      (data.poster_path || data.backdrop_path) && !data.adult
+                        ? `https://image.tmdb.org/t/p/w185${
+                            data.poster_path || data.backdrop_path
+                          }`
+                        : data.adult
+                        ? "/pixeled.jpg"
+                        : "/no-photo.jpg"
+                    }
+                    alt={data.title}
+                  />
+                </Link>
+                <div className="lg:absolute bottom-0 w-full bg-neutral-900 lg:opacity-0 duration-300 lg:group-hover:opacity-100 z-10">
+                  <ThreePrefrenceBtn
+                    cardId={data.id}
+                    cardType={data.media_type}
+                    cardName={data.name || data.title}
+                    cardAdult={data.adult}
+                    cardImg={data.poster_path || data.backdrop_path}
+                  />
+                </div>
               </div>
-              <span className=" flex flex-col gap-3  hlimitSearch px-2 text-gray-200 bg-purple-600 h-full py-2  lg:group-hover:opacity-70">
+
+              <span className=" flex flex-col gap-3  hlimitSearch px-2 text-gray-200 bg-purple-600 h-full py-2 ">
                 <div className="mb-1">
                   <Link
-                    className="group-hover:underline text-lg font-semibold"
+                    className=" text-lg font-semibold group-hover:underline"
                     href={`/app/${data.media_type}/${data.id}-${(
                       data.name || data.title
                     )

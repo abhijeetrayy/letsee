@@ -81,7 +81,7 @@ export default async function Home() {
         <h2 className="text-2xl my-4 font-bold">Weekly Top 20</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 max-w-6xl w-full m-auto">
           {data?.results.map((item: any) => (
-            <div className="group relative w-full h-full bg-indigo-700  ">
+            <div className="group relative w-full h-full bg-indigo-700 rounded-md overflow-hidden ">
               <div className="absolute top-0 left-0">
                 <p className="px-1 py-1 bg-neutral-950  text-white rounded-br-md">
                   {item.media_type}
@@ -147,7 +147,7 @@ export default async function Home() {
         <h2 className="text-2xl my-4 font-bold">Trending Tv Show's</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 max-w-6xl w-full m-auto">
           {TrendingTv?.results.map((item: any) => (
-            <div className="group relative  w-full h-full bg-indigo-700">
+            <div className="group relative  w-full h-full bg-indigo-700 rounded-md overflow-hidden">
               <div className="absolute top-0 left-0">
                 <p className="px-1 py-1 bg-neutral-950  text-white rounded-br-md">
                   {item.media_type}

@@ -141,7 +141,7 @@ const ShowDetails = async ({
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
                 {show.genres.map((genre: any) => (
                   <Link
-                    className="px-2 py-1  bg-neutral-600 hover:bg-neutral-500  rounded-md"
+                    className="px-2 py-1 text-gray-300 bg-neutral-700 hover:bg-neutral-500  rounded-md"
                     href={`/app/tvbygenre/list/${genre.id}-${genre.name}`}
                     key={genre.id}
                   >
@@ -197,7 +197,7 @@ const ShowDetails = async ({
             <div className="mb-4  text-gray-400">
               <span>Production Companies: </span>
               {show.production_companies.map((company: any, index: number) => (
-                <span key={company.id}>
+                <span className="break-words" key={company.id}>
                   {company.name}
                   {index < show.production_companies.length - 1 && ", "}
                 </span>
