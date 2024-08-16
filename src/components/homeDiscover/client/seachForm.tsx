@@ -84,7 +84,7 @@ const MovieSearch = () => {
           loading..
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
           {results?.results?.map(
             (data: any) =>
               data?.media_type !== "person" && (
@@ -169,7 +169,7 @@ const MovieSearch = () => {
               data?.media_type == "person" && (
                 <div
                   key={data.id}
-                  className=" relative group flex flex-col   text-gray-300 rounded-md hover:z-30"
+                  className=" relative group flex flex-col   text-gray-300 rounded-md overflow-hidden duration-300 lg:hover:scale-105 hover:z-30"
                 >
                   <div className="absolute top-0 left-0 z-40">
                     <p className="p-1 bg-black text-white rounded-br-md text-sm">

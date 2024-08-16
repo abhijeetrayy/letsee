@@ -198,7 +198,7 @@ const MovieDetails = async ({
 
               <div className="mb-4 flex flex-row gap-1 text-neutral-300">
                 <span>Production: </span>
-                <div className="">
+                <div className="break-words">
                   {movie?.production_companies
                     ?.slice(0, 5)
                     .map((item: any, index: number) =>
@@ -206,14 +206,14 @@ const MovieDetails = async ({
                       index ? (
                         <div
                           key={item.id}
-                          className={" inline-block  px-1 whitespace-nowrap"}
+                          className={"break-words inline-block  px-1 "}
                         >
                           {item.name},
                         </div>
                       ) : (
                         <div
                           key={item.id}
-                          className={" inline-block px-1 whitespace-nowrap"}
+                          className={"break-words inline-block px-1 "}
                         >
                           {item.name}
                         </div>
