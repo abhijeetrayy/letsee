@@ -1,16 +1,13 @@
 import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
 
-import CardMovieButton from "@/components/buttons/cardButtons";
-import ProfileWatched from "@/components/profile/profileWatched";
-import { redirect } from "next/navigation";
-import { CiSaveDown1 } from "react-icons/ci";
-import { FcLike } from "react-icons/fc";
-import { IoEyeOutline } from "react-icons/io5";
 import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
+import ProfileWatched from "@/components/profile/profileWatched";
+import UserConnections from "@/components/profile/UserConnections";
+import UserIntrectionBtn from "@/components/profile/UserIntrectionBtn";
+import { redirect } from "next/navigation";
 
 const getUserData = async (id: any) => {
-  console.log(id, "hola");
   const supabase = createClient();
 
   const { count: watchedCount, error: countError } = await supabase
@@ -48,13 +45,10 @@ const page = async ({
 }) => {
   let { id }: any = params;
 
-  console.log(id, "dd");
-
   let DefaultId;
   let UserData;
   const supabase = createClient();
   const { data: YouUser, error }: any = await supabase.auth.getUser();
-  console.log(YouUser);
 
   if (id == undefined) {
     redirect(`/app/profile?id=${YouUser.user.id}`);
@@ -65,7 +59,7 @@ const page = async ({
       .from("users")
       .select()
       .eq(" id", id);
-    console.log(OtherUser, "oo");
+
     DefaultId = await OtherUser[0]?.id;
     UserData = OtherUser[0];
   } else {
@@ -131,6 +125,14 @@ const page = async ({
                 sapien, eu bibendum leo turpis non risus.
               </p>
             </div> */}
+            <div>
+              <div className="mb-1">
+                {YouUser.user?.id !== id && <UserIntrectionBtn userId={id} />}
+              </div>
+              <div>
+                <UserConnections userId={id} />
+              </div>
+            </div>
             <div className="w-full flex flex-col md:flex-row min-h-64 h-full">
               <div className="group flex-1 flex justify-center items-center flex-col rounded-l-md border border-gray-500 hover:flex-[2] duration-300">
                 <Link
