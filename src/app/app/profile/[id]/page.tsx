@@ -6,6 +6,7 @@ import ProfileWatched from "@/components/profile/profileWatched";
 import UserConnections from "@/components/profile/UserConnections";
 import UserIntrectionBtn from "@/components/profile/UserIntrectionBtn";
 import { redirect } from "next/navigation";
+import { FaEdit } from "react-icons/fa";
 
 const getUserData = async (id: any) => {
   const supabase = createClient();
@@ -48,24 +49,24 @@ const page = async ({
   let DefaultId;
   let UserData;
   const supabase = createClient();
-  const { data: YouUser, error }: any = await supabase.auth.getUser();
+  const { data: YouUser, error: UserError }: any =
+    await supabase.auth.getUser();
 
   if (id == undefined) {
-    redirect(`/app/profile?id=${YouUser.user.id}`);
+    redirect(`/404`);
   }
 
-  if (id !== undefined && id !== YouUser.user.id) {
-    const { data: OtherUser, error }: any = await supabase
-      .from("users")
-      .select()
-      .eq(" id", id);
-
-    DefaultId = await OtherUser[0]?.id;
-    UserData = OtherUser[0];
-  } else {
-    DefaultId = await YouUser?.user?.id;
-    UserData = YouUser;
+  const { data, error: profileError }: any = await supabase
+    .from("users")
+    .select("*")
+    .eq("username", id)
+    .single();
+  console.log(data);
+  if (profileError) {
+    redirect("/app/profile/setup");
   }
+  DefaultId = await data.id;
+  UserData = data;
 
   const {
     watchedCount,
@@ -78,7 +79,7 @@ const page = async ({
   return (
     <div className=" flex flex-col items-center w-full">
       <div className=" flex flex-col max-w-6xl w-full min-h-screen gap-5">
-        {(id == undefined || id == YouUser.user.id) && (
+        {(id == undefined || id == YouUser.user.username) && (
           <p className="text-sm w-fit my-2 font-sans  py-1 px-1 bg-neutral-700 rounded-md">
             My Profile
           </p>
@@ -92,13 +93,24 @@ const page = async ({
               src={"/avatar.svg"}
               alt="Profile"
             />
-            <h2 className="text-2xl font-semibold ">HELLO --</h2>
+            <div className="flex flex-row">
+              <h2 className="text-2xl font-semibold ">HELLO --</h2>
+              <Link
+                className="w-fit px-1 text-2xl border rounded-md hover:text-neutral-200"
+                href={"/app/profile/setup"}
+              >
+                <FaEdit />
+              </Link>
+            </div>
+            <Link
+              className="w-fit hover:text-green-600"
+              href={`/app/profile/${UserData?.username}`}
+            >
+              @{UserData?.username}
+            </Link>
+
             <div className="">
-              {id == undefined || id == YouUser.user.id ? (
-                <p className="text-sm ">{YouUser.user.email}</p>
-              ) : (
-                <p className="text-sm ">{UserData.email}</p>
-              )}
+              <p className="text-sm ">{UserData.email}</p>
             </div>
             {/* <div className="mt-6">
               <h3 className="text-lg font-semibold  mb-2">Details</h3>
@@ -127,10 +139,12 @@ const page = async ({
             </div> */}
             <div>
               <div className="mb-1">
-                {YouUser.user?.id !== id && <UserIntrectionBtn userId={id} />}
+                {UserData.username !== id && (
+                  <UserIntrectionBtn userId={UserData.id} />
+                )}
               </div>
               <div>
-                <UserConnections userId={id} />
+                <UserConnections userId={UserData.id} />
               </div>
             </div>
             <div className="w-full flex flex-col md:flex-row min-h-64 h-full">
