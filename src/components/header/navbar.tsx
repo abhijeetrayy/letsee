@@ -12,6 +12,11 @@ import { SearchProvider } from "@/app/contextAPI/searchContext";
 async function navbar() {
   const supabase = createClient();
   const { data, error } = await supabase.auth.getUser();
+  const { data: userData, error: userError } = await supabase
+    .from("users")
+    .select("*")
+    .eq("id", data.user?.id)
+    .single();
   return (
     <div className="w-full flex flex-row items-center justify-between text-white max-w-7xl p-3 h-full z-50">
       <div className="">
@@ -70,7 +75,7 @@ async function navbar() {
               </div>
             </div>
           </div> */}
-          <DropdownMenu user={data} />
+          <DropdownMenu user={userData} />
         </div>
       </div>
     </div>
