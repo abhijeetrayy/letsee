@@ -35,6 +35,15 @@ async function getImages(id: any) {
   return data;
 }
 
+async function getExternalIds(id: any) {
+  const response = await fetch(
+    `https://api.themoviedb.org/3/tv/${id}/external_ids?api_key=${process.env.TMDB_API_KEY}`
+  );
+
+  const data = await response.json();
+  return data;
+}
+
 const ShowDetails = async ({
   params,
   searchParams,
@@ -44,7 +53,7 @@ const ShowDetails = async ({
 }) => {
   const { id } = params;
   const show = await getShowDetails(id);
-
+  const ExternalIDs = await getExternalIds(id);
   const { cast, crew } = await getShowCredit(id);
   const { results: videos } = await getVideos(id);
   const { posters: Pimages, backdrops: Bimages } = await getImages(id);
@@ -115,12 +124,25 @@ const ShowDetails = async ({
                 cardImg={show.poster_path || show.backdrop_path}
               />
             </div>
-            <div className="my-3">
-              Popularity:{" "}
-              <span className="text-green-600 font-bold">
-                {show.popularity}
-              </span>
-            </div>
+            {show?.popularity && (
+              <div className="my-2">
+                Popularity:{" "}
+                <span className="text-green-600 font-bold">
+                  {show.popularity}
+                </span>
+              </div>
+            )}
+            {ExternalIDs?.imdb_id && (
+              <div className="flex flex-row items-center gap-2">
+                <LiaImdb className="text-4xl" />:
+                <Link
+                  target="_blank"
+                  href={`https://imdb.com/title/${ExternalIDs.imdb_id}`}
+                >
+                  {show.name}
+                </Link>
+              </div>
+            )}
 
             <p className=" mb-4 text-gray-400">{show.overview}</p>
             <p className=" text-gray-400 mb-2">
