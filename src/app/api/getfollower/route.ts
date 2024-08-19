@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
   // Query to get emails of users followed by the specified user
   const { data: connection, error: connectionError } = await supabase
     .from("user_connections")
-    .select("follower_id, users!fk_follower(email)")
+    .select("follower_id, users!fk_follower(username)")
     .eq("followed_id", userId);
   console.log(connection);
   if (connectionError) {

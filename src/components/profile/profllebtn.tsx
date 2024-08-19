@@ -179,13 +179,13 @@ export function ShowFollowing({ followingCount, userId }: any) {
           >
             X
           </button>
-          <h2 className="text-xl font-bold mb-4">Following</h2>
+          <h2 className="text-xl text-neutral-700 font-bold mb-4">Following</h2>
           {loading ? (
             <p>Loading...</p>
           ) : following.length > 0 ? (
             <ul>
               {following.map((user: any) => (
-                <li className="mb-2">{user.users.email}</li>
+                <li className="mb-2 text-neutral-700">{user.users.email}</li>
               ))}
             </ul>
           ) : (
