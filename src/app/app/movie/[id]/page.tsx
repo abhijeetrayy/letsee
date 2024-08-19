@@ -307,32 +307,24 @@ const MovieDetails = async ({
         <div className="max-w-7xl w-full  my-4">
           <h1 className="text-md md:text-lg my-2 ">{movie.title}: Images</h1>
 
-          <div className="w-full max-w-7xl m-auto flex flex-row gap-3 overflow-x-scroll vone-scrollbar my-3">
-            {Bimages.length > 0
-              ? Bimages?.slice(0, 15).map((item: any) => (
-                  <img
-                    key={item.id} // Add a key to avoid React warnings
-                    className="max-h-96 min-h-64 h-full w-fit"
-                    src={
-                      movie.adult
-                        ? "/pixeled.jpg"
-                        : `https://image.tmdb.org/t/p/w300${item.file_path}`
-                    } // Use item.key instead of item.id
-                    alt={item.name}
-                  />
-                ))
-              : Pimages?.slice(0, 15).map((item: any) => (
-                  <img
-                    key={item.id} // Add a key to avoid React warnings
-                    className="max-h-96 min-h-64 h-full w-fit"
-                    src={
-                      movie.adult
-                        ? "/pixeled.jpg"
-                        : `https://image.tmdb.org/t/p/w185${item.file_path}`
-                    } // Use item.key instead of item.id
-                    alt={item.name}
-                  />
+          <div className="max-w-7xl w-full m-auto my-3 overflow-x-auto vone-scrollbar">
+            <div className="flex gap-3 pb-3 snap-x snap-mandatory">
+              {(Bimages.length > 0 ? Bimages : Pimages)
+                ?.slice(0, 15)
+                .map((item: any) => (
+                  <div key={item.id} className="snap-center shrink-0">
+                    <img
+                      className="w-[400px] h-auto object-cover"
+                      src={
+                        movie.adult
+                          ? "/pixeled.jpg"
+                          : `https://image.tmdb.org/t/p/w300${item.file_path}`
+                      }
+                      alt={item.name}
+                    />
+                  </div>
                 ))}
+            </div>
           </div>
         </div>
       )}
