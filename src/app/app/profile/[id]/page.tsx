@@ -93,7 +93,7 @@ const page = async ({
               src={"/avatar.svg"}
               alt="Profile"
             />
-            <div className="flex flex-row">
+            <div className="flex flex-row gap-3 my-2 items-center">
               <Link
                 className="w-fit text-xl hover:text-green-600"
                 href={`/app/profile/${UserData?.username}`}
@@ -102,7 +102,7 @@ const page = async ({
               </Link>
               {UserData.id == YouUser.user.id && (
                 <Link
-                  className="w-fit m-2 px-1 text-lg border rounded-md hover:text-neutral-100"
+                  className="w-fit  px-1 text-lg border rounded-md hover:text-neutral-100"
                   href={"/app/profile/setup"}
                 >
                   <FaEdit />
