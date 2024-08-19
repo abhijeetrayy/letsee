@@ -96,6 +96,10 @@ function personCredits({ orginalCast, cast, crew, name }: any) {
           </div>
         ))}
       </div>
+      <div className="mt-2 mb-5 w-fit m-auto cursor-default">
+        {"<-  "} {"  ->"}
+      </div>
+
       <div>
         <h1 className="my-3">Timeline - </h1>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 ">

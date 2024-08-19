@@ -79,7 +79,7 @@ const page = async ({
   return (
     <div className=" flex flex-col items-center w-full">
       <div className=" flex flex-col max-w-6xl w-full min-h-screen gap-5">
-        {(id == undefined || id == YouUser.user.username) && (
+        {(id == undefined || UserData.id == YouUser.user.id) && (
           <p className="text-sm w-fit my-2 font-sans  py-1 px-1 bg-neutral-700 rounded-md">
             My Profile
           </p>
@@ -94,20 +94,21 @@ const page = async ({
               alt="Profile"
             />
             <div className="flex flex-row">
-              <h2 className="text-2xl font-semibold ">HELLO --</h2>
               <Link
-                className="w-fit px-1 text-2xl border rounded-md hover:text-neutral-200"
-                href={"/app/profile/setup"}
+                className="w-fit text-xl hover:text-green-600"
+                href={`/app/profile/${UserData?.username}`}
               >
-                <FaEdit />
+                @{UserData?.username}
               </Link>
+              {UserData.id == YouUser.user.id && (
+                <Link
+                  className="w-fit m-2 px-1 text-lg border rounded-md hover:text-neutral-100"
+                  href={"/app/profile/setup"}
+                >
+                  <FaEdit />
+                </Link>
+              )}
             </div>
-            <Link
-              className="w-fit hover:text-green-600"
-              href={`/app/profile/${UserData?.username}`}
-            >
-              @{UserData?.username}
-            </Link>
 
             <div className="">
               <p className="text-sm ">{UserData.email}</p>
@@ -139,7 +140,7 @@ const page = async ({
             </div> */}
             <div>
               <div className="mb-1">
-                {UserData.username !== id && (
+                {UserData.id !== YouUser.user.id && (
                   <UserIntrectionBtn userId={UserData.id} />
                 )}
               </div>
@@ -148,31 +149,22 @@ const page = async ({
               </div>
             </div>
             <div className="w-full flex flex-col md:flex-row min-h-64 h-full">
-              <div className="group flex-1 flex justify-center items-center flex-col rounded-l-md border border-gray-500 hover:flex-[2] duration-300">
-                <Link
-                  href={""}
-                  className="text-2xl group-hover:text-4xl group-hover:text-orange-500 duration-300 group-hover:underline"
-                >
+              <div className="group flex-1 cursor-default flex justify-center items-center flex-col rounded-l-md border border-gray-500 ">
+                <span className="text-2xl group-hover:text-4xl group-hover:text-orange-500 duration-300 ">
                   {watchedCount}
-                </Link>
+                </span>
                 <span className="text-sm">Movie/TV Show Watched</span>
               </div>
-              <div className="group flex-1 flex justify-center items-center flex-col  border border-gray-500 hover:flex-[2] duration-300">
-                <Link
-                  href={""}
-                  className="text-2xl group-hover:text-4xl group-hover:text-indigo-500 duration-300 group-hover:underline"
-                >
+              <div className="group flex-1 cursor-default flex justify-center items-center flex-col  border border-gray-500 ">
+                <span className="text-2xl group-hover:text-4xl group-hover:text-indigo-500 duration-300 ">
                   {favoriteCount}
-                </Link>
+                </span>
                 <span className="text-sm">Favorites</span>
               </div>
-              <div className="group flex-1 flex justify-center items-center flex-col rounded-r-md border border-gray-500 hover:flex-[2] duration-300">
-                <Link
-                  href={""}
-                  className="text-2xl group-hover:text-4xl group-hover:text-green-500 duration-300 group-hover:underline"
-                >
+              <div className="group flex-1 cursor-default flex justify-center items-center flex-col rounded-r-md border border-gray-500 ">
+                <span className="text-2xl group-hover:text-4xl group-hover:text-green-500 duration-300 ">
                   {watchlistCount}
-                </Link>
+                </span>
                 <span className="text-sm">WatchList</span>
               </div>
             </div>
@@ -244,20 +236,14 @@ const page = async ({
                                 : item.item_name)}
                           </span>
                         </Link>
-                        {/* <p className="text-xs mb-2 ">
-              {data.release_date || data.first_air_date}
-              </p>
-              <div className=" mb-4 text-xs">
-              <GenreName genreids={data.genre_ids} />
-              </div> */}
-                        {/* <div className="mt-1 ">
-              <Staring id={data.id} type={data.media_type} />
-            </div> */}
                       </div>
                     </div>
                   </div>
                 </div>
               ))}
+            </div>
+            <div className="mt-2 mb-5 w-fit m-auto cursor-default">
+              {"<- "} {" ->"}
             </div>
           </div>
         )}
@@ -342,6 +328,9 @@ const page = async ({
                   </div>
                 </div>
               ))}
+            </div>
+            <div className="mt-2 mb-5 w-fit m-auto cursor-default">
+              {"<- "} {" ->"}
             </div>
           </div>
         )}
