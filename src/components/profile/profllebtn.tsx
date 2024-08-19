@@ -125,7 +125,7 @@ export function ShowFollower({ followerCount, userId }: any) {
 
   return (
     <button
-      className="border border-gray-300 w-full rounded-l-md px-4 py-2 hover:bg-neutral-800"
+      className="border border-gray-300 w-full rounded-r-md px-4 py-2 hover:bg-neutral-800"
       onClick={() => setModal(!modal)}
     >
       {followerCount} Following

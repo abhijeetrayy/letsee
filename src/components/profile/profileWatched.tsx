@@ -115,102 +115,71 @@ const WatchedMoviesList = ({ userId }: any): any => {
     <div>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-3">
         {movies?.map((item: any) => (
-          <div className="" key={item.id}>
-            <div className=" relative group flex flex-col rounded-md bg-black mr-2.5 w-full  text-gray-300 overflow-hidden duration-300  lg:hover:scale-105 ">
-              <div className="absolute top-0 left-0 z-10 lg:opacity-0 lg:group-hover:opacity-100">
-                {item.item_adult ? (
-                  <p className="p-1 bg-red-600 text-white rounded-br-md text-sm">
-                    Adult
-                  </p>
-                ) : (
-                  <p className="p-1 bg-black text-white rounded-br-md text-sm">
-                    {item.item_type}
-                  </p>
-                )}
-              </div>
-              {/* <div className="absolute top-0 right-0 z-10">
-                  {(item.release_date || item.first_air_date) && (
-                    <p className="p-1 bg-indigo-600 text-white rounded-tr-sm rounded-bl-md text-sm">
-                      {new Date(item.release_date).getFullYear() ||
-                        new Date(item.first_air_date).getFullYear()}
-                    </p>
-                  )}
-                </div> */}
-              <Link
-                className="h-[270px]"
-                href={`/app/${item.item_type}/${item.item_id}-${item.item_name
-                  .trim()
-                  .replace(/[^a-zA-Z0-9]/g, "-")
-                  .replace(/-+/g, "-")}}`}
+          <div
+            className="relative group flex flex-col bg-black w-full h-[400px] text-gray-300 rounded-md overflow-hidden duration-300 lg:hover:scale-105"
+            key={item.id}
+          >
+            <div className="absolute top-0 left-0 z-10 lg:opacity-0 lg:group-hover:opacity-100">
+              {item.item_adult ? (
+                <p className="p-1 bg-red-600 text-white rounded-br-md text-sm">
+                  Adult
+                </p>
+              ) : (
+                <p className="p-1 bg-black text-white rounded-br-md text-sm">
+                  {item.item_type}
+                </p>
+              )}
+            </div>
+
+            <Link
+              className="h-[300px]"
+              href={`/app/${item.item_type}/${item.item_id}-${item.item_name
+                .trim()
+                .replace(/[^a-zA-Z0-9]/g, "-")
+                .replace(/-+/g, "-")}}`}
+            >
+              <img
+                className="relative object-cover h-full w-full"
+                src={
+                  item.item_adult
+                    ? "/pixeled.jpg"
+                    : `https://image.tmdb.org/t/p/w185/${item.image_url}`
+                }
+                loading="lazy"
+                alt={item.item_name}
+              />
+            </Link>
+            <div className="w-full h-[100px] bg-indigo-700 z-10  flex flex-col justify-between">
+              <ThreePrefrenceBtn
+                cardId={item.item_id}
+                cardType={item.item_type}
+                cardName={item.item_name}
+                cardAdult={item.item_adult}
+                cardImg={item.image_url}
+              />
+              <div
+                title={item.name || item.title}
+                className="w-full flex flex-col gap-2 px-4 text-gray-200 pb-2"
               >
-                <img
-                  className="relative object-cover h-full w-full  "
-                  src={
-                    item.item_adult
-                      ? "/pixeled.jpg"
-                      : `https://image.tmdb.org/t/p/w185/${item.image_url}`
-                  }
-                  loading="lazy"
-                  alt={item.item_name}
-                />
-              </Link>
-              <div className=" w-full bg-neutral-900 z-10">
-                <ThreePrefrenceBtn
-                  cardId={item.item_id}
-                  cardType={item.item_type}
-                  cardName={item.item_name}
-                  cardAdult={item.item_adult}
-                  cardImg={item.image_url}
-                />
-                <div
-                  title={item.name || item.title}
-                  className="w-full flex flex-col gap-2  px-4  bg-indigo-700  text-gray-200 "
+                <Link
+                  href={`/app/${item.item_type}/${item.item_id}-${item.item_name
+                    .trim()
+                    .replace(/[^a-zA-Z0-9]/g, "-")
+                    .replace(/-+/g, "-")}}`}
                 >
-                  <Link
-                    href={`/app/${item.item_type}/${
-                      item.item_id
-                    }-${item.item_name
-                      .trim()
-                      .replace(/[^a-zA-Z0-9]/g, "-")
-                      .replace(/-+/g, "-")}}`}
-                    className="mb-1"
-                  >
-                    <span className="">
-                      {item?.item_name &&
-                        (item.item_name.length > 16
-                          ? item.item_name?.slice(0, 14) + ".."
-                          : item.item_name)}
-                    </span>
-                  </Link>
-                  {/* <p className="text-xs mb-2 ">
-                {data.release_date || data.first_air_date}
-              </p>
-              <div className=" mb-4 text-xs">
-                <GenreName genreids={data.genre_ids} />
-              </div> */}
-                  {/* <div className="mt-1 ">
-                <Staring id={data.id} type={data.media_type} />
-              </div> */}
-                </div>
+                  <span className="">
+                    {item?.item_name &&
+                      (item.item_name.length > 16
+                        ? item.item_name?.slice(0, 14) + ".."
+                        : item.item_name)}
+                  </span>
+                </Link>
               </div>
             </div>
           </div>
         ))}
 
         <div>
-          {/* <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-        >
-          Previous
-        </button>
-        <select
-          value={currentPage}
-          onChange={(e) => handlePageChange(Number(e.target.value))}
-          >
-          {renderPageOptions()}
-          </select> */}
-
           {movies.length < totalItems && (
             <div>
               <button

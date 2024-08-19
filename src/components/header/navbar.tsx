@@ -23,7 +23,7 @@ async function navbar() {
         <Link href={"/app"}>Let's see</Link>
       </div>
       <div>
-        <BurgerMenu userID={data?.user?.id} />
+        <BurgerMenu userID={userData.username} />
       </div>
       <div className="hidden md:flex flex-row gap-3  items-center">
         <div className="px-4 py-1  rounded-md bg-neutral-600 hover:bg-neutral-500">
