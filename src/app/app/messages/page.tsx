@@ -74,7 +74,7 @@ const Conversations = () => {
   }, [user]);
 
   return (
-    <div className="conversations-container bg-gray-100 p-4 rounded-lg shadow-md">
+    <div className="max-w-4xl w-full m-auto bg-neutral-800 p-4 rounded-lg shadow-md">
       <h1 className="text-2xl font-bold mb-4">Conversations</h1>
       {!loading ? (
         conversationalists.length > 0 ? (
@@ -82,11 +82,13 @@ const Conversations = () => {
             {conversationalists.map((conversationalist) => (
               <li
                 key={conversationalist.id}
-                className="mb-2 p-2 bg-white rounded-lg shadow-sm"
+                className="mb-2 p-2 bg-neutral-700 rounded-lg shadow-sm"
               >
                 <Link href={`/app/messages/${conversationalist.id}`}>
-                  <span className="text-blue-600 hover:underline">
-                    {conversationalist.username || conversationalist.email}
+                  <span className="text-blue-100 hover:underline">
+                    {(conversationalist.username &&
+                      "@" + conversationalist.username) ||
+                      conversationalist.email}
                   </span>
                 </Link>
               </li>
