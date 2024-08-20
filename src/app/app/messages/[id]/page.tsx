@@ -195,9 +195,9 @@ const Chat = () => {
               </Link>
             </h1>
           </div>
-          <div className="max-w-3xl w-full m-auto bg-neutral-800 p-4 rounded-lg shadow-md min-h-full">
+          <div className="max-w-3xl w-full m-auto bg-neutral-800 p-2 md:p-4 rounded-lg shadow-md min-h-full">
             <div
-              className=" bg-neutral-700 p-4 rounded-lg h-full overflow-y-auto "
+              className=" md:bg-neutral-700 md:p-4 rounded-lg h-full overflow-y-auto "
               ref={chatRef}
             >
               {isValidRecipient ? (
@@ -243,7 +243,7 @@ const Chat = () => {
               />
               <button
                 onClick={sendMessage}
-                className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg"
+                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg"
               >
                 Send
               </button>
