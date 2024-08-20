@@ -15,7 +15,7 @@ interface Message {
 }
 
 // Helper function to check if the recipient is valid
-export const isRecipientValid = async (recipientId: string) => {
+const isRecipientValid = async (recipientId: string) => {
   const supabase: SupabaseClient = createClient();
   const { data, error } = await supabase
     .from("users")
