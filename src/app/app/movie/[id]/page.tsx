@@ -244,10 +244,10 @@ const MovieDetails = async ({
                     .trim()
                     .replace(/[^a-zA-Z0-9]/g, "-")
                     .replace(/-+/g, "-")}`}
-                  className="group rounded-md h-full max-w-44  w-full  bg-indigo-600 lg:bg-inherit lg:hover:bg-indigo-600"
+                  className="group rounded-md overflow-hidden  bg-indigo-600 lg:bg-inherit lg:hover:bg-indigo-600"
                 >
                   <img
-                    className=" min-w-44  h-56 rounded-md object-cover"
+                    className=" max-w-44  rounded-md h-56  object-cover"
                     src={
                       item.profile_path
                         ? `https://image.tmdb.org/t/p/w185${item.profile_path}`
@@ -271,7 +271,7 @@ const MovieDetails = async ({
               <div className="   ml-3">
                 <Link
                   href={`/app/movie/${id}/cast`}
-                  className="flex justify-center items-center w-44   h-56 border-2 border-neutral-500 hover:border-indigo-600 hover:bg-neutral-800 rounded-md"
+                  className="flex justify-center items-center max-w-44   h-56 border-2 border-neutral-500 hover:border-indigo-600 hover:bg-neutral-800 rounded-md"
                 >
                   more..
                 </Link>

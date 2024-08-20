@@ -27,6 +27,9 @@ async function navbar() {
       </div>
       <div className="hidden md:flex flex-row gap-3  items-center">
         <div className="px-4 py-1  rounded-md bg-neutral-600 hover:bg-neutral-500">
+          <Link href={`/app/messages`}>Message's</Link>
+        </div>
+        <div className="px-4 py-1  rounded-md bg-neutral-600 hover:bg-neutral-500">
           <Link href={`/app/profile`}>User's</Link>
         </div>
         <div>

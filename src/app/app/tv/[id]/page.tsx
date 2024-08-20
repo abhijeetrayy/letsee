@@ -242,10 +242,10 @@ const ShowDetails = async ({
                     .trim()
                     .replace(/[^a-zA-Z0-9]/g, "-")
                     .replace(/-+/g, "-")}`}
-                  className="group rounded-md h-full max-w-44 lg:max-w-56 w-full  bg-indigo-600 lg:bg-inherit lg:hover:bg-indigo-600"
+                  className="group rounded-md overflow-hidden  bg-indigo-600 lg:bg-inherit lg:hover:bg-indigo-600"
                 >
                   <img
-                    className=" min-w-44 max-w-44 lg:min-w-52 h-56 rounded-md object-cover"
+                    className=" max-w-44  rounded-md h-56  object-cover"
                     src={
                       item.profile_path
                         ? `https://image.tmdb.org/t/p/w185${item.profile_path}`

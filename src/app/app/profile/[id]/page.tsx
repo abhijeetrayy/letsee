@@ -113,6 +113,11 @@ const page = async ({
             <div className="">
               <p className="text-sm ">{UserData.email}</p>
             </div>
+            {UserData.about && (
+              <div className="">
+                <p className="text-sm ">About: {UserData.about}</p>
+              </div>
+            )}
             {/* <div className="mt-6">
               <h3 className="text-lg font-semibold  mb-2">Details</h3>
               <ul className="">

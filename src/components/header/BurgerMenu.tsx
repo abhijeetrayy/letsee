@@ -91,6 +91,14 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID }) => {
           </li>
           <li>
             <button
+              onClick={() => link(`/app/messages`)}
+              className="text-2xl hover:text-gray-400"
+            >
+              Message's
+            </button>
+          </li>
+          <li>
+            <button
               onClick={() => link(`/app/profile`)}
               className="text-2xl hover:text-gray-400"
             >
