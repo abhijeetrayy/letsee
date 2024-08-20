@@ -31,7 +31,7 @@ async function getUsername() {
     .select("*")
     .eq("id", userData.user?.id)
     .single();
-  console.log(profileData, "bb");
+
   return { profileData };
 }
 
@@ -41,7 +41,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const { profileData } = await getUsername();
-  console.log(profileData, "aa");
+
   if (profileData.username == null) {
     return <SetupComp />;
   } else {

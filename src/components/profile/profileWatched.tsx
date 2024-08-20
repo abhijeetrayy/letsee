@@ -58,59 +58,6 @@ const WatchedMoviesList = ({ userId }: any): any => {
     setCurrentPage(newPage);
   };
 
-  // const renderPageOptions = () => {
-  //   const options = [];
-  //   for (let i = 1; i <= totalPages; i++) {
-  //     options.push(
-  //       <option key={i} value={i}>
-  //         Page {i}
-  //       </option>
-  //     );
-  //   }
-  //   return options;
-  // };
-
-  const isItemPreferred = (itemId: number): boolean => {
-    if (Array.isArray(userPrefrence.userFavorites)) {
-      return userPrefrence.userFavorites.some(
-        (pref: any) => pref.item_id === itemId
-      );
-    } else if (
-      typeof userPrefrence.userFavorites === "object" &&
-      userPrefrence.userFavorites !== null
-    ) {
-      // If userPrefrence.userPrefrence is an object, check if it has the item_id as a key
-      return Object.keys(userPrefrence.userFavorites).includes(
-        itemId.toString()
-      );
-    } else {
-      console.error(
-        "Unexpected userPrefrence.userPrefrence type:",
-        typeof userPrefrence.userFavorites
-      );
-      return false;
-    }
-  };
-  const isItemWatched = (itemId: number): boolean => {
-    if (Array.isArray(userPrefrence.userWatched)) {
-      return userPrefrence.userWatched.some(
-        (pref: any) => pref.item_id === itemId
-      );
-    } else if (
-      typeof userPrefrence.userWatched === "object" &&
-      userPrefrence.userWatched !== null
-    ) {
-      // If userPrefrence.userPrefrence is an object, check if it has the item_id as a key
-      return Object.keys(userPrefrence.userWatched).includes(itemId.toString());
-    } else {
-      console.error(
-        "Unexpected userPrefrence.userPrefrence type:",
-        typeof userPrefrence.userWatched
-      );
-      return false;
-    }
-  };
-
   return (
     <div>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-3">

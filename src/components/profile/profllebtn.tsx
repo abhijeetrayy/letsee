@@ -3,6 +3,7 @@
 
 import React, { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
+import Link from "next/link";
 
 interface FollowerBtnClientProps {
   profileId: string;
@@ -59,8 +60,7 @@ export function FollowerBtnClient({
     </button>
   );
 }
-
-export function ShowFollower({ followerCount, userId }: any) {
+export function ShowFollowing({ followingCount, userId }: any) {
   const [modal, setModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [following, setFollowing] = useState([]);
@@ -73,7 +73,7 @@ export function ShowFollower({ followerCount, userId }: any) {
       if (modal) {
         setLoading(true);
         try {
-          const response = await fetch("/api/getfollowing", {
+          const response = await fetch("/api/getfollower", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -85,7 +85,7 @@ export function ShowFollower({ followerCount, userId }: any) {
           }
           const res = await response.json();
           setFollowing(res.connection);
-          console.log(res);
+          console.log(res, "from ui getfollowing");
         } catch (error) {
           console.error("Error fetching following:", error);
         } finally {
@@ -112,11 +112,16 @@ export function ShowFollower({ followerCount, userId }: any) {
           ) : following.length > 0 ? (
             <ul className="text-neutral-700">
               {following.map((user: any) => (
-                <li className="mb-2">{user.users.email}</li>
+                <Link
+                  href={`/app/profile/${user.users.username}`}
+                  className="mb-2 block  hover:text-indigo-700"
+                >
+                  @{user.users.username}
+                </Link>
               ))}
             </ul>
           ) : (
-            <p>No following users found.</p>
+            <p>No follower users found.</p>
           )}
         </div>
       </div>
@@ -128,12 +133,12 @@ export function ShowFollower({ followerCount, userId }: any) {
       className="border border-gray-300 w-full rounded-r-md px-4 py-2 hover:bg-neutral-800"
       onClick={() => setModal(!modal)}
     >
-      {followerCount} Following
+      {followingCount} Follower
     </button>
   );
 }
 
-export function ShowFollowing({ followingCount, userId }: any) {
+export function ShowFollower({ followerCount, userId }: any) {
   const [modal, setModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [following, setFollowing] = useState([]);
@@ -146,7 +151,7 @@ export function ShowFollowing({ followingCount, userId }: any) {
       if (modal) {
         setLoading(true);
         try {
-          const response = await fetch("/api/getfollower", {
+          const response = await fetch("/api/getfollowing", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -158,7 +163,7 @@ export function ShowFollowing({ followingCount, userId }: any) {
           }
           const res = await response.json();
           setFollowing(res.connection);
-          console.log(res);
+          console.log(res.connection, "from ui getfollower");
         } catch (error) {
           console.error("Error fetching following:", error);
         } finally {
@@ -174,7 +179,7 @@ export function ShowFollowing({ followingCount, userId }: any) {
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
         <div className="bg-white p-4 rounded-md max-w-md w-full max-h-[80vh] overflow-y-auto">
           <button
-            className="float-right text-gray-600 hover:text-gray-800"
+            className="float-right text-gray-600 "
             onClick={() => setModal(!modal)}
           >
             X
@@ -183,9 +188,14 @@ export function ShowFollowing({ followingCount, userId }: any) {
           {loading ? (
             <p>Loading...</p>
           ) : following.length > 0 ? (
-            <ul>
+            <ul className="text-neutral-700">
               {following.map((user: any) => (
-                <li className="mb-2 text-neutral-700">{user.users.email}</li>
+                <Link
+                  href={`/app/profile/${user.users.username}`}
+                  className="mb-2 block hover:text-indigo-700"
+                >
+                  @{user.users.username}
+                </Link>
               ))}
             </ul>
           ) : (
@@ -201,7 +211,7 @@ export function ShowFollowing({ followingCount, userId }: any) {
       className="border border-gray-300 w-full rounded-l-md px-4 py-2 hover:bg-neutral-800"
       onClick={() => setModal(!modal)}
     >
-      {followingCount} Following
+      {followerCount} Following
     </button>
   );
 }
