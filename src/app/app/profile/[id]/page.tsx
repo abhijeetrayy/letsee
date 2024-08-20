@@ -61,7 +61,7 @@ const page = async ({
     .select("*")
     .eq("username", id)
     .single();
-  console.log(data);
+
   if (profileError) {
     redirect("/app/profile/setup");
   }

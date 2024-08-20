@@ -4,6 +4,7 @@ import { createClient } from "@/utils/supabase/client";
 import { Span } from "next/dist/trace";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { CiSearch } from "react-icons/ci";
+import { useRouter } from "next/navigation";
 
 const supabase = createClient();
 
@@ -16,6 +17,7 @@ function Page() {
   const [oneWord, setOneWord] = useState(true);
   const [isUsernameValid, setIsUsernameValid] = useState(true);
   const [usernameAvailable, setUsernameAvailable] = useState(null) as any;
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchUser() {
@@ -121,7 +123,7 @@ function Page() {
       setUser(updatedUser);
     }
 
-    setLoading(false);
+    router.refresh();
   };
 
   if (loading) return <div>Loading...</div>;
