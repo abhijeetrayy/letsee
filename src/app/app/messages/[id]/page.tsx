@@ -195,9 +195,9 @@ const Chat = () => {
               </Link>
             </h1>
           </div>
-          <div className="max-w-3xl w-full m-auto bg-neutral-800 p-4 rounded-lg shadow-md min-h-full">
+          <div className="max-w-3xl w-full m-auto bg-neutral-800 p-2 md:p-4 rounded-lg shadow-md min-h-full">
             <div
-              className=" bg-neutral-700 p-4 rounded-lg h-full overflow-y-auto "
+              className=" md:bg-neutral-700 md:p-4 rounded-lg h-full overflow-y-auto "
               ref={chatRef}
             >
               {isValidRecipient ? (
