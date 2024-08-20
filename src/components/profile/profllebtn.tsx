@@ -98,8 +98,8 @@ export function ShowFollowing({ followingCount, userId }: any) {
 
   if (modal) {
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-        <div className="bg-white p-4 rounded-md max-w-md w-full max-h-[80vh] overflow-y-auto">
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="z-50 bg-white p-4 rounded-md max-w-md w-full max-h-[80vh] overflow-y-auto">
           <button
             className="float-right text-gray-600 hover:text-gray-800"
             onClick={() => setModal(!modal)}
@@ -130,7 +130,7 @@ export function ShowFollowing({ followingCount, userId }: any) {
 
   return (
     <button
-      className="border border-gray-300 w-full rounded-r-md px-4 py-2 hover:bg-neutral-800"
+      className="border border-gray-300 w-full rounded-l-md px-4 py-2 hover:bg-neutral-800"
       onClick={() => setModal(!modal)}
     >
       {followingCount} Follower
@@ -176,8 +176,8 @@ export function ShowFollower({ followerCount, userId }: any) {
 
   if (modal) {
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-        <div className="bg-white p-4 rounded-md max-w-md w-full max-h-[80vh] overflow-y-auto">
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="z-50 bg-white p-4 rounded-md max-w-md w-full max-h-[80vh] overflow-y-auto">
           <button
             className="float-right text-gray-600 "
             onClick={() => setModal(!modal)}
@@ -208,7 +208,7 @@ export function ShowFollower({ followerCount, userId }: any) {
 
   return (
     <button
-      className="border border-gray-300 w-full rounded-l-md px-4 py-2 hover:bg-neutral-800"
+      className="border border-gray-300 w-full rounded-r-md px-4 py-2 hover:bg-neutral-800"
       onClick={() => setModal(!modal)}
     >
       {followerCount} Following

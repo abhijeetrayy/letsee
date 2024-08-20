@@ -16,9 +16,11 @@ export async function POST(req: NextRequest) {
     );
 
     const show = await response.json();
+    console.log(show);
 
     return NextResponse.json(show, { status: 200 });
   } catch (error) {
+    console.log(error);
     return NextResponse.json(error, { status: 500 });
   }
 }
