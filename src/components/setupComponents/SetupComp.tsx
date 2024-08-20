@@ -1,18 +1,21 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import { createClient } from "@/utils/supabase/client";
-import { useRouter } from "next/navigation";
+import { Span } from "next/dist/trace";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { CiSearch } from "react-icons/ci";
 
 const supabase = createClient();
 
 function Page() {
   const [loading, setLoading] = useState(true);
+  const [btnloading, setbtnLoading] = useState(false);
   const [user, setUser] = useState(null) as any;
   const [username, setUsername] = useState("");
   const [about, setAbout] = useState("");
+  const [oneWord, setOneWord] = useState(true);
+  const [isUsernameValid, setIsUsernameValid] = useState(true);
   const [usernameAvailable, setUsernameAvailable] = useState(null) as any;
-
-  const router = useRouter();
 
   useEffect(() => {
     async function fetchUser() {
@@ -39,28 +42,42 @@ function Page() {
     fetchUser();
   }, []);
 
-  const checkUsername = async () => {
+  const sanitizeUsername = (input: string) => {
+    const sanitized = input.toLowerCase().replace(/[^a-z0-9]/g, "");
+    const isValid = sanitized === input;
+    const isOneWord = sanitized.length > 1;
+    return { sanitized, isValid, isOneWord };
+  };
+
+  const checkUsername = async (sanitized: string) => {
     if (!username.trim()) {
       setUsernameAvailable(null);
       return;
     }
 
-    const { data, error } = await supabase
-      .from("users")
-      .select("username")
-      .eq("username", username.trim())
-      //   .not("id", "eq", user.id) // Exclude the current user
-      .single();
+    setbtnLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from("users")
+        .select("username")
+        .eq("username", sanitized)
+        .single();
 
-    if (error && error.code === "PGRST116") {
-      // If the username does not exist, treat it as available
-      setUsernameAvailable(true);
-    } else if (error) {
-      console.error("Error checking username availability:", error);
+      if (error && error.code === "PGRST116") {
+        // If the username does not exist, treat it as available
+        setUsernameAvailable(true);
+      } else if (error) {
+        console.error("Error checking username availability:", error);
+        setUsernameAvailable(false);
+      } else {
+        // If we got a result, it means the username is not available
+        setUsernameAvailable(data ? false : true);
+      }
+    } catch (error) {
+      console.error("Error checking username:", error);
       setUsernameAvailable(false);
-    } else {
-      // If we got a result, it means the username is not available
-      setUsernameAvailable(data ? false : true);
+    } finally {
+      setbtnLoading(false);
     }
   };
 
@@ -72,7 +89,7 @@ function Page() {
     }
 
     // Check if the username is unique before submitting
-    await checkUsername();
+    await checkUsername(username);
 
     if (usernameAvailable === false) {
       alert("Username is not available. Please choose a different one.");
@@ -91,20 +108,20 @@ function Page() {
     if (error) {
       console.error("Error updating profile:", error);
       alert("Error updating profile. Please try again.");
-      const {
-        data: { user: updatedUser },
-      } = await supabase.auth.getUser();
-      if (updatedUser) {
-        setUser(updatedUser);
-      }
-      setLoading(false);
     } else {
       console.log("Profile updated successfully");
       alert("Profile updated successfully!");
-      router.refresh();
     }
 
     // Refetch user data after submission
+    const {
+      data: { user: updatedUser },
+    } = await supabase.auth.getUser();
+    if (updatedUser) {
+      setUser(updatedUser);
+    }
+
+    setLoading(false);
   };
 
   if (loading) return <div>Loading...</div>;
@@ -121,7 +138,10 @@ function Page() {
           }
         >
           <h1 className="text-7xl font-extrabold text-neutral-100">Profile</h1>
-          <p>Manage your profile details below.</p>
+          <p>
+            <span className="font-bold text-indigo-500">Complete</span> your
+            profile details below.
+          </p>
         </div>
         <form
           className={"flex flex-col max-w-sm w-full m-auto gap-2"}
@@ -131,25 +151,54 @@ function Page() {
             Username
           </label>
           <input
-            className="text-neutral-700 ring-0 outline-0 px-3 focus:ring-2 rounded-sm focus:ring-indigo-600 py-2"
+            className={`text-neutral-700 ring-0 outline-0 px-3 focus:ring-2 rounded-sm py-2 ${
+              isUsernameValid
+                ? "focus:ring-indigo-600"
+                : "ring-2 ring-red-500 focus:ring-red-500"
+            }`}
             id="username"
             type="text"
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            onBlur={checkUsername}
+            onChange={(e) => {
+              const { sanitized, isValid, isOneWord } = sanitizeUsername(
+                e.target.value
+              );
+              setIsUsernameValid(isValid);
+              setOneWord(isOneWord);
+              setUsername(sanitized);
+              if (sanitized && isValid && isOneWord) {
+                checkUsername(sanitized);
+              } else {
+                setUsernameAvailable(null); // Reset availability when typing
+              }
+            }}
+            // onBlur={checkUsername}
           />
-          <button
-            type="button"
-            onClick={checkUsername}
-            className="text-neutral-100 bg-green-500 p-2 rounded-md w-fit hover:bg-green-600"
-          >
-            Check
-          </button>
-          {usernameAvailable !== null && (
-            <span>
-              {usernameAvailable ? "✅ Available" : "❌ Not available"}
+          {!isUsernameValid && (
+            <span className="text-red-500">
+              username: aA-zZ and 0-9, no special character or spaces
             </span>
           )}
+          {!oneWord && (
+            <span className="text-red-500">
+              username: more than one character
+            </span>
+          )}
+
+          <div className="h-6">
+            {btnloading ? (
+              <span>
+                <AiOutlineLoading3Quarters className="w-fit mt-1 ml-1 animate-spin text-neutral-100" />
+              </span>
+            ) : (
+              usernameAvailable !== null && (
+                <span className="text-neutral-100">
+                  {usernameAvailable ? "✅ Available" : "❌ Not available"}
+                </span>
+              )
+            )}
+          </div>
+
           <label className="text-neutral-100 pl-2" htmlFor="about">
             About
           </label>
@@ -160,9 +209,14 @@ function Page() {
             onChange={(e) => setAbout(e.target.value)}
           />
           <button
-            className="text-neutral-100 bg-indigo-700 py-2 rounded-md w-full hover:bg-indigo-600"
+            className="text-neutral-100 bg-indigo-700 py-2 rounded-md w-full hover:bg-indigo-600 disabled:bg-gray-400"
             type="submit"
-            disabled={loading || usernameAvailable === false}
+            disabled={
+              loading ||
+              usernameAvailable === false ||
+              !isUsernameValid ||
+              !oneWord
+            }
           >
             {loading ? "Updating..." : "Update Profile"}
           </button>

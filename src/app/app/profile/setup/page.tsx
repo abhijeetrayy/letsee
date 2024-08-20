@@ -9,6 +9,7 @@ function Page() {
   const [user, setUser] = useState(null) as any;
   const [username, setUsername] = useState("");
   const [about, setAbout] = useState("");
+  const [isUsernameValid, setIsUsernameValid] = useState(true);
   const [usernameAvailable, setUsernameAvailable] = useState(null) as any;
 
   useEffect(() => {
@@ -35,6 +36,12 @@ function Page() {
 
     fetchUser();
   }, []);
+
+  const sanitizeUsername = (input: string) => {
+    const sanitized = input.toLowerCase().replace(/[^a-z0-9]/g, "");
+    const isValid = sanitized === input;
+    return { sanitized, isValid };
+  };
 
   const checkUsername = async () => {
     if (!username.trim()) {
@@ -128,22 +135,31 @@ function Page() {
             Username
           </label>
           <input
-            className="text-neutral-700 ring-0 outline-0 px-3 focus:ring-2 rounded-sm focus:ring-indigo-600 py-2"
+            className={`text-neutral-700 ring-0 outline-0 px-3 focus:ring-2 rounded-sm py-2 ${
+              isUsernameValid
+                ? "focus:ring-indigo-600"
+                : "ring-2 ring-red-500 focus:ring-red-500"
+            }`}
             id="username"
             type="text"
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={(e) => {
+              const { sanitized, isValid } = sanitizeUsername(e.target.value);
+              setUsername(sanitized);
+              setIsUsernameValid(isValid);
+            }}
             onBlur={checkUsername}
           />
           <button
             type="button"
             onClick={checkUsername}
-            className="text-neutral-100 bg-green-500 p-2 rounded-md w-fit hover:bg-green-600"
+            className="text-neutral-100 bg-green-500 p-2 rounded-md w-fit hover:bg-green-600 disabled:bg-gray-400"
+            disabled={!isUsernameValid}
           >
             Check
           </button>
           {usernameAvailable !== null && (
-            <span>
+            <span className="text-neutral-100">
               {usernameAvailable ? "✅ Available" : "❌ Not available"}
             </span>
           )}
@@ -157,9 +173,11 @@ function Page() {
             onChange={(e) => setAbout(e.target.value)}
           />
           <button
-            className="text-neutral-100 bg-indigo-700 py-2 rounded-md w-full hover:bg-indigo-600"
+            className="text-neutral-100 bg-indigo-700 py-2 rounded-md w-full hover:bg-indigo-600 disabled:bg-gray-400"
             type="submit"
-            disabled={loading || usernameAvailable === false}
+            disabled={
+              loading || usernameAvailable === false || !isUsernameValid
+            }
           >
             {loading ? "Updating..." : "Update Profile"}
           </button>
