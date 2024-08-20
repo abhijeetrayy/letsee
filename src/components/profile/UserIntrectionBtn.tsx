@@ -1,6 +1,7 @@
 import React from "react";
 import { createClient } from "@/utils/supabase/server";
 import { FollowerBtnClient } from "./profllebtn";
+import Link from "next/link";
 
 async function UserIntrectionBtn({ userId }: any) {
   const supabase = createClient();
@@ -21,7 +22,12 @@ async function UserIntrectionBtn({ userId }: any) {
         profileId={userId}
       />
 
-      <button>Message</button>
+      <Link
+        className="bg-blue-600 p-2 rounded-md"
+        href={`/app/message/${userId}`}
+      >
+        Message
+      </Link>
     </div>
   );
 }
