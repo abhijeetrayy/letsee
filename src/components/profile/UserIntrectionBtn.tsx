@@ -24,7 +24,7 @@ async function UserIntrectionBtn({ userId }: any) {
 
       <Link
         className="bg-blue-600 p-2 rounded-md"
-        href={`/app/message/${userId}`}
+        href={`/app/messages/${userId}`}
       >
         Message
       </Link>
