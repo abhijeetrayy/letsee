@@ -16,7 +16,7 @@ async function UserConnections({ userId }: any) {
   console.log(followedby, following);
 
   return (
-    <div className="flex flex-row justify-around h-20 w-full gap-0   ">
+    <div className="flex flex-row justify-around h-20 w-full gap-0  z-50 ">
       <ShowFollowing userId={userId} followingCount={following} />
       <ShowFollower userId={userId} followerCount={followedby} />
     </div>

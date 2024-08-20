@@ -26,7 +26,7 @@ export default function LoginPage() {
       setLoading(false);
       setError(error.message);
     } else {
-      router.push("/app");
+      router.refresh();
     }
   };
 
@@ -53,7 +53,7 @@ export default function LoginPage() {
           progress: undefined,
         }
       );
-      router.push("/app");
+      router.refresh();
     }
   };
 

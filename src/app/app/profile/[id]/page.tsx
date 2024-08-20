@@ -144,7 +144,7 @@ const page = async ({
                   <UserIntrectionBtn userId={UserData.id} />
                 )}
               </div>
-              <div>
+              <div className="z-50">
                 <UserConnections userId={UserData.id} />
               </div>
             </div>
@@ -175,7 +175,7 @@ const page = async ({
             <div className="my-3">
               <div>Favorites "{favoriteCount}"</div>
             </div>
-            <div className="w-full flex flex-row overflow-x-scroll vone-scrollbar gap-3">
+            <div className="w-full flex flex-row overflow-x-scroll vone-scrollbar gap-3 z-40">
               {favorates?.map((item: any) => (
                 <div className="" key={item.id}>
                   <div className=" relative group flex flex-col rounded-md bg-black  w-full  text-gray-300 overflow-hidden  ">
@@ -252,7 +252,7 @@ const page = async ({
             <div className="my-3">
               <div>WatchLater "{watchlistCount}"</div>
             </div>
-            <div className="w-full flex flex-row overflow-x-scroll vone-scrollbar gap-3">
+            <div className="w-full flex flex-row overflow-x-scroll vone-scrollbar gap-3 z-40">
               {watchlist?.map((item: any) => (
                 <div className="" key={item.id}>
                   <div className=" relative group flex flex-col rounded-md bg-black  w-full  text-gray-300 overflow-hidden  ">
@@ -267,14 +267,7 @@ const page = async ({
                         </p>
                       )}
                     </div>
-                    {/* <div className="absolute top-0 right-0 z-10">
-                {(item.release_date || item.first_air_date) && (
-                  <p className="p-1 bg-indigo-600 text-white rounded-tr-sm rounded-bl-md text-sm">
-                  {new Date(item.release_date).getFullYear() ||
-                  new Date(item.first_air_date).getFullYear()}
-                  </p>
-                  )}
-                  </div> */}
+
                     <Link
                       className="h-[270px] w-[200px] "
                       href={`/app/${item.item_type}/${item.item_id}`}
@@ -335,7 +328,7 @@ const page = async ({
           </div>
         )}
         {watchedCount > 0 && (
-          <div>
+          <div className="z-40">
             <div className="my-3">
               <div>
                 Watched {""} "{watchedCount}"
