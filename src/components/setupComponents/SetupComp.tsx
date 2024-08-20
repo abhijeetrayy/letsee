@@ -176,7 +176,7 @@ function Page() {
           />
           {!isUsernameValid && (
             <span className="text-red-500">
-              username: aA-zZ and 0-9, no special character or spaces
+              username: a-z lowercase and 0-9, no special character or spaces
             </span>
           )}
           {!oneWord && (
