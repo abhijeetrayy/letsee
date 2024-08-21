@@ -1,17 +1,9 @@
 "use client";
 
-import Link from "next/link";
-import React, { useState, useEffect, useContext, useMemo } from "react";
-import CardMovieButton from "../buttons/cardButtons";
-import { IoEyeOutline, IoEyeSharp } from "react-icons/io5";
-import { FcAlarmClock, FcLike } from "react-icons/fc";
-import { CiHeart, CiSaveDown1 } from "react-icons/ci";
 import userPrefrenceContext from "@/app/contextAPI/userPrefrence";
-import { FaRegEyeSlash } from "react-icons/fa";
-import { RiEyeCloseLine } from "react-icons/ri";
-import { GiBleedingEye } from "react-icons/gi";
-import { PiEyeBold } from "react-icons/pi";
 import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
+import Link from "next/link";
+import { useContext, useEffect, useMemo, useState } from "react";
 
 const WatchedMoviesList = ({ userId }: any): any => {
   const [movies, setMovies] = useState<any[]>([]);

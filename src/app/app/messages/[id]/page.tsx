@@ -1,10 +1,9 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import { SupabaseClient, User } from "@supabase/supabase-js";
 import Link from "next/link";
-import { Span } from "next/dist/trace";
 
 interface Message {
   id: string;
@@ -14,22 +13,14 @@ interface Message {
   created_at: string;
 }
 
-// Helper function to check if the recipient is valid
-const isRecipientValid = async (recipientId: string) => {
+const isRecipientValid = async (recipientId: string): Promise<boolean> => {
   const supabase: SupabaseClient = createClient();
-
   const { data, error } = await supabase
     .from("users")
     .select("id")
     .eq("id", recipientId)
     .single();
-
-  if (error || !data) {
-    console.error("Invalid recipient ID:", error?.message);
-    return false;
-  }
-
-  return true;
+  return !error && !!data;
 };
 
 const Chat = () => {
@@ -38,86 +29,73 @@ const Chat = () => {
   const [user, setUser] = useState<User | null>(null);
   const [recipient, setRecipient] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [disable, setDisable] = useState<boolean>(false);
   const [recipientUsername, setRecipientUsername] = useState<string | null>(
     null
   );
   const [isValidRecipient, setIsValidRecipient] = useState<boolean>(true);
   const { id }: any = useParams();
   const chatRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const supabase: SupabaseClient = createClient();
 
-  const fetchUsername = async (userId: string) => {
-    const { data, error } = await supabase
-      .from("users")
-      .select("username")
-      .eq("id", userId)
-      .single();
+  const fetchUsername = useCallback(
+    async (userId: string) => {
+      const { data, error } = await supabase
+        .from("users")
+        .select("username")
+        .eq("id", userId)
+        .single();
 
-    if (error) {
-      console.error("Error fetching username:", error.message);
-      return null;
-    }
-
-    return data?.username || null;
-  };
-
-  // Fetch the authenticated user
-  useEffect(() => {
-    const getUser = async () => {
-      const { data, error } = await supabase.auth.getUser();
       if (error) {
-        console.error(error);
-      } else {
-        setUser(data.user);
+        console.error("Error fetching username:", error.message);
+        return null;
       }
-    };
-    getUser();
-  }, []);
+      return data?.username || null;
+    },
+    [supabase]
+  );
 
-  // Set the recipient ID from the URL parameters and validate it
   useEffect(() => {
-    const validateRecipient = async (recipientId: string) => {
-      const { data: userData, error }: any = await supabase.auth.getUser();
-
-      const valid = await isRecipientValid(recipientId);
-      setIsValidRecipient(valid);
-      if (valid) {
-        const username = await fetchUsername(recipientId);
-        setRecipientUsername(username);
+    const getUserAndMessages = async () => {
+      const { data: userData, error: userError } =
+        await supabase.auth.getUser();
+      if (userError) {
+        console.error(userError);
+        return;
       }
-    };
 
-    if (id) {
-      setRecipient(id);
-      validateRecipient(id);
-    }
-  }, [id]);
+      const user = userData.user;
+      setUser(user);
 
-  // Fetch existing messages when user and recipient are set
-  useEffect(() => {
-    if (user && recipient && isValidRecipient) {
-      const fetchMessages = async () => {
-        const { data, error } = await supabase
-          .from("messages")
-          .select("*")
-          .or(`sender_id.eq.${user.id},recipient_id.eq.${user.id}`)
-          .or(`sender_id.eq.${recipient},recipient_id.eq.${recipient}`)
-          .order("created_at", { ascending: true });
+      if (id) {
+        setRecipient(id);
+        const valid = await isRecipientValid(id);
+        setIsValidRecipient(valid);
+        if (valid) {
+          const username = await fetchUsername(id);
+          setRecipientUsername(username);
 
-        if (error) {
-          console.error(error);
-        } else {
+          const { data: messageData, error: messageError } = await supabase
+            .from("messages")
+            .select("*")
+            .or(`sender_id.eq.${user.id},recipient_id.eq.${user.id}`)
+            .or(`sender_id.eq.${id},recipient_id.eq.${id}`)
+            .order("created_at", { ascending: true });
+
+          if (messageError) {
+            console.error(messageError);
+          } else {
+            setMessages(messageData);
+          }
           setLoading(false);
-          setMessages(data);
         }
-      };
+      }
+    };
+    getUserAndMessages();
+  }, [id, supabase, fetchUsername]);
 
-      fetchMessages();
-    }
-  }, [user, recipient, isValidRecipient]);
-
-  // Listen for new messages in real-time
   useEffect(() => {
     if (user && recipient && isValidRecipient) {
       const channel = supabase
@@ -136,16 +114,13 @@ const Chat = () => {
               (payload.new.sender_id === recipient &&
                 payload.new.recipient_id === user.id)
             ) {
-              setMessages((prevMessages) => [
+              setMessages((prevMessages: any) => [
                 ...prevMessages,
-                {
-                  id: payload.new.id,
-                  sender_id: payload.new.sender_id,
-                  recipient_id: payload.new.recipient_id,
-                  content: payload.new.content,
-                  created_at: payload.new.created_at,
-                },
+                payload.new,
               ]);
+              if (payload.new.sender_id === user.id) {
+                setDisable(false); // Re-enable the button only if the sent message is confirmed in the state
+              }
             }
           }
         )
@@ -155,11 +130,12 @@ const Chat = () => {
         channel.unsubscribe();
       };
     }
-  }, [user, recipient, isValidRecipient]);
+  }, [user, recipient, isValidRecipient, supabase]);
 
-  // Send a message to the database
-  const sendMessage = async () => {
+  const sendMessage = useCallback(async () => {
     if (message.trim() !== "" && user && recipient && isValidRecipient) {
+      setDisable(true); // Disable the button before processing
+
       const { error } = await supabase.from("messages").insert([
         {
           sender_id: user.id,
@@ -170,13 +146,16 @@ const Chat = () => {
 
       if (error) {
         console.error(error);
+        setDisable(false); // Re-enable the button if there's an error
       } else {
         setMessage(""); // Clear the input field after sending the message
+        setTimeout(() => {
+          inputRef.current?.focus(); // Ensure the input remains focused after sending
+        }, 0); // Ensure focus is set after the message is sent
       }
     }
-  };
+  }, [message, user, recipient, isValidRecipient, supabase]);
 
-  // Scroll to the bottom of the chat whenever messages are updated
   useEffect(() => {
     if (chatRef.current) {
       chatRef.current.scrollTop = chatRef.current.scrollHeight;
@@ -198,16 +177,16 @@ const Chat = () => {
               </Link>
             </h1>
           </div>
-          <div className="max-w-3xl w-full m-auto bg-neutral-800 p-2 md:p-4 rounded-lg shadow-md vone-scrollbar">
+          <div className="max-w-3xl w-full m-auto bg-neutral-800 p-2 md:p-4 rounded-lg shadow-md">
             <div
-              className=" md:bg-neutral-700 md:p-4 rounded-lg  overflow-y-auto max-h-screen h-full vone-scrollbar"
+              className="md:bg-neutral-700 md:p-4 rounded-lg overflow-y-auto max-h-screen h-full vone-scrollbar"
               ref={chatRef}
             >
               {isValidRecipient ? (
                 messages.map((msg) => (
                   <div
                     key={msg.id}
-                    className={`message p-2 rounded-lg mb-2 max-w-xs ${
+                    className={`break-words message p-2 rounded-lg mb-2 max-w-xs ${
                       msg.sender_id === user?.id
                         ? "bg-blue-600 text-white self-end"
                         : "bg-gray-300 text-black self-start"
@@ -233,25 +212,31 @@ const Chat = () => {
             </div>
             <div className="chat-input mt-4 flex flex-col md:flex-row md:items-center gap-2 md:gap-0 md:space-x-4">
               <input
+                ref={inputRef} // Attach the ref to the input
                 type="text"
                 placeholder="Type your message..."
                 value={message}
-                onChange={(e) => setMessage(e.target.value)}
+                onChange={(e) => {
+                  if (e.target.value.length <= 2000) {
+                    setMessage(e.target.value);
+                  }
+                }}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    sendMessage();
+                  if (e.key === "Enter" && !disable) {
+                    sendMessage(); // Send the message on Enter
                   }
                 }}
                 className="bg-white text-neutral-700 p-2 rounded-lg shadow-sm w-full"
               />
               <button
+                disabled={disable}
                 onClick={sendMessage}
                 className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg"
               >
                 Send
               </button>
             </div>
-          </div>{" "}
+          </div>
         </div>
       ) : (
         <p>Loading</p>

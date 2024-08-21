@@ -1,12 +1,13 @@
+import { redirect } from "next/navigation";
+import { FaEdit } from "react-icons/fa";
 import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
 
-import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
+import ProfileFavorite from "@/components/profile/ProfileFavorite";
+import ProfileWatchlater from "@/components/profile/ProfileWatchlater";
 import ProfileWatched from "@/components/profile/profileWatched";
 import UserConnections from "@/components/profile/UserConnections";
 import UserIntrectionBtn from "@/components/profile/UserIntrectionBtn";
-import { redirect } from "next/navigation";
-import { FaEdit } from "react-icons/fa";
 
 const getUserData = async (id: any) => {
   const supabase = createClient();
@@ -118,31 +119,8 @@ const page = async ({
                 <p className="text-sm ">About: {UserData.about}</p>
               </div>
             )}
-            {/* <div className="mt-6">
-              <h3 className="text-lg font-semibold  mb-2">Details</h3>
-              <ul className="">
-                <li>
-                  <strong>Username:</strong> {user.username}
-                </li>
-                <li>
-                  <strong>Location:</strong> {user.location}
-                </li>
-                <li>
-                  <strong>Member Since:</strong> {user.memberSince}
-                </li>
-              </ul>
-            </div> */}
           </div>
           <div className="flex-[2] mt-6 flex flex-col gap-4">
-            {/* <div>
-              <h3 className="text-lg font-semibold  mb-2">About</h3>
-              <p className="">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
-                interdum ultricies purus, et volutpat orci pharetra vel. Nullam
-                scelerisque, orci eget interdum dapibus, risus orci pulvinar
-                sapien, eu bibendum leo turpis non risus.
-              </p>
-            </div> */}
             <div>
               <div className="mb-1">
                 {UserData.id !== YouUser.user.id && (
@@ -176,161 +154,16 @@ const page = async ({
           </div>
         </div>
         {favoriteCount > 0 && (
-          <div>
-            <div className="my-3">
-              <div>Favorites "{favoriteCount}"</div>
-            </div>
-            <div className="w-full flex flex-row overflow-x-scroll vone-scrollbar gap-3 z-40">
-              {favorates?.map((item: any) => (
-                <div className="" key={item.id}>
-                  <div className=" relative group flex flex-col rounded-md bg-black  w-full  text-gray-300 overflow-hidden  ">
-                    <div className="absolute top-0 left-0 z-10 lg:opacity-0 lg:group-hover:opacity-100">
-                      {item.item_adult ? (
-                        <p className="p-1 bg-red-600 text-white rounded-br-md text-sm">
-                          Adult
-                        </p>
-                      ) : (
-                        <p className="p-1 bg-black text-white rounded-br-md text-sm">
-                          {item.item_type}
-                        </p>
-                      )}
-                    </div>
-                    {/* <div className="absolute top-0 right-0 z-10">
-                {(item.release_date || item.first_air_date) && (
-                  <p className="p-1 bg-indigo-600 text-white rounded-tr-sm rounded-bl-md text-sm">
-                  {new Date(item.release_date).getFullYear() ||
-                  new Date(item.first_air_date).getFullYear()}
-                  </p>
-                  )}
-                  </div> */}
-                    <Link
-                      className="h-[270px] w-[200px]"
-                      href={`/app/${item.item_type}/${item.item_id}`}
-                    >
-                      <img
-                        className="  h-full w-full  object-cover  "
-                        src={
-                          item.item_adult
-                            ? "/pixeled.jpg"
-                            : `https://image.tmdb.org/t/p/w185/${item.image_url}`
-                        }
-                        loading="lazy"
-                        alt={item.item_name}
-                      />
-                    </Link>
-                    <div className=" w-full bg-neutral-900 z-10">
-                      <ThreePrefrenceBtn
-                        cardId={item.item_id}
-                        cardType={item.item_type}
-                        cardName={item.item_name}
-                        cardAdult={item.item_adult}
-                        cardImg={item.image_url}
-                      />
-                      <div
-                        title={item.name || item.title}
-                        className="w-full flex flex-col gap-2  px-4  bg-indigo-700  text-gray-200 "
-                      >
-                        <Link
-                          href={`/app/${item.item_type}/${item.item_id}`}
-                          className="mb-1"
-                        >
-                          <span className="">
-                            {item?.item_name &&
-                              (item.item_name.length > 16
-                                ? item.item_name?.slice(0, 14) + ".."
-                                : item.item_name)}
-                          </span>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="mt-2 mb-5 w-fit m-auto cursor-default">
-              {"<- "} {" ->"}
-            </div>
-          </div>
+          <ProfileFavorite
+            favorites={favorates}
+            favoriteCount={favoriteCount}
+          />
         )}
         {watchlistCount > 0 && (
-          <div>
-            <div className="my-3">
-              <div>WatchLater "{watchlistCount}"</div>
-            </div>
-            <div className="w-full flex flex-row overflow-x-scroll vone-scrollbar gap-3 z-40">
-              {watchlist?.map((item: any) => (
-                <div className="" key={item.id}>
-                  <div className=" relative group flex flex-col rounded-md bg-black  w-full  text-gray-300 overflow-hidden  ">
-                    <div className="absolute top-0 left-0 z-10 lg:opacity-0 lg:group-hover:opacity-100">
-                      {item.item_adult ? (
-                        <p className="p-1 bg-red-600 text-white rounded-br-md text-sm">
-                          Adult
-                        </p>
-                      ) : (
-                        <p className="p-1 bg-black text-white rounded-br-md text-sm">
-                          {item.item_type}
-                        </p>
-                      )}
-                    </div>
-
-                    <Link
-                      className="h-[270px] w-[200px] "
-                      href={`/app/${item.item_type}/${item.item_id}`}
-                    >
-                      <img
-                        className=" h-full w-full object-cover "
-                        src={
-                          item.item_adult
-                            ? "/pixeled.jpg"
-                            : `https://image.tmdb.org/t/p/w185/${item.item_img}`
-                        }
-                        loading="lazy"
-                        alt={item.item_name}
-                      />
-                    </Link>
-                    <div className=" w-full bg-neutral-900 z-10">
-                      <ThreePrefrenceBtn
-                        cardId={item.item_id}
-                        cardType={item.item_type}
-                        cardName={item.item_name}
-                        cardAdult={item.item_adult}
-                        cardImg={item.item_img}
-                      />
-
-                      <div
-                        title={item.name || item.title}
-                        className="w-full flex flex-col gap-2  px-4  bg-indigo-700  text-gray-200 "
-                      >
-                        <Link
-                          href={`/app/${item.item_type}/${item.item_id}`}
-                          className="mb-1"
-                        >
-                          <span className="">
-                            {item?.item_name &&
-                              (item.item_name.length > 16
-                                ? item.item_name?.slice(0, 14) + ".."
-                                : item.item_name)}
-                          </span>
-                        </Link>
-                        {/* <p className="text-xs mb-2 ">
-              {data.release_date || data.first_air_date}
-              </p>
-              <div className=" mb-4 text-xs">
-              <GenreName genreids={data.genre_ids} />
-              </div> */}
-                        {/* <div className="mt-1 ">
-              <Staring id={data.id} type={data.media_type} />
-            </div> */}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="mt-2 mb-5 w-fit m-auto cursor-default">
-              {"<- "} {" ->"}
-            </div>
-          </div>
+          <ProfileWatchlater
+            watchlist={watchlist}
+            watchlistCount={watchedCount}
+          />
         )}
         {watchedCount > 0 && (
           <div className="z-40">
