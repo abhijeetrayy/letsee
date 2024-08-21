@@ -162,7 +162,7 @@ const page = async ({
         {watchlistCount > 0 && (
           <ProfileWatchlater
             watchlist={watchlist}
-            watchlistCount={watchedCount}
+            watchlistCount={watchlistCount}
           />
         )}
         {watchedCount > 0 && (
