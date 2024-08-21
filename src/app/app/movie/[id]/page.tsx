@@ -228,7 +228,7 @@ const MovieDetails = async ({
         </div>
       </div>
 
-      <MovieCast credits={credits} id={id} />
+      <MovieCast credits={credits?.cast} id={id} type={"movie"} />
       <Video videos={videos} movie={movie} />
       {(Bimages.length > 0 || Pimages.length > 0) && (
         <div className="max-w-6xl w-full m-auto my-4">
