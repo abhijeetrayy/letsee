@@ -231,12 +231,12 @@ const MovieDetails = async ({
         </div>
       </div>
 
-      <div className="max-w-6xl w-full ">
+      <div className="max-w-6xl w-full">
         <div className="mt-7">
           <h2 className="text-lg ">Cast</h2>
-          <div className="overflow-x-scroll no-scrollbar">
-            <div className="flex flex-row gap-3 m-3 rounded-md">
-              {credits?.cast.slice(0, 6).map((item: any) => (
+          <div className=" ">
+            <div className="flex flex-row gap-3 m-3 overflow-x-scroll no-scrollbar">
+              {credits?.cast?.slice(0, 6).map((item: any) => (
                 <Link
                   title={item.name}
                   key={item.id}
@@ -244,10 +244,10 @@ const MovieDetails = async ({
                     .trim()
                     .replace(/[^a-zA-Z0-9]/g, "-")
                     .replace(/-+/g, "-")}`}
-                  className="group rounded-md overflow-hidden  bg-indigo-600 lg:bg-inherit lg:hover:bg-indigo-600"
+                  className="group min-w-fit rounded-md overflow-hidden  bg-indigo-600 lg:bg-inherit lg:hover:bg-indigo-600"
                 >
                   <img
-                    className=" max-w-44  rounded-md h-56  object-cover"
+                    className=" w-24 md:w-44   rounded-md h-32 md:h-56  object-cover"
                     src={
                       item.profile_path
                         ? `https://image.tmdb.org/t/p/w185${item.profile_path}`
@@ -257,27 +257,35 @@ const MovieDetails = async ({
                   />
 
                   {item.name.length > 14 ? (
-                    <p className="break-words lg:opacity-0 group-hover:opacity-100 ml-2">
-                      {item.name.slice(0, 13)}..
-                    </p>
+                    <span>
+                      <p className="hidden md:block text-base break-words lg:opacity-0 group-hover:opacity-100 ml-2 mt-1">
+                        {item.name.slice(0, 12)}..
+                      </p>
+                      <p className="text-xs md:hidden break-words lg:opacity-0 group-hover:opacity-100 ml-2 mt-1">
+                        {item.name.slice(0, 11)}..
+                      </p>
+                    </span>
                   ) : (
-                    <p className=" lg:opacity-0 group-hover:opacity-100 ml-2">
+                    <p className="text-xs md:text-base  break-words lg:opacity-0 group-hover:opacity-100 ml-2 mt-1  ">
                       {item.name}
                     </p>
                   )}
                 </Link>
               ))}
 
-              <div className="   ml-3">
+              <div className="">
                 <Link
                   href={`/app/movie/${id}/cast`}
-                  className="flex justify-center items-center w-44   h-56 border-2 border-neutral-500 hover:border-indigo-600 hover:bg-neutral-800 rounded-md"
+                  className=" flex justify-center items-center  w-24 md:w-44 h-32 md:h-56 border-2 border-neutral-500 hover:border-indigo-600 hover:bg-neutral-800 rounded-md"
                 >
                   more..
                 </Link>
                 <p className=" opacity-0 ml-2">""</p>
               </div>
             </div>
+          </div>
+          <div className="mt-4 md:mt-2 mb-5 w-fit m-auto cursor-default">
+            {"<- "} {" ->"}
           </div>
         </div>
       </div>
@@ -301,6 +309,9 @@ const MovieDetails = async ({
                 />
               ))}
           </div>
+          <div className="mt-4 md:mt-2 mb-5 w-fit m-auto cursor-default">
+            {"<- "} {" ->"}
+          </div>
         </div>
       )}
       {(Bimages.length > 0 || Pimages.length > 0) && (
@@ -308,7 +319,7 @@ const MovieDetails = async ({
           <h1 className="text-md md:text-lg my-2 ">{movie.title}: Images</h1>
 
           <div className="max-w-7xl w-full m-auto my-3 overflow-x-auto no-scrollbar">
-            <div className="flex md:block md:columns-3 lg:columns-4 gap-3 pb-3 snap-x snap-mandatory">
+            <div className="columns-1 sm:columns-3 md:columns-4 lg:columns-5 w-fit m-auto gap-3 pb-3 snap-x snap-mandatory">
               {(Bimages.length > 0 ? Bimages : Pimages)
                 ?.slice(0, 13)
                 .map((item: any) => (
