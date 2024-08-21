@@ -1,6 +1,5 @@
-"use client";
-
 import Link from "next/link";
+import KnownFor from "../KnowFor";
 // import { useState } from "react";
 
 import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
@@ -8,97 +7,7 @@ import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
 function personCredits({ orginalCast, cast, crew, name }: any) {
   return (
     <div>
-      <div className="w-full flex flex-row gap-5 overflow-x-scroll vone-scrollbar ">
-        {orginalCast?.slice(0, 17).map((data: any) => (
-          <div
-            className="relative min-w-fit bg-black rounded-md overflow-hidden"
-            key={data.id}
-          >
-            <div className=" relative group flex flex-col  bg-black  text-gray-300 ">
-              <div className="absolute top-0 left-0 z-10 lg:opacity-0 lg:group-hover:opacity-100">
-                {data.adult ? (
-                  <p className="p-1 bg-red-600 text-white rounded-br-md text-sm">
-                    Adult
-                  </p>
-                ) : (
-                  <p className="p-1 bg-black text-white rounded-br-md text-sm">
-                    {data.media_type}
-                  </p>
-                )}
-              </div>
-              <div className="absolute top-0 right-0 z-10">
-                {(data.release_date || data.first_air_date) && (
-                  <p className="p-1 bg-indigo-600 text-white rounded-tr-sm rounded-bl-md text-sm">
-                    {new Date(data.release_date).getFullYear() ||
-                      new Date(data.first_air_date).getFullYear()}
-                  </p>
-                )}
-              </div>
-              <Link
-                className="h-[330px] max-w-56 w-full  "
-                href={`/app/${data.media_type}/${data.id}-${(
-                  data.name || data.title
-                )
-                  .trim()
-                  .replace(/[^a-zA-Z0-9]/g, "-")
-                  .replace(/-+/g, "-")}`}
-              >
-                <img
-                  className="w-full h-full object-cover"
-                  src={
-                    (data.poster_path || data.backdrop_path) && !data.adult
-                      ? `https://image.tmdb.org/t/p/w342${
-                          data.poster_path || data.backdrop_path
-                        }`
-                      : data.adult
-                      ? "/pixeled.jpg"
-                      : "/no-photo.jpg"
-                  }
-                  loading="lazy"
-                  alt={data.title}
-                />
-              </Link>
-              <div className="lg:absolute bottom-0 w-full bg-neutral-900 lg:opacity-0 lg:group-hover:opacity-100 z-10">
-                <ThreePrefrenceBtn
-                  cardId={data.id}
-                  cardType={data.media_type}
-                  cardName={data.name || data.title}
-                  cardAdult={data.adult}
-                  cardImg={data.poster_path || data.backdrop_path}
-                />
-
-                <div
-                  title={data.name || data.title}
-                  className="w-full flex flex-col gap-2  px-4  bg-indigo-700  text-gray-200 "
-                >
-                  <Link
-                    href={`/app/${data.media_type}/${data.id}-${(
-                      data.name || data.title
-                    )
-                      .trim()
-                      .replace(/[^a-zA-Z0-9]/g, "-")
-                      .replace(/-+/g, "-")}`}
-                    className="mb-1"
-                  >
-                    <span className="">
-                      {data?.title
-                        ? data.title.length > 20
-                          ? data.title?.slice(0, 20) + "..."
-                          : data.title
-                        : data.name.length > 20
-                        ? data.name?.slice(0, 20) + "..."
-                        : data.name}
-                    </span>
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-      <div className="mt-2 mb-5 w-fit m-auto cursor-default">
-        {"<-  "} {"  ->"}
-      </div>
+      <KnownFor castData={orginalCast} />
 
       <div>
         <h1 className="my-3">Timeline - </h1>

@@ -1,11 +1,8 @@
-import CardMovieButton from "@/components/buttons/cardButtons";
-import Link from "next/link";
-import { CiSaveDown1 } from "react-icons/ci";
-import { FcLike } from "react-icons/fc";
-import { IoEyeOutline } from "react-icons/io5";
 import ThreeUserPrefrenceBtn from "@/components/buttons/threePrefrencebtn";
+import MovieCast from "@/components/movie/MovieCast";
+import Video from "@/components/movie/Video";
 import { Countrydata } from "@/staticData/countryName";
-import { FaImdb } from "react-icons/fa";
+import Link from "next/link";
 import { LiaImdb } from "react-icons/lia";
 
 // import { likedButton as LikedButton } from "@/components/buttons/intrectionButton";
@@ -62,7 +59,7 @@ const MovieDetails = async ({
   );
 
   return (
-    <div className="flex flex-col items-center justify-center text-white relative  w-full">
+    <div className=" text-white relative  w-full">
       {/* Poster Image as Background */}
 
       {/* Content */}
@@ -231,98 +228,11 @@ const MovieDetails = async ({
         </div>
       </div>
 
-      <div className="max-w-6xl w-full">
-        <div className="mt-7">
-          <h2 className="text-lg ">Cast</h2>
-          <div className=" ">
-            <div className="flex flex-row gap-3 m-3 overflow-x-scroll no-scrollbar">
-              {credits?.cast?.slice(0, 6).map((item: any) => (
-                <Link
-                  title={item.name}
-                  key={item.id}
-                  href={`/app/person/${item.id}-${item.name
-                    .trim()
-                    .replace(/[^a-zA-Z0-9]/g, "-")
-                    .replace(/-+/g, "-")}`}
-                  className="group min-w-fit rounded-md overflow-hidden  bg-indigo-600 lg:bg-inherit lg:hover:bg-indigo-600"
-                >
-                  <img
-                    className=" w-24 md:w-44   rounded-md h-32 md:h-56  object-cover"
-                    src={
-                      item.profile_path
-                        ? `https://image.tmdb.org/t/p/w185${item.profile_path}`
-                        : "/avatar.svg"
-                    }
-                    alt={item.name}
-                  />
-
-                  <span>
-                    {item.name.length > 15 ? (
-                      <p className="hidden md:block  break-words lg:opacity-0 group-hover:opacity-100 ml-2 mt-1">
-                        {item.name.slice(0, 13)}..
-                      </p>
-                    ) : (
-                      <p className="hidden md:block break-words lg:opacity-0 group-hover:opacity-100 ml-2 mt-1  ">
-                        {item.name}
-                      </p>
-                    )}
-                    {item.name.length > 13 ? (
-                      <p className="text-xs md:hidden break-words lg:opacity-0 group-hover:opacity-100 ml-2 mt-1">
-                        {item.name.slice(0, 11)}..
-                      </p>
-                    ) : (
-                      <p className="text-xs md:hidden  break-words lg:opacity-0 group-hover:opacity-100 ml-2 mt-1  ">
-                        {item.name}
-                      </p>
-                    )}
-                  </span>
-                </Link>
-              ))}
-
-              <div className="">
-                <Link
-                  href={`/app/movie/${id}/cast`}
-                  className=" flex justify-center items-center  w-24 md:w-44 h-32 md:h-56 border-2 border-neutral-500 hover:border-indigo-600 hover:bg-neutral-800 rounded-md"
-                >
-                  more..
-                </Link>
-                <p className=" opacity-0 ml-2">""</p>
-              </div>
-            </div>
-          </div>
-          <div className="mt-4 md:mt-2 mb-5 w-fit m-auto cursor-default">
-            {"<- "} {" ->"}
-          </div>
-        </div>
-      </div>
-      {videos.filter((item: any) => item.site === "YouTube").length > 0 && (
-        <div className="max-w-6xl w-full  mt-10 ">
-          <h1 className="text-sm lg:text-lg my-2 ">{movie.title}: Media</h1>
-
-          <div className="w-full max-w-7xl m-auto flex flex-row overflow-x-scroll no-scrollbar my-3">
-            {videos
-              .filter((item: any) => item.site === "YouTube")
-              ?.slice(0, 4)
-              .map((item: any) => (
-                <iframe
-                  key={item.id} // Add a key to avoid React warnings
-                  className="min-w-96 max-w-96 w-full  aspect-video mb-6"
-                  src={`https://www.youtube.com/embed/${item.key}`} // Use item.key instead of item.id
-                  title={item.name}
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-              ))}
-          </div>
-          <div className="mt-4 md:mt-2 mb-5 w-fit m-auto cursor-default">
-            {"<- "} {" ->"}
-          </div>
-        </div>
-      )}
+      <MovieCast credits={credits} id={id} />
+      <Video videos={videos} movie={movie} />
       {(Bimages.length > 0 || Pimages.length > 0) && (
-        <div className="max-w-6xl w-full  my-4">
-          <h1 className="text-md md:text-lg my-2 ">{movie.title}: Images</h1>
+        <div className="max-w-6xl w-full m-auto my-4">
+          <h1 className="text-sm md:text-lg my-2 ">{movie.title}: Images</h1>
 
           <div className="max-w-7xl w-full m-auto my-3 overflow-x-auto no-scrollbar">
             <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 w-fit m-auto gap-3 pb-3 snap-x snap-mandatory">

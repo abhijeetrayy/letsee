@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link"; // Assuming you are using Next.js
 import ThreePrefrenceBtn from "../buttons/threePrefrencebtn";
 
-function FavoritesList({ favorites, favoriteCount }: any) {
+function WatchLaterList({ watchlist, watchlistCount }: any) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
@@ -40,16 +40,16 @@ function FavoritesList({ favorites, favoriteCount }: any) {
   }, []);
 
   return (
-    <div className="">
+    <div className="my-10">
       <div className="my-3">
-        <div>Favorites "{favoriteCount}"</div>
+        <div>WatchLater "{watchlistCount}"</div>
       </div>
       <div className="relative w-full">
         <div
           ref={scrollRef}
           className="w-full flex flex-row overflow-x-scroll no-scrollbar gap-3 z-40"
         >
-          {favorites?.map((item: any) => (
+          {watchlist?.map((item: any) => (
             <div key={item.id}>
               <div className="relative group flex flex-col rounded-md bg-black w-full text-gray-300 overflow-hidden">
                 <div className="absolute top-0 left-0 z-10 lg:opacity-0 lg:group-hover:opacity-100">
@@ -72,7 +72,7 @@ function FavoritesList({ favorites, favoriteCount }: any) {
                     src={
                       item.item_adult
                         ? "/pixeled.jpg"
-                        : `https://image.tmdb.org/t/p/w185/${item.image_url}`
+                        : `https://image.tmdb.org/t/p/w185/${item.item_img}`
                     }
                     loading="lazy"
                     alt={item.item_name}
@@ -85,7 +85,7 @@ function FavoritesList({ favorites, favoriteCount }: any) {
                     cardType={item.item_type}
                     cardName={item.item_name}
                     cardAdult={item.item_adult}
-                    cardImg={item.image_url}
+                    cardImg={item.item_img}
                   />
                   <div
                     title={item.name || item.title}
@@ -135,4 +135,4 @@ function FavoritesList({ favorites, favoriteCount }: any) {
   );
 }
 
-export default FavoritesList;
+export default WatchLaterList;

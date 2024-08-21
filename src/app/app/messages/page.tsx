@@ -66,8 +66,8 @@ const Conversations = () => {
         } else {
           setConversationalists(usersData);
         }
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     fetchConversationalists();
