@@ -1,14 +1,13 @@
 import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
 
-import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
+import ProfileFavorites from "@/components/profile/ProfileFavorites";
 import ProfileWatched from "@/components/profile/profileWatched";
+import ProfileWatchlater from "@/components/profile/ProfileWatchlater";
 import UserConnections from "@/components/profile/UserConnections";
 import UserIntrectionBtn from "@/components/profile/UserIntrectionBtn";
 import { redirect } from "next/navigation";
 import { FaEdit } from "react-icons/fa";
-import ProfileFavorites from "@/components/profile/ProfileFavorites";
-import ProfileWatchlater from "@/components/profile/ProfileWatchlater";
 
 const getUserData = async (id: any) => {
   const supabase = createClient();
@@ -120,31 +119,8 @@ const page = async ({
                 <p className="text-sm ">About: {UserData.about}</p>
               </div>
             )}
-            {/* <div className="mt-6">
-              <h3 className="text-lg font-semibold  mb-2">Details</h3>
-              <ul className="">
-                <li>
-                  <strong>Username:</strong> {user.username}
-                </li>
-                <li>
-                  <strong>Location:</strong> {user.location}
-                </li>
-                <li>
-                  <strong>Member Since:</strong> {user.memberSince}
-                </li>
-              </ul>
-            </div> */}
           </div>
           <div className="flex-[2] mt-6 flex flex-col gap-4">
-            {/* <div>
-              <h3 className="text-lg font-semibold  mb-2">About</h3>
-              <p className="">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
-                interdum ultricies purus, et volutpat orci pharetra vel. Nullam
-                scelerisque, orci eget interdum dapibus, risus orci pulvinar
-                sapien, eu bibendum leo turpis non risus.
-              </p>
-            </div> */}
             <div>
               <div className="mb-1">
                 {UserData.id !== YouUser.user.id && (

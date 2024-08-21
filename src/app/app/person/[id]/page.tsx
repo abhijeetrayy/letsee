@@ -1,11 +1,8 @@
-import CardMovieButton from "@/components/buttons/cardButtons";
-import Image from "next/image";
-import { lazy, Suspense } from "react";
-import { IoEyeOutline } from "react-icons/io5";
+import { Suspense } from "react";
 
 import PersonCredits from "@/components/person/server/personCredits";
-import { FaInstagram, FaXTwitter } from "react-icons/fa6";
 import Link from "next/link";
+import { FaInstagram, FaXTwitter } from "react-icons/fa6";
 
 async function fetchPersonData(id: any) {
   const response = await fetch(
