@@ -256,20 +256,26 @@ const MovieDetails = async ({
                     alt={item.name}
                   />
 
-                  {item.name.length > 14 ? (
-                    <span>
-                      <p className="hidden md:block text-base break-words lg:opacity-0 group-hover:opacity-100 ml-2 mt-1">
-                        {item.name.slice(0, 12)}..
+                  <span>
+                    {item.name.length > 15 ? (
+                      <p className="hidden md:block  break-words lg:opacity-0 group-hover:opacity-100 ml-2 mt-1">
+                        {item.name.slice(0, 13)}..
                       </p>
+                    ) : (
+                      <p className="hidden md:block break-words lg:opacity-0 group-hover:opacity-100 ml-2 mt-1  ">
+                        {item.name}
+                      </p>
+                    )}
+                    {item.name.length > 13 ? (
                       <p className="text-xs md:hidden break-words lg:opacity-0 group-hover:opacity-100 ml-2 mt-1">
                         {item.name.slice(0, 11)}..
                       </p>
-                    </span>
-                  ) : (
-                    <p className="text-xs md:text-base  break-words lg:opacity-0 group-hover:opacity-100 ml-2 mt-1  ">
-                      {item.name}
-                    </p>
-                  )}
+                    ) : (
+                      <p className="text-xs md:hidden  break-words lg:opacity-0 group-hover:opacity-100 ml-2 mt-1  ">
+                        {item.name}
+                      </p>
+                    )}
+                  </span>
                 </Link>
               ))}
 
