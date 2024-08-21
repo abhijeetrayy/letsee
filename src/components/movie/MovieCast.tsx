@@ -2,7 +2,7 @@
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 
-function MovieCast({ credits, id }: any) {
+function MovieCast({ credits, id, type }: any) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
@@ -38,7 +38,7 @@ function MovieCast({ credits, id }: any) {
     }
   }, []);
   return (
-    <div className="max-w-6xl w-full m-auto">
+    <div className="max-w-6xl w-full m-auto mb-5">
       <div className="mt-7">
         <h2 className="text-lg">Cast</h2>
         <div className="relative">
@@ -46,7 +46,7 @@ function MovieCast({ credits, id }: any) {
             ref={scrollRef}
             className="flex flex-row gap-3 m-3 overflow-x-scroll no-scrollbar"
           >
-            {credits?.cast?.slice(0, 6).map((item: any) => (
+            {credits?.slice(0, 6).map((item: any) => (
               <Link
                 title={item.name}
                 key={item.id}
@@ -75,9 +75,9 @@ function MovieCast({ credits, id }: any) {
                       {item.name}
                     </p>
                   )}
-                  {item.name.length > 13 ? (
+                  {item.name.length > 12 ? (
                     <p className="text-xs md:hidden break-words lg:opacity-0 group-hover:opacity-100 ml-2 mt-1">
-                      {item.name.slice(0, 11)}..
+                      {item.name.slice(0, 10)}..
                     </p>
                   ) : (
                     <p className="text-xs md:hidden break-words lg:opacity-0 group-hover:opacity-100 ml-2 mt-1">
@@ -90,7 +90,7 @@ function MovieCast({ credits, id }: any) {
 
             <div className="">
               <Link
-                href={`/app/movie/${id}/cast`}
+                href={`/app/${type == "movie" ? "movie" : "tv"}/${id}/cast`}
                 className="flex justify-center items-center w-24 md:w-44 h-32 md:h-56 border-2 border-neutral-500 hover:border-indigo-600 hover:bg-neutral-800 rounded-md"
               >
                 more..

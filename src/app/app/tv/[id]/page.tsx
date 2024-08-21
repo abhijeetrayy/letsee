@@ -1,4 +1,6 @@
 import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
+import MovieCast from "@components/movie/MovieCast";
+import Video from "@components/movie/Video";
 import Link from "next/link";
 import { LiaImdb } from "react-icons/lia";
 
@@ -229,70 +231,8 @@ const ShowDetails = async ({
         </div>
       </div>
 
-      <div className="max-w-6xl w-full">
-        <div className="mt-7">
-          <h2 className="text-lg ">Cast</h2>
-          <div className=" ">
-            <div className="flex flex-row gap-3 m-3 overflow-x-scroll no-scrollbar">
-              {cast.slice(0, 6).map((item: any) => (
-                <Link
-                  title={item.name}
-                  key={item.id}
-                  href={`/app/person/${item.id}-${item.name
-                    .trim()
-                    .replace(/[^a-zA-Z0-9]/g, "-")
-                    .replace(/-+/g, "-")}`}
-                  className="group min-w-fit rounded-md overflow-hidden  bg-indigo-600 lg:bg-inherit lg:hover:bg-indigo-600"
-                >
-                  <img
-                    className=" w-24 md:w-44   rounded-md h-32 md:h-56  object-cover"
-                    src={
-                      item.profile_path
-                        ? `https://image.tmdb.org/t/p/w185${item.profile_path}`
-                        : "/avatar.svg"
-                    }
-                    alt={item.name}
-                  />
-
-                  <span>
-                    {item.name.length > 15 ? (
-                      <p className="hidden md:block  break-words lg:opacity-0 group-hover:opacity-100 ml-2 mt-1">
-                        {item.name.slice(0, 13)}..
-                      </p>
-                    ) : (
-                      <p className="hidden md:block break-words lg:opacity-0 group-hover:opacity-100 ml-2 mt-1  ">
-                        {item.name}
-                      </p>
-                    )}
-                    {item.name.length > 13 ? (
-                      <p className="text-xs md:hidden break-words lg:opacity-0 group-hover:opacity-100 ml-2 mt-1">
-                        {item.name.slice(0, 11)}..
-                      </p>
-                    ) : (
-                      <p className="text-xs md:hidden  break-words lg:opacity-0 group-hover:opacity-100 ml-2 mt-1  ">
-                        {item.name}
-                      </p>
-                    )}
-                  </span>
-                </Link>
-              ))}
-
-              <div className="">
-                <Link
-                  href={`/app/tv/${id}/cast`}
-                  className=" flex justify-center items-center  w-24 md:w-44 h-32 md:h-56 border-2 border-neutral-500 hover:border-indigo-600 hover:bg-neutral-800 rounded-md"
-                >
-                  more..
-                </Link>
-                <p className=" opacity-0 ml-2">""</p>
-              </div>
-            </div>
-          </div>
-          <div className="mt-4 md:mt-2 mb-5 w-fit m-auto cursor-default">
-            {"<- "} {" ->"}
-          </div>
-        </div>
-      </div>
+      <MovieCast credits={cast} id={show.id} type={"tv"} />
+      <div className="w-full max-w-5xl">{show.seasons && <h2>Seasons</h2>}</div>
       <div className="flex flex-row gap-4 my-4 w-full max-w-5xl overflow-x-scroll vone-scrollbar">
         {show.seasons
           .filter((item: any) => item.name !== "Specials")
@@ -306,7 +246,7 @@ const ShowDetails = async ({
                       : `https://image.tmdb.org/t/p/w185${season.poster_path}`
                     : "/no-photo.jpg"
                 }`}
-                className="min-w-44 max-w-44 h-full object-cover"
+                className="min-w-44 max-w-44 h-full object-cover border border-indigo-600"
                 alt={season.name}
               />
               <div>
@@ -327,31 +267,7 @@ const ShowDetails = async ({
             </div>
           ))}
       </div>
-      {videos.filter((item: any) => item.site === "YouTube").length > 0 && (
-        <div className="max-w-6xl w-full  mt-10 ">
-          <h1 className="text-md md:text-lg my-2 ">{show.name}: Media</h1>
-
-          <div className="w-full max-w-7xl m-auto flex flex-row overflow-x-scroll no-scrollbar my-3">
-            {videos
-              .filter((item: any) => item.site === "YouTube")
-              ?.slice(0, 4)
-              .map((item: any) => (
-                <iframe
-                  key={item.id} // Add a key to avoid React warnings
-                  className="min-w-96 max-w-96 w-full  aspect-video mb-6"
-                  src={`https://www.youtube.com/embed/${item.key}`} // Use item.key instead of item.id
-                  title={item.name}
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
-              ))}
-          </div>
-          <div className="mt-4 md:mt-2 mb-5 w-fit m-auto cursor-default">
-            {"<- "} {" ->"}
-          </div>
-        </div>
-      )}
+      <Video videos={videos} movie={show} />
       {(Bimages.length > 0 || Pimages.length > 0) && (
         <div className="max-w-6xl w-full  mt-4 ">
           <h1 className="text-md md:text-lg my-2 ">{show.name}: Images</h1>

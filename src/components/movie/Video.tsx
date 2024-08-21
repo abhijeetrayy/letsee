@@ -42,7 +42,9 @@ function Video({ videos, movie }: any) {
       <div className="max-w-6xl w-full m-auto">
         {videos.filter((item: any) => item.site === "YouTube").length > 0 && (
           <div className="mt-7">
-            <h1 className="text-sm lg:text-lg my-2">{movie.title}: Media</h1>
+            <h1 className="text-sm lg:text-lg my-2">
+              {movie.title || movie.name}: Media
+            </h1>
             <div className="relative">
               <div
                 ref={scrollRef}
