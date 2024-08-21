@@ -1,11 +1,11 @@
 import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
 
-import ProfileFavorites from "@/components/profile/ProfileFavorites";
-import ProfileWatched from "@/components/profile/profileWatched";
-import ProfileWatchlater from "@/components/profile/ProfileWatchlater";
-import UserConnections from "@/components/profile/UserConnections";
-import UserIntrectionBtn from "@/components/profile/UserIntrectionBtn";
+import ProfileFavorites from "../../../../components/profile/ProfileFavorites";
+import ProfileWatched from "../../../../components/profile/profileWatched";
+import ProfileWatchlater from "../../../../components/profile/ProfileWatchlater";
+import UserConnections from "../../../../components/profile/UserConnections";
+import UserIntrectionBtn from "../../../../components/profile/UserIntrectionBtn";
 import { redirect } from "next/navigation";
 import { FaEdit } from "react-icons/fa";
 
