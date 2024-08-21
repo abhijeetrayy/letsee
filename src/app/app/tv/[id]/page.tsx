@@ -328,7 +328,7 @@ const ShowDetails = async ({
           ))}
       </div>
       {videos.filter((item: any) => item.site === "YouTube").length > 0 && (
-        <div className="max-w-7xl w-full  mt-10 ">
+        <div className="max-w-6xl w-full  mt-10 ">
           <h1 className="text-md md:text-lg my-2 ">{show.name}: Media</h1>
 
           <div className="w-full max-w-7xl m-auto flex flex-row overflow-x-scroll no-scrollbar my-3">
@@ -353,13 +353,13 @@ const ShowDetails = async ({
         </div>
       )}
       {(Bimages.length > 0 || Pimages.length > 0) && (
-        <div className="max-w-7xl w-full  mt-4 ">
+        <div className="max-w-6xl w-full  mt-4 ">
           <h1 className="text-md md:text-lg my-2 ">{show.name}: Images</h1>
 
           <div className="max-w-7xl w-full m-auto my-3 overflow-x-auto no-scrollbar">
-            <div className="columns-1 sm:columns-3 md:columns-4 lg:columns-5 m-auto w-fit gap-3 pb-3 snap-x snap-mandatory">
+            <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 m-auto w-fit gap-3 pb-3 snap-x snap-mandatory">
               {Bimages.length > 0
-                ? Bimages?.slice(0, 15).map((item: any) => (
+                ? Bimages?.slice(0, 13).map((item: any) => (
                     <img
                       key={item.id} // Add a key to avoid React warnings
                       className="max-h-96  h-full object-cover mb-3"

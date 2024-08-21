@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { SupabaseClient, User } from "@supabase/supabase-js";
 import Link from "next/link";
@@ -13,7 +13,7 @@ interface UserInfo {
 const Conversations = () => {
   const [user, setUser] = useState<User | null>(null);
   const [conversationalists, setConversationalists] = useState<UserInfo[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const supabase: SupabaseClient = createClient();
 
   // Fetch the authenticated user
@@ -73,13 +73,15 @@ const Conversations = () => {
     fetchConversationalists();
   }, [user]);
 
+  const chatMemo = useMemo(() => conversationalists, [conversationalists]);
+
   return (
     <div className="max-w-4xl w-full m-auto bg-neutral-800 p-4 rounded-lg shadow-md">
       <h1 className="text-2xl font-bold mb-4">Conversations</h1>
       {!loading ? (
-        conversationalists.length > 0 ? (
+        chatMemo.length > 0 ? (
           <ul className="flex flex-col">
-            {conversationalists.map((conversationalist) => (
+            {chatMemo.map((conversationalist) => (
               <Link
                 key={conversationalist.id}
                 className=" group mb-2 p-2 bg-neutral-700 rounded-lg shadow-sm"

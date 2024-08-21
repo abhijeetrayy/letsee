@@ -3,7 +3,7 @@ import React from "react";
 
 function foot() {
   return (
-    <div className=" w-full flex justify-center my-4">
+    <div className=" w-full flex justify-center my-10">
       <div className="max-w-7xl flex gap-5 text-center">
         <h1>Let's see</h1>
         <span>

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useMemo } from "react";
 import CardMovieButton from "../buttons/cardButtons";
 import { IoEyeOutline, IoEyeSharp } from "react-icons/io5";
 import { FcAlarmClock, FcLike } from "react-icons/fc";
@@ -12,22 +12,19 @@ import { RiEyeCloseLine } from "react-icons/ri";
 import { GiBleedingEye } from "react-icons/gi";
 import { PiEyeBold } from "react-icons/pi";
 import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
-// Assuming you're using Supabase Auth
-interface UserPreference {
-  item_id: number;
-}
 
 const WatchedMoviesList = ({ userId }: any): any => {
   const [movies, setMovies] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const { userPrefrence }: any = useContext(userPrefrenceContext);
   console.log(userPrefrence);
 
-  const [loading, setLoading] = useState(false);
   const userID = userId;
+
   useEffect(() => {
     fetchMovies(currentPage);
   }, [currentPage]);
@@ -54,6 +51,8 @@ const WatchedMoviesList = ({ userId }: any): any => {
     setLoading(false);
   };
 
+  const memoizedMovies = useMemo(() => movies, [movies]);
+
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
   };
@@ -61,7 +60,7 @@ const WatchedMoviesList = ({ userId }: any): any => {
   return (
     <div>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-3 z-40">
-        {movies?.map((item: any) => (
+        {memoizedMovies?.map((item: any) => (
           <div
             className="z-40 relative group flex flex-col bg-black w-full h-[400px] text-gray-300 rounded-md overflow-hidden duration-300 lg:hover:scale-105"
             key={item.id}
@@ -127,7 +126,7 @@ const WatchedMoviesList = ({ userId }: any): any => {
         ))}
 
         <div>
-          {movies.length < totalItems && (
+          {memoizedMovies.length < totalItems && (
             <div>
               <button
                 className="w-full h-full text-gray-300 border min-h-[330px] bg-neutral-700 rounded-md hover:bg-neutral-800"
