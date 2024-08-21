@@ -3,11 +3,11 @@ import { FaEdit } from "react-icons/fa";
 import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
 
-import ProfileWatched from "../../../../components/profile/profileWatched";
-import ProfileWatchlater from "../../../../components/profile/ProfileWatchlater";
-import ProfileFavorites from "../../../../components/profile/ProfileFavorites";
-import UserConnections from "../../../../components/profile/UserConnections";
-import UserIntrectionBtn from "../../../../components/profile/UserIntrectionBtn";
+import ProfileFavorites from "@/components/profile/ProfileFavorites";
+import ProfileWatchlater from "@/components/profile/ProfileWatchlater";
+import ProfileWatched from "@/components/profile/profileWatched";
+import UserConnections from "@/components/profile/UserConnections";
+import UserIntrectionBtn from "@/components/profile/UserIntrectionBtn";
 
 const getUserData = async (id: any) => {
   const supabase = createClient();

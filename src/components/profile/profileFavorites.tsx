@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import Link from "next/link"; // Assuming you are using Next.js
+import Link from "next/link";
 import ThreePrefrenceBtn from "../buttons/threePrefrencebtn";
 
 function FavoritesList({ favorites, favoriteCount }: any) {
