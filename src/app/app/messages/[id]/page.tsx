@@ -17,6 +17,7 @@ interface Message {
 // Helper function to check if the recipient is valid
 const isRecipientValid = async (recipientId: string) => {
   const supabase: SupabaseClient = createClient();
+
   const { data, error } = await supabase
     .from("users")
     .select("id")
@@ -77,6 +78,8 @@ const Chat = () => {
   // Set the recipient ID from the URL parameters and validate it
   useEffect(() => {
     const validateRecipient = async (recipientId: string) => {
+      const { data: userData, error }: any = await supabase.auth.getUser();
+
       const valid = await isRecipientValid(recipientId);
       setIsValidRecipient(valid);
       if (valid) {
@@ -195,9 +198,9 @@ const Chat = () => {
               </Link>
             </h1>
           </div>
-          <div className="max-w-3xl w-full m-auto bg-neutral-800 p-2 md:p-4 rounded-lg shadow-md ">
+          <div className="max-w-3xl w-full m-auto bg-neutral-800 p-2 md:p-4 rounded-lg shadow-md vone-scrollbar">
             <div
-              className=" md:bg-neutral-700 md:p-4 rounded-lg  overflow-y-auto max-h-screen h-full"
+              className=" md:bg-neutral-700 md:p-4 rounded-lg  overflow-y-auto max-h-screen h-full vone-scrollbar"
               ref={chatRef}
             >
               {isValidRecipient ? (

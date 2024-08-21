@@ -78,20 +78,19 @@ const Conversations = () => {
       <h1 className="text-2xl font-bold mb-4">Conversations</h1>
       {!loading ? (
         conversationalists.length > 0 ? (
-          <ul>
+          <ul className="flex flex-col">
             {conversationalists.map((conversationalist) => (
-              <li
+              <Link
                 key={conversationalist.id}
-                className="mb-2 p-2 bg-neutral-700 rounded-lg shadow-sm"
+                className=" group mb-2 p-2 bg-neutral-700 rounded-lg shadow-sm"
+                href={`/app/messages/${conversationalist.id}`}
               >
-                <Link href={`/app/messages/${conversationalist.id}`}>
-                  <span className="text-blue-100 hover:underline">
-                    {(conversationalist.username &&
-                      "@" + conversationalist.username) ||
-                      conversationalist.email}
-                  </span>
-                </Link>
-              </li>
+                <span className="text-blue-100 group-hover:underline">
+                  {(conversationalist.username &&
+                    "@" + conversationalist.username) ||
+                    conversationalist.email}
+                </span>
+              </Link>
             ))}
           </ul>
         ) : (
