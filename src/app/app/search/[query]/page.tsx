@@ -79,7 +79,7 @@ function Page() {
                   data?.media_type !== "person" && (
                     <div
                       key={data.id}
-                      className="relative group flex flex-col bg-indigo-700 w-full h-full text-gray-300  duration-300 rounded-md overflow-hidden lg:hover:scale-105 hover:z-10"
+                      className="relative group flex flex-col bg-neutral-900 w-full h-full text-gray-300  duration-300 rounded-md overflow-hidden lg:hover:scale-105 hover:z-10"
                     >
                       <div className="absolute top-0 left-0 flex flex-row justify-between w-full z-10">
                         <p className="p-1 bg-black text-white rounded-br-md text-sm">
@@ -114,7 +114,7 @@ function Page() {
                         />
                       </Link>
 
-                      <div className=" lg:absolute lg:bottom-0 w-full  bg-neutral-900 lg:opacity-0 lg:group-hover:opacity-100">
+                      <div className=" lg:absolute lg:bottom-0 w-full bg-neutral-900 lg:opacity-0 lg:group-hover:opacity-100">
                         <ThreePrefrenceBtn
                           cardId={data.id}
                           cardType={data.media_type}

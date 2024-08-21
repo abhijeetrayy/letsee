@@ -232,7 +232,7 @@ const ShowDetails = async ({
       <div className="max-w-6xl w-full">
         <div className="mt-7">
           <h2 className="text-lg ">Cast</h2>
-          <div className="overflow-x-scroll vone-scrollbar">
+          <div className="overflow-x-scroll no-scrollbar">
             <div className="flex flex-row gap-3 m-3 rounded-md">
               {cast.slice(0, 6).map((item: any) => (
                 <Link
@@ -317,7 +317,7 @@ const ShowDetails = async ({
         <div className="max-w-7xl w-full  mt-10 ">
           <h1 className="text-md md:text-lg my-2 ">{show.name}: Media</h1>
 
-          <div className="w-full max-w-7xl m-auto flex flex-row overflow-x-scroll vone-scrollbar my-3">
+          <div className="w-full max-w-7xl m-auto flex flex-row overflow-x-scroll no-scrollbar my-3">
             {videos
               .filter((item: any) => item.site === "YouTube")
               ?.slice(0, 4)
@@ -339,28 +339,30 @@ const ShowDetails = async ({
         <div className="max-w-7xl w-full  mt-4 ">
           <h1 className="text-md md:text-lg my-2 ">{show.name}: Images</h1>
 
-          <div className="w-full max-w-7xl m-auto flex flex-row gap-3 overflow-x-scroll vone-scrollbar my-3">
-            {Bimages.length > 0
-              ? Bimages?.slice(0, 15).map((item: any) => (
-                  <img
-                    key={item.id} // Add a key to avoid React warnings
-                    className="max-h-96  h-full object-cover"
-                    src={
-                      show.adult
-                        ? "/pixeled.jpg"
-                        : `https://image.tmdb.org/t/p/w300${item.file_path}`
-                    } // Use item.key instead of item.id
-                    alt={item.name}
-                  />
-                ))
-              : Pimages?.slice(0, 15).map((item: any) => (
-                  <img
-                    key={item.id} // Add a key to avoid React warnings
-                    className="max-h-96  h-full object-cover w"
-                    src={`show.adult ? "/pixeled.jpg" : https://image.tmdb.org/t/p/w185${item.file_path}`} // Use item.key instead of item.id
-                    alt={item.name}
-                  />
-                ))}
+          <div className="max-w-7xl w-full m-auto my-3 overflow-x-auto no-scrollbar">
+            <div className="flex md:block md:columns-3 lg:columns-4 gap-3 pb-3 snap-x snap-mandatory">
+              {Bimages.length > 0
+                ? Bimages?.slice(0, 15).map((item: any) => (
+                    <img
+                      key={item.id} // Add a key to avoid React warnings
+                      className="max-h-96  h-full object-cover mb-3"
+                      src={
+                        show.adult
+                          ? "/pixeled.jpg"
+                          : `https://image.tmdb.org/t/p/w300${item.file_path}`
+                      } // Use item.key instead of item.id
+                      alt={item.name}
+                    />
+                  ))
+                : Pimages?.slice(0, 15).map((item: any) => (
+                    <img
+                      key={item.id} // Add a key to avoid React warnings
+                      className="max-h-96  h-full object-cover mb-3"
+                      src={`show.adult ? "/pixeled.jpg" : https://image.tmdb.org/t/p/w185${item.file_path}`} // Use item.key instead of item.id
+                      alt={item.name}
+                    />
+                  ))}
+            </div>
           </div>
         </div>
       )}
