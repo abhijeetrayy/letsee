@@ -296,7 +296,7 @@ const MovieDetails = async ({
         </div>
       </div>
       {videos.filter((item: any) => item.site === "YouTube").length > 0 && (
-        <div className="max-w-7xl w-full  mt-10 ">
+        <div className="max-w-6xl w-full  mt-10 ">
           <h1 className="text-sm lg:text-lg my-2 ">{movie.title}: Media</h1>
 
           <div className="w-full max-w-7xl m-auto flex flex-row overflow-x-scroll no-scrollbar my-3">
@@ -321,17 +321,17 @@ const MovieDetails = async ({
         </div>
       )}
       {(Bimages.length > 0 || Pimages.length > 0) && (
-        <div className="max-w-7xl w-full  my-4">
+        <div className="max-w-6xl w-full  my-4">
           <h1 className="text-md md:text-lg my-2 ">{movie.title}: Images</h1>
 
           <div className="max-w-7xl w-full m-auto my-3 overflow-x-auto no-scrollbar">
-            <div className="columns-1 sm:columns-3 md:columns-4 lg:columns-5 w-fit m-auto gap-3 pb-3 snap-x snap-mandatory">
+            <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 w-fit m-auto gap-3 pb-3 snap-x snap-mandatory">
               {(Bimages.length > 0 ? Bimages : Pimages)
                 ?.slice(0, 13)
                 .map((item: any) => (
                   <div key={item.id} className="snap-center shrink-0 mb-2">
                     <img
-                      className="w-[400px] h-auto object-cover"
+                      className="w-full h-auto object-cover"
                       src={
                         movie.adult
                           ? "/pixeled.jpg"
