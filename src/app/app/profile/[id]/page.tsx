@@ -3,7 +3,7 @@ import { FaEdit } from "react-icons/fa";
 import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
 
-import ProfileFavorites from "@/components/profile/ProfileFavorites";
+import ProfileFavorite from "@/components/profile/ProfileFavorite";
 import ProfileWatchlater from "@/components/profile/ProfileWatchlater";
 import ProfileWatched from "@/components/profile/profileWatched";
 import UserConnections from "@/components/profile/UserConnections";
@@ -154,7 +154,7 @@ const page = async ({
           </div>
         </div>
         {favoriteCount > 0 && (
-          <ProfileFavorites
+          <ProfileFavorite
             favorites={favorates}
             favoriteCount={favoriteCount}
           />
