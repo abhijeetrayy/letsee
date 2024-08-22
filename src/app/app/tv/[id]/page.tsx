@@ -94,10 +94,10 @@ const ShowDetails = async ({
           />
         </div>
 
-        <div className="max-w-6xl w-full relative  z-10  flex flex-col md:flex-row  gap-5">
-          <div className="md:flex-1 w-fit m-auto">
+        <div className="max-w-6xl w-full relative  z-10  flex flex-col md:flex-row  gap-5  mt-5 mb-2">
+          <div className="md:flex-1">
             <img
-              className="min-h[500px] rounded-md"
+              className="rounded-md object-cover h-full max-h-[500px]"
               src={
                 show.adult
                   ? "/pixeled.jpg"
@@ -106,7 +106,7 @@ const ShowDetails = async ({
               alt={show.name}
             />
           </div>
-          <div className="md:flex-[2]">
+          <div className="md:flex-[2] w-full">
             <h1 className="text-4xl font-bold mb-4">
               {" "}
               {show?.adult && (
