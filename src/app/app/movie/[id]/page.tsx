@@ -60,9 +60,6 @@ const MovieDetails = async ({
 
   return (
     <div className=" text-white relative  w-full">
-      {/* Poster Image as Background */}
-
-      {/* Content */}
       <div className="relative flex flex-col items-center justify-center w-full min-h-[550px] h-full">
         <div className="md:absolute w-full  h-full overflow-hidden">
           <div

@@ -135,7 +135,7 @@ function personCredits({ cast, crew, name }: any) {
                     .replace(/-+/g, "-")}`}
                 >
                   <img
-                    className="relative  object-cover w-full min-h-[270px] sm:min-h-[290px] md:min-h-[322px] duration-300 lg:group-hover:opacity-70"
+                    className="w-full    h-[270px] sm:h-[290px] md:h-[322px] object-cover duration-300  lg:group-hover:opacity-70"
                     src={
                       (data.poster_path || data.backdrop_path) && !data.adult
                         ? `https://image.tmdb.org/t/p/w185${
@@ -159,10 +159,10 @@ function personCredits({ cast, crew, name }: any) {
                 </div>
               </div>
 
-              <span className=" flex flex-col gap-3  hlimitSearch px-2 text-gray-200 bg-purple-600 h-full py-2 ">
-                <div className="mb-1">
+              <div className="flex flex-col  h-full bg-purple-500 text-gray-100 px-2 py-2">
+                <div className="relative">
                   <Link
-                    className=" text-lg font-semibold group-hover:underline"
+                    className="text-lg font-semibold group-hover:underline"
                     href={`/app/${data.media_type}/${data.id}-${(
                       data.name || data.title
                     )
@@ -172,18 +172,20 @@ function personCredits({ cast, crew, name }: any) {
                   >
                     {data.title || data.name}
                   </Link>
-                </div>
-                <p className="text-xs mb-1 ">
-                  {data.release_date || data.first_air_date}
-                </p>
+                  <p className="text-xs mb-1">
+                    {data.release_date || data.first_air_date}
+                  </p>
 
-                <p className=" text-xs ">
-                  {name}:{" "}
-                  <span className="font-bold">
-                    {data.department}-{data.job}
-                  </span>
-                </p>
-              </span>
+                  <div className="mt-auto">
+                    <p className="text-xs">
+                      {name}:{" "}
+                      <span className="font-bold">
+                        {data.department}-{data.job}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         ))}

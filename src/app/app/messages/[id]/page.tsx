@@ -229,7 +229,7 @@ const Chat = () => {
             <div className="chat-input mt-4 flex flex-col md:flex-row md:items-center gap-2 md:gap-0 md:space-x-4">
               <input
                 ref={inputRef} // Attach the ref to the input
-                type="text"
+                type="textarea"
                 placeholder="Type your message..."
                 value={message}
                 onChange={(e) => {

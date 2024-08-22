@@ -1,12 +1,12 @@
 "use client";
-import React, { useContext } from "react";
-import { CiHeart, CiSaveDown1 } from "react-icons/ci";
-import { FcLike } from "react-icons/fc";
-import { IoEyeOutline } from "react-icons/io5";
-import CardMovieButton from "./cardButtons";
 import UserPrefrenceContext from "@/app/contextAPI/userPrefrence";
+import { useContext } from "react";
+import { CiHeart } from "react-icons/ci";
+import { FcLike } from "react-icons/fc";
+import { MdOutlineWatchLater } from "react-icons/md";
 import { PiEyeBold } from "react-icons/pi";
 import { RiEyeCloseLine } from "react-icons/ri";
+import CardMovieButton from "./cardButtons";
 
 function threePrefrencebtn({
   cardId,
@@ -111,9 +111,9 @@ function threePrefrencebtn({
             imgUrl={cardImg}
             icon={
               isItemInWatchLater(cardId) ? (
-                <CiSaveDown1 className="font-bold text-green-500" />
+                <MdOutlineWatchLater className="font-bold text-green-500" />
               ) : (
-                <CiSaveDown1 />
+                <MdOutlineWatchLater />
               )
             }
           />
