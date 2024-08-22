@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
-import { SupabaseClient, User } from "@supabase/supabase-js";
+
 import Link from "next/link";
 
 interface Message {
@@ -13,8 +13,18 @@ interface Message {
   created_at: string;
 }
 
+const options: Intl.DateTimeFormatOptions = {
+  year: "numeric", // Correct type
+  month: "long", // Correct type for month
+  day: "numeric", // Correct type for day
+  hour: "numeric", // Correct type for hour
+  minute: "numeric", // Correct type for minute
+  second: "numeric", // Correct type for second
+  hour12: true, // Correct type for hour12
+};
+
 const isRecipientValid = async (recipientId: string): Promise<boolean> => {
-  const supabase: SupabaseClient = createClient();
+  const supabase = createClient();
   const { data, error } = await supabase
     .from("users")
     .select("id")
@@ -26,7 +36,7 @@ const isRecipientValid = async (recipientId: string): Promise<boolean> => {
 const Chat = () => {
   const [message, setMessage] = useState<string>("");
   const [messages, setMessages] = useState<Message[]>([]);
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState(null) as any;
   const [recipient, setRecipient] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [disable, setDisable] = useState<boolean>(false);
@@ -38,7 +48,7 @@ const Chat = () => {
   const chatRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const supabase: SupabaseClient = createClient();
+  const supabase = createClient();
 
   const fetchUsername = useCallback(
     async (userId: string) => {
@@ -107,7 +117,7 @@ const Chat = () => {
             schema: "public",
             table: "messages",
           },
-          (payload) => {
+          (payload: { new: Message }) => {
             if (
               (payload.new.sender_id === user.id &&
                 payload.new.recipient_id === recipient) ||
@@ -186,7 +196,7 @@ const Chat = () => {
                 messages.map((msg) => (
                   <div
                     key={msg.id}
-                    className={`break-words message p-2 rounded-lg mb-2 max-w-xs ${
+                    className={`break-words  p-2 rounded-lg mb-2 max-w-xs ${
                       msg.sender_id === user?.id
                         ? "bg-blue-600 text-white self-end"
                         : "bg-gray-300 text-black self-start"
@@ -202,6 +212,12 @@ const Chat = () => {
                       )}
                     </div>
                     {msg.content}
+                    <span className="block text-xs text-right mt-3  ">
+                      {new Date(msg.created_at).toLocaleString(
+                        "en-US",
+                        options
+                      )}
+                    </span>{" "}
                   </div>
                 ))
               ) : (
