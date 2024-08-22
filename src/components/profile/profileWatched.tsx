@@ -54,28 +54,27 @@ const WatchedMoviesList = ({ userId }: any): any => {
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-3 z-40">
         {memoizedMovies?.map((item: any) => (
           <div
-            className="z-40 relative group flex flex-col bg-black w-full h-[400px] text-gray-300 rounded-md overflow-hidden duration-300 lg:hover:scale-105"
+            className="z-40 relative group flex flex-col justify-between  bg-black  text-gray-300 rounded-md overflow-hidden duration-300 lg:hover:scale-105"
             key={item.id}
           >
-            <div className="absolute top-0 left-0 z-10 lg:opacity-0 lg:group-hover:opacity-100">
-              {item.item_adult ? (
-                <p className="p-1 bg-red-600 text-white rounded-br-md text-sm">
-                  Adult
-                </p>
-              ) : (
-                <p className="p-1 bg-black text-white rounded-br-md text-sm">
-                  {item.item_type}
-                </p>
-              )}
-            </div>
-
             <Link
-              className="h-[300px]"
+              className="relative"
               href={`/app/${item.item_type}/${item.item_id}-${item.item_name
                 .trim()
                 .replace(/[^a-zA-Z0-9]/g, "-")
                 .replace(/-+/g, "-")}}`}
             >
+              <div className="absolute top-0 left-0 z-10 lg:opacity-0 lg:group-hover:opacity-100">
+                {item.item_adult ? (
+                  <p className="p-1 bg-red-600 text-white rounded-br-md text-sm">
+                    Adult
+                  </p>
+                ) : (
+                  <p className="p-1 bg-black text-white rounded-br-md text-sm">
+                    {item.item_type}
+                  </p>
+                )}
+              </div>
               <img
                 className="relative object-cover h-full w-full"
                 src={

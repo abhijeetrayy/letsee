@@ -13,7 +13,9 @@ function FavoritesList({ favorites, favoriteCount }: any) {
     if (element) {
       const { scrollLeft, scrollWidth, clientWidth } = element;
       setCanScrollLeft(scrollLeft > 0);
-      setCanScrollRight(scrollLeft < scrollWidth - clientWidth);
+      setCanScrollRight(
+        scrollWidth > clientWidth && scrollLeft < scrollWidth - clientWidth
+      );
     }
   };
 
