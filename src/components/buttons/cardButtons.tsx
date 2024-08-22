@@ -132,7 +132,7 @@ const CardMovieButton: React.FC<CardMovieButtonProps> = ({
         });
 
         toast.update(toastId, {
-          render: data.message,
+          render: successMessage,
           type: "success",
           isLoading: false,
           autoClose: 2000,
@@ -188,7 +188,7 @@ const CardMovieButton: React.FC<CardMovieButtonProps> = ({
         });
 
         toast.update(toastId, {
-          render: data.message,
+          render: successMessage,
           type: "success",
           isLoading: false,
           autoClose: 2000,

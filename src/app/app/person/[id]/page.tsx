@@ -32,6 +32,15 @@ async function fetchPersonCredits(id: any) {
   }
   return response.json();
 }
+async function getImages(id: any) {
+  const response = await fetch(
+    `https://api.themoviedb.org/3/person/${id}/images?api_key=${process.env.TMDB_API_KEY}`
+  );
+  if (!response.ok) {
+    throw new Error("Failed to fetch person credits");
+  }
+  return response.json();
+}
 const PersonList = async ({
   params,
   searchParams,
@@ -42,9 +51,10 @@ const PersonList = async ({
   const person = await fetchPersonData(params.id);
   const { cast, crew } = await fetchPersonCredits(params.id);
   const person_ids = await external_ids(params.id);
+  const { profiles } = await getImages(params.id);
 
   return (
-    <div className="text-white w-full flex justify-center">
+    <div className="text-white w-full flex flex-col items-center justify-center">
       <div className=" flex flex-col gap-4  max-w-6xl  w-full">
         <div className="flex flex-col p-3 max-w-5xl w-full m-auto md:flex-row gap-4 z-10">
           <div className="flex-1">
@@ -97,8 +107,22 @@ const PersonList = async ({
             </p>
           </div>
         </div>
-
-        <h3 className="text-lg font-semibold">Known For:</h3>
+        {/* <h3 className="text-lg font-semibold">
+          {profiles.length > 1 && "Looks"}
+        </h3>
+        <div className="flex flex-row max-w-6xl w-full overflow-x-scroll no-scrollbar gap-2 mb-4">
+          {profiles
+            .filter((item: any) => item.file_path !== person.profile_path)
+            .map((item: any) => (
+              <img
+                className="rounded-md max-h-[400px] h-full"
+                src={`https://image.tmdb.org/t/p/h632${item.file_path}`}
+                alt={""}
+                loading="lazy"
+              />
+            ))}
+        </div> */}
+        <h3 className="text-lg font-semibold">Known For</h3>
         <div>
           <Suspense
             fallback={
