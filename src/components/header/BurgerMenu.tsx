@@ -14,7 +14,7 @@ interface BurgerMenuProps {
 const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const [unread, setUnread] = useState(Number);
+  const [unread, setUnread] = useState<number | null>(0);
 
   const router = useRouter();
 
@@ -116,7 +116,10 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID }) => {
               onClick={() => link(`/app/messages`)}
               className="text-2xl hover:text-gray-400"
             >
-              Message's <span className="text-green-500">({unread})</span>
+              Message's{" "}
+              {(unread !== 0 || unread !== null) && (
+                <span className="text-green-500">({unread})</span>
+              )}
             </button>
           </li>
           <li>
