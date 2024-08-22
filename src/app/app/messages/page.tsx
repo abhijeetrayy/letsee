@@ -1,18 +1,19 @@
 "use client";
+
 import { useState, useEffect, useMemo } from "react";
 import { createClient } from "@/utils/supabase/client";
-
 import Link from "next/link";
 
 interface UserInfo {
   id: string;
   username: string | null;
   email: string;
+  unreadCount: number;
 }
 
 const Conversations = () => {
-  const [user, setUser] = useState(null) as any;
-  const [conversationalists, setConversationalists] = useState<UserInfo[]>([]);
+  const [user, setUser] = useState<any>(null);
+  const [users, setUsers] = useState<UserInfo[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const supabase = createClient();
 
@@ -21,59 +22,69 @@ const Conversations = () => {
     const getUser = async () => {
       const { data, error } = await supabase.auth.getUser();
       if (error) {
-        console.error(error);
+        console.error("Error fetching user:", error.message);
       } else {
         setUser(data.user);
       }
     };
     getUser();
-  }, []);
+  }, [supabase]);
 
-  // Fetch all users who have messaged or been messaged by the authenticated user
+  // Fetch all users and unread message counts
   useEffect(() => {
-    const fetchConversationalists = async () => {
+    const fetchUsers = async () => {
+      if (!user) return;
+
       setLoading(true);
-      if (user) {
-        const { data, error } = await supabase
-          .from("messages")
-          .select("sender_id, recipient_id")
-          .or(`sender_id.eq.${user.id},recipient_id.eq.${user.id}`);
 
-        if (error) {
-          console.error("Error fetching messages:", error.message);
-          return;
-        }
-
-        // Extract unique user IDs from messages
-        const userIds = Array.from(
-          new Set(
-            data
-              .flatMap((msg: any) =>
-                msg.sender_id === user.id ? [msg.recipient_id] : [msg.sender_id]
-              )
-              .filter((id: any) => id !== user.id)
-          )
-        );
-
-        // Fetch user details for these IDs
+      try {
+        // Fetch all users
         const { data: usersData, error: usersError } = await supabase
           .from("users")
-          .select("id, username, email")
-          .in("id", userIds);
+          .select("id, username, email");
 
         if (usersError) {
-          console.error("Error fetching user details:", usersError.message);
-        } else {
-          setConversationalists(usersData);
+          throw new Error(usersError.message);
         }
+
+        // Fetch unread message count per sender for the logged-in user
+        const { data: messages, error: messagesError } = await supabase
+          .from("messages")
+          .select("sender_id")
+          .eq("recipient_id", user.id)
+          .eq("is_read", false);
+
+        if (messagesError) {
+          throw new Error(messagesError.message);
+        }
+
+        // Create a map of unread messages count by sender
+        const unreadCountMap = messages.reduce(
+          (acc: { [key: string]: number }, message: any) => {
+            acc[message.sender_id] = (acc[message.sender_id] || 0) + 1;
+            return acc;
+          },
+          {}
+        );
+
+        // Merge the unread counts with the users data
+        const updatedUsers = usersData.map((u: any) => ({
+          ...u,
+          unreadCount: unreadCountMap[u.id] || 0,
+        }));
+
+        setUsers(updatedUsers);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      } finally {
         setLoading(false);
       }
     };
 
-    fetchConversationalists();
-  }, [user]);
+    fetchUsers();
+  }, [user, supabase]);
 
-  const chatMemo = useMemo(() => conversationalists, [conversationalists]);
+  const chatMemo = useMemo(() => users, [users]);
 
   return (
     <div className="max-w-4xl w-full m-auto bg-neutral-800 p-4 rounded-lg shadow-md">
@@ -81,16 +92,23 @@ const Conversations = () => {
       {!loading ? (
         chatMemo.length > 0 ? (
           <ul className="flex flex-col">
-            {chatMemo.map((conversationalist) => (
+            {chatMemo.map((user) => (
               <Link
-                key={conversationalist.id}
-                className=" group mb-2 p-2 bg-neutral-700 rounded-lg shadow-sm"
-                href={`/app/messages/${conversationalist.id}`}
+                key={user.id}
+                className="group mb-2 p-2 bg-neutral-700 rounded-lg shadow-sm"
+                href={`/app/messages/${user.id}`}
               >
-                <span className="text-blue-100 group-hover:underline">
-                  {(conversationalist.username &&
-                    "@" + conversationalist.username) ||
-                    conversationalist.email}
+                <span
+                  className={`text-blue-100 group-hover:underline ${
+                    user.unreadCount > 0 ? "font-bold" : ""
+                  }`}
+                >
+                  {user.username ? `@${user.username}` : user.email}
+                  {user.unreadCount > 0 && (
+                    <span className="text-xs text-red-500 ml-2">
+                      ({user.unreadCount})
+                    </span>
+                  )}
                 </span>
               </Link>
             ))}
@@ -99,7 +117,7 @@ const Conversations = () => {
           <p>No conversations found.</p>
         )
       ) : (
-        <p>Loading..</p>
+        <p>Loading...</p>
       )}
     </div>
   );

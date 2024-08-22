@@ -6,6 +6,7 @@ import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
 
 interface Message {
+  is_read: boolean;
   id: string;
   sender_id: string;
   recipient_id: string;
@@ -98,6 +99,21 @@ const Chat = () => {
             console.error(messageError);
           } else {
             setMessages(messageData);
+
+            // Mark all unread messages as read
+            const unreadMessageIds = messageData
+              .filter(
+                (msg: any) =>
+                  msg.recipient_id === user.id && msg.is_read === false
+              )
+              .map((msg: any) => msg.id);
+
+            if (unreadMessageIds.length > 0) {
+              await supabase
+                .from("messages")
+                .update({ is_read: true })
+                .in("id", unreadMessageIds);
+            }
           }
           setLoading(false);
         }
@@ -196,10 +212,12 @@ const Chat = () => {
                 messages.map((msg) => (
                   <div
                     key={msg.id}
-                    className={`break-words  p-2 rounded-lg mb-2 max-w-xs ${
+                    className={`break-words p-2 rounded-lg mb-2 max-w-xs ${
                       msg.sender_id === user?.id
                         ? "bg-blue-600 text-white self-end"
-                        : "bg-gray-300 text-black self-start"
+                        : msg.is_read
+                        ? "bg-gray-300 text-black self-start"
+                        : "bg-yellow-300 text-black self-start" // Highlight unread messages
                     } ${msg.sender_id === user?.id ? "ml-auto" : "mr-auto"}`}
                   >
                     <div className="text-xs text-gray-600 mb-1">
