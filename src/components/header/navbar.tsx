@@ -41,7 +41,7 @@ async function navbar() {
       <div className="hidden md:flex flex-row gap-3  items-center">
         <div className="px-4 py-1  rounded-md bg-neutral-600 hover:bg-neutral-500">
           <Link href={`/app/messages`}>
-            Message's <span className="text-red-500">({messages})</span>
+            Message's <span className="text-green-500">({messages})</span>
           </Link>
         </div>
         <div className="px-4 py-1  rounded-md bg-neutral-600 hover:bg-neutral-500">

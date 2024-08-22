@@ -105,7 +105,7 @@ const Conversations = () => {
                 >
                   {user.username ? `@${user.username}` : user.email}
                   {user.unreadCount > 0 && (
-                    <span className="text-xs text-red-500 ml-2">
+                    <span className="text-xs text-green-500 ml-2">
                       ({user.unreadCount})
                     </span>
                   )}

@@ -1,10 +1,11 @@
 "use client";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import SignOut from "../buttons/signOut";
 import { CiSearch } from "react-icons/ci";
 import { useRouter } from "next/navigation"; // use next/navigation for client components
+import { createClient } from "@/utils/supabase/client";
 
 interface BurgerMenuProps {
   userID: string | undefined; // Define the type for the userID prop
@@ -13,6 +14,7 @@ interface BurgerMenuProps {
 const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
+  const [unread, setUnread] = useState<number | null>(0);
 
   const router = useRouter();
 
@@ -29,6 +31,26 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID }) => {
     router.push(`${link}`);
     setIsOpen(!isOpen);
   }
+
+  const supabase = createClient();
+  useEffect(() => {
+    const unread = async () => {
+      const { data, error } = await supabase.auth.getUser();
+
+      const { count: messages, error: messagesError } = await supabase
+
+        .from("messages")
+        .select("*", { count: "exact", head: true })
+        .eq("recipient_id", data.user?.id)
+        .eq("is_read", false);
+
+      if (messagesError) {
+        throw new Error(messagesError.message);
+      }
+      setUnread(messages);
+    };
+    unread();
+  }, []);
 
   return (
     <div className="relative">
@@ -94,7 +116,10 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID }) => {
               onClick={() => link(`/app/messages`)}
               className="text-2xl hover:text-gray-400"
             >
-              Message's
+              Message's{" "}
+              {(unread !== 0 || unread !== null) && (
+                <span className="text-green-500">({unread})</span>
+              )}
             </button>
           </li>
           <li>
