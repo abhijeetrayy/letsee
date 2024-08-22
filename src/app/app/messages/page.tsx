@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useMemo } from "react";
 import { createClient } from "@/utils/supabase/client";
-import { SupabaseClient, User } from "@supabase/supabase-js";
+
 import Link from "next/link";
 
 interface UserInfo {
@@ -11,10 +11,10 @@ interface UserInfo {
 }
 
 const Conversations = () => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState(null) as any;
   const [conversationalists, setConversationalists] = useState<UserInfo[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const supabase: SupabaseClient = createClient();
+  const supabase = createClient();
 
   // Fetch the authenticated user
   useEffect(() => {
@@ -48,10 +48,10 @@ const Conversations = () => {
         const userIds = Array.from(
           new Set(
             data
-              .flatMap((msg) =>
+              .flatMap((msg: any) =>
                 msg.sender_id === user.id ? [msg.recipient_id] : [msg.sender_id]
               )
-              .filter((id) => id !== user.id)
+              .filter((id: any) => id !== user.id)
           )
         );
 
