@@ -88,7 +88,7 @@ const MovieDetails = async ({
             alt=""
           />
         </div>
-        <div className="max-w-6xl w-full relative  z-10  flex flex-col md:flex-row  gap-5">
+        <div className="max-w-6xl w-full relative  z-10  flex flex-col md:flex-row  gap-5 mb-2 my-4">
           <div className=" flex-1 ">
             <img
               className="rounded-md object-cover h-full max-h-[500px]"
