@@ -2,8 +2,8 @@ import { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Unisocial",
-  description: "created by Uni Pvt",
+  title: "let's see - Unisocial",
+  description: "Cinema Social Media",
 };
 
 export default function RootLayout({
