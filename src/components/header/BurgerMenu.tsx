@@ -14,7 +14,7 @@ interface BurgerMenuProps {
 const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const [unread, setUnread] = useState(null);
+  const [unread, setUnread] = useState(Number);
 
   const router = useRouter();
 
