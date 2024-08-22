@@ -23,28 +23,9 @@ function personCredits({ cast, crew, name }: any) {
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 ">
           {sortedCast.map((data: any) => (
             <div className="" key={data.id}>
-              <div className=" relative group flex flex-col rounded-md bg-black  w-full  text-gray-300 overflow-hidden duration-300  lg:hover:scale-105 ">
-                <div className="absolute top-0 left-0 z-10 lg:opacity-0 lg:group-hover:opacity-100">
-                  {data.adult ? (
-                    <p className="p-1 bg-red-600 text-white rounded-br-md text-sm">
-                      Adult
-                    </p>
-                  ) : (
-                    <p className="p-1 bg-black text-white rounded-br-md text-sm">
-                      {data.media_type}
-                    </p>
-                  )}
-                </div>
-                <div className="absolute top-0 right-0 z-10">
-                  {(data.release_date || data.first_air_date) && (
-                    <p className="p-1 bg-indigo-600 text-white rounded-tr-sm rounded-bl-md text-sm">
-                      {new Date(data.release_date).getFullYear() ||
-                        new Date(data.first_air_date).getFullYear()}
-                    </p>
-                  )}
-                </div>
+              <div className=" relative group flex flex-col justify-between rounded-md bg-black  w-full h-full  text-gray-300 overflow-hidden duration-300  lg:hover:scale-105 ">
                 <Link
-                  className="   w-full  h-[266px] md:w-56 md:h-80   "
+                  className="relative  "
                   href={`/app/${data.media_type}/${data.id}-${(
                     data.name || data.title
                   )
@@ -52,6 +33,25 @@ function personCredits({ cast, crew, name }: any) {
                     .replace(/[^a-zA-Z0-9]/g, "-")
                     .replace(/-+/g, "-")}`}
                 >
+                  <div className="absolute top-0 left-0 z-10 lg:opacity-0 lg:group-hover:opacity-100">
+                    {data.adult ? (
+                      <p className="p-1 bg-red-600 text-white rounded-br-md text-sm">
+                        Adult
+                      </p>
+                    ) : (
+                      <p className="p-1 bg-black text-white rounded-br-md text-sm">
+                        {data.media_type}
+                      </p>
+                    )}
+                  </div>
+                  <div className="absolute top-0 right-0 z-10">
+                    {(data.release_date || data.first_air_date) && (
+                      <p className="p-1 bg-indigo-600 text-white rounded-tr-sm rounded-bl-md text-sm">
+                        {new Date(data.release_date).getFullYear() ||
+                          new Date(data.first_air_date).getFullYear()}
+                      </p>
+                    )}
+                  </div>
                   <img
                     className=" h-full w-full object-cover"
                     src={

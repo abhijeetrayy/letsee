@@ -2,7 +2,8 @@
 "use client";
 
 import Link from "next/link";
-import React, { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { FaBars } from "react-icons/fa";
 import SignOut from "../buttons/signOut";
 
 const DropdownMenu = ({ user }: any) => {
@@ -38,12 +39,12 @@ const DropdownMenu = ({ user }: any) => {
     <div ref={dropdownRef} className="dropdown">
       <button
         onClick={toggleDropdown}
-        className="dropdown-button px-3 py-1 rounded-md bg-neutral-600 hover:bg-neutral-500"
+        className="dropdown-button px-3 py-2 rounded-md bg-neutral-600 hover:bg-neutral-500"
       >
-        Menu
+        <FaBars />
       </button>
       {isOpen && (
-        <div className="dropdown-content px-3 py-1 rounded-md  bg-neutral-700 text-gray-700 w-[162px] mt-2 -translate-x-24  ">
+        <div className="dropdown-content px-3 py-1 rounded-md  bg-neutral-700 text-gray-700 w-[162px] mt-2 -translate-x-[120px]  ">
           {/* {items.map((item, index) => (
             <a href="#" key={index}>{item}</a>
           ))} */}

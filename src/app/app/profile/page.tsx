@@ -22,11 +22,7 @@ const page = async () => {
         {Users?.filter((item: any) => item.username !== null).map(
           (item: any) => (
             <Link className="group p-3" href={`/app/profile/${item.username}`}>
-              <img
-                className="w-64 h-64 object-cover"
-                src="/avatar.svg"
-                alt=""
-              />
+              <img className=" object-cover" src="/avatar.svg" alt="" />
               <h1 className="text-md  break-words group-hover:text-green-500">
                 @{item.username}
               </h1>
