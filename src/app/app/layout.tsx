@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
 // import { Inter } from "next/font/google";
-import localfont from "next/font/local";
-import "../globals.css";
 import UserPrefrenceProvider from "@/app/contextAPI/userPrefrenceProvider";
 import Footbar from "@/components/footbar/foot";
 import Navbar from "@/components/header/navbar";
-import { ToastContainer } from "react-toastify";
-import { SearchProvider } from "../contextAPI/searchContext";
-import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
 import SetupComp from "@/components/setupComponents/SetupComp";
+import { createClient } from "@/utils/supabase/server";
+import localfont from "next/font/local";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+import { SearchProvider } from "../contextAPI/searchContext";
+import "../globals.css";
 
 // const inter = Inter({ subsets: ["latin"] });
 
@@ -19,8 +20,8 @@ const inter = localfont({
 });
 
 export const metadata: Metadata = {
-  title: "Unisocial",
-  description: "created by Uni Pvt",
+  title: "let's see - Unisocial",
+  description: "Cinema Social Media",
 };
 
 async function getUsername() {
