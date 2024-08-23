@@ -1,14 +1,14 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { createClient } from "@/utils/supabase/client";
 
-interface UnreadMessageCounterProps {
-  userId: string | undefined;
+interface RealtimeUnreadCountProps {
+  userId: string;
   className?: string;
 }
 
-const UnreadMessageCounter: React.FC<UnreadMessageCounterProps> = ({
+const RealtimeUnreadCount: React.FC<RealtimeUnreadCountProps> = ({
   userId,
   className,
 }) => {
@@ -16,8 +16,6 @@ const UnreadMessageCounter: React.FC<UnreadMessageCounterProps> = ({
   const supabase = createClient();
 
   useEffect(() => {
-    if (!userId) return;
-
     const fetchUnreadCount = async () => {
       const { count, error } = await supabase
         .from("messages")
@@ -26,63 +24,55 @@ const UnreadMessageCounter: React.FC<UnreadMessageCounterProps> = ({
         .eq("is_read", false);
 
       if (error) {
-        console.error("Error fetching unread messages:", error.message);
-        return;
+        console.error("Error fetching unread messages count:", error.message);
+      } else {
+        setUnreadCount(count || 0);
       }
-
-      setUnreadCount(count || 0);
-    };
-
-    const setupSubscription = () => {
-      const channel = supabase
-        .channel(`messages:recipient:${userId}`)
-        .on(
-          "postgres_changes",
-          {
-            event: "INSERT",
-            schema: "public",
-            table: "messages",
-            filter: `recipient_id=eq.${userId}`,
-          },
-          (payload: any) => {
-            console.log("New message received:", payload);
-            if (!payload.new.is_read) {
-              setUnreadCount((prevCount) => prevCount + 1);
-            }
-          }
-        )
-        .on(
-          "postgres_changes",
-          {
-            event: "UPDATE",
-            schema: "public",
-            table: "messages",
-            filter: `recipient_id=eq.${userId}`,
-          },
-          (payload: any) => {
-            console.log("Message read status updated:", payload);
-            if (payload.old.is_read === false && payload.new.is_read === true) {
-              setUnreadCount((prevCount) => Math.max(prevCount - 1, 0));
-            }
-          }
-        )
-        .subscribe();
-
-      return channel;
     };
 
     fetchUnreadCount();
-    const channel = setupSubscription();
 
-    // Cleanup subscription on component unmount
+    // Set up real-time subscription
+    const channel = supabase
+      .channel(`realtime-unread-count-${userId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "messages",
+          filter: `recipient_id=eq.${userId}`,
+        },
+        (payload: any) => {
+          console.log("New message received:", payload);
+          setUnreadCount((prevCount) => prevCount + 1);
+        }
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "messages",
+          filter: `recipient_id=eq.${userId},is_read=eq.false`,
+        },
+        (payload: any) => {
+          console.log("Message updated:", payload);
+          fetchUnreadCount(); // Re-fetch count when a message is updated
+        }
+      )
+      .subscribe();
+
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [userId, supabase]);
+  }, [supabase, userId]);
 
-  if (unreadCount === 0) return null;
-
-  return <span className={className}>({unreadCount})</span>;
+  return (
+    <span className={className}>
+      {unreadCount > 0 && <span>({unreadCount})</span>}
+    </span>
+  );
 };
 
-export default UnreadMessageCounter;
+export default RealtimeUnreadCount;
