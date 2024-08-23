@@ -1,20 +1,19 @@
 "use client";
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
+import { CiSearch } from "react-icons/ci";
 import { FaBars, FaTimes } from "react-icons/fa";
 import SignOut from "../buttons/signOut";
-import { CiSearch } from "react-icons/ci";
-import { useRouter } from "next/navigation"; // use next/navigation for client components
-import { createClient } from "@/utils/supabase/client";
+import RealtimeUnreadCount from "./RealtimeUnreadCount";
 
 interface BurgerMenuProps {
-  userID: string | undefined; // Define the type for the userID prop
+  userID: string | undefined;
+  userId: any;
 }
 
-const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID }) => {
+const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID, userId }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const [unread, setUnread] = useState<number | null>(0);
 
   const router = useRouter();
 
@@ -27,42 +26,21 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID }) => {
     router.push(`/app/search/${searchText}`);
     setIsOpen(!isOpen);
   }
+
   function link(link: string) {
     router.push(`${link}`);
     setIsOpen(!isOpen);
   }
 
-  const supabase = createClient();
-  useEffect(() => {
-    const unread = async () => {
-      const { data, error } = await supabase.auth.getUser();
-
-      const { count: messages, error: messagesError } = await supabase
-
-        .from("messages")
-        .select("*", { count: "exact", head: true })
-        .eq("recipient_id", data.user?.id)
-        .eq("is_read", false);
-
-      if (messagesError) {
-        throw new Error(messagesError.message);
-      }
-      setUnread(messages);
-    };
-    unread();
-  }, []);
-
   return (
     <div className="relative">
-      {/* Burger Icon */}
       <button
-        className=" text-white focus:outline-none md:hidden"
+        className="dropdown-button px-3 py-2 rounded-md bg-neutral-600 hover:bg-neutral-500 md:hidden"
         onClick={toggleMenu}
       >
-        {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+        {isOpen ? <FaTimes /> : <FaBars />}
       </button>
 
-      {/* Menu */}
       <div
         className={`z-50 fixed top-0 left-0 w-full h-full bg-neutral-800 transition-transform transform ${
           isOpen ? "translate-x-0" : "-translate-x-full hidden"
@@ -75,7 +53,7 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID }) => {
           {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
         </button>
 
-        <div className=" absolute top-5 w-full ">
+        <div className="absolute top-5 w-full ">
           <h1 className="text-3xl font-bold w-fit m-auto">Let's see</h1>
         </div>
 
@@ -117,9 +95,7 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID }) => {
               className="text-2xl hover:text-gray-400"
             >
               Message's{" "}
-              {(unread !== 0 || unread !== null) && (
-                <span className="text-green-500">({unread})</span>
-              )}
+              <RealtimeUnreadCount userId={userId} className="text-green-500" />
             </button>
           </li>
           <li>
