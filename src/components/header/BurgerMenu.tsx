@@ -95,7 +95,7 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID, userId }) => {
               className="text-2xl hover:text-gray-400"
             >
               Message's{" "}
-              <RealtimeUnreadCount userId={userId} className="text-green-500" />
+              {/* <RealtimeUnreadCount userId={userId} className="text-green-500" /> */}
             </button>
           </li>
           <li>

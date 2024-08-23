@@ -41,14 +41,14 @@ async function navbar() {
       <div className="flex flex-row gap-3 items-center">
         <div className="px-4 py-1  rounded-md bg-neutral-600 hover:bg-neutral-500">
           <Link
-            className="flex flex-row gap-1 items-center justify-center"
+            className="flex flex-row gap-1 items-center justify-center my-1"
             href={`/app/messages`}
           >
             <LuSend />
-            <RealtimeUnreadCount
+            {/* <RealtimeUnreadCount
               userId={userData.id}
               className="text-green-500"
-            />
+            /> */}
           </Link>
         </div>
         <div className="hidden md:flex flex-row gap-3  items-center">
