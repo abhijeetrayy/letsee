@@ -54,14 +54,14 @@ export default async function Home() {
   const data = await getTrending();
   const TrendingTv = await getTrendingTV();
   return (
-    <div className="max-w-7xl w-full m-auto">
+    <div className="flex flex-col gap-8 max-w-7xl w-full m-auto">
       <div className="w-full">
         <SearchForm />
       </div>
-      <div className="my-3">
+      <div className="">
         <DiscoverUsers />
       </div>
-      <div className="w-full max-w-7xl my-3">
+      <div className="w-full max-w-7xl ">
         <h1 className="text-lg font-semibold mb-2">Movie Genres</h1>
         <div className="flex flex-row  overflow-x-scroll vone-scrollbar gap-1">
           {genre?.genres.map((genre: any) => (
@@ -81,11 +81,11 @@ export default async function Home() {
           <MovieCard key={genre.id} genre={genre} />
         ))}
       </div> */}
-      <div className="my-3">
+      <div className="">
         <h2 className="text-2xl my-4 font-bold">Weekly Top 20</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 max-w-6xl w-full m-auto">
           {data?.results.map((item: any) => (
-            <div className="group relative w-full h-full bg-indigo-700 rounded-md overflow-hidden ">
+            <div className="group relative w-full h-full bg-neutral-700 rounded-md overflow-hidden ">
               <div className="absolute top-0 left-0">
                 <p className="px-1 py-1 bg-neutral-950  text-white rounded-br-md">
                   {item.media_type}
@@ -132,7 +132,7 @@ export default async function Home() {
           ))}
         </div>
       </div>
-      <div className="w-full max-w-7xl my-3">
+      <div className="w-full max-w-7xl ">
         <h1 className="text-lg font-semibold mb-2">Tv Show Genres</h1>
         <div className="flex flex-row  overflow-x-scroll vone-scrollbar gap-1 ">
           {tvGenres?.genres.map((genre: any) => (
@@ -147,11 +147,11 @@ export default async function Home() {
           ))}
         </div>
       </div>
-      <div className="w-full my-3 ">
+      <div className="w-full  ">
         <h2 className="text-2xl my-4 font-bold">Trending Tv Show's</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 max-w-6xl w-full m-auto">
           {TrendingTv?.results.map((item: any) => (
-            <div className="group relative  w-full h-full bg-indigo-700 rounded-md overflow-hidden">
+            <div className="group relative  w-full h-full bg-neutral-700 rounded-md overflow-hidden">
               <div className="absolute top-0 left-0">
                 <p className="px-1 py-1 bg-neutral-950  text-white rounded-br-md">
                   {item.media_type}

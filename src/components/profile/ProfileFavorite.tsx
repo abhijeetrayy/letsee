@@ -73,7 +73,7 @@ function FavoritesList({ favorites, favoriteCount }: any) {
                     className="h-full w-full object-cover"
                     src={
                       item.item_adult
-                        ? "/pixeled.jpg"
+                        ? "/pixeled.webp"
                         : `https://image.tmdb.org/t/p/w185/${item.image_url}`
                     }
                     loading="lazy"

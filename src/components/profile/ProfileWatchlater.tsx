@@ -73,7 +73,7 @@ function WatchLaterList({ watchlist, watchlistCount }: any) {
                     className="h-full w-full object-cover"
                     src={
                       item.item_adult
-                        ? "/pixeled.jpg"
+                        ? "/pixeled.webp"
                         : `https://image.tmdb.org/t/p/w185/${item.item_img}`
                     }
                     loading="lazy"

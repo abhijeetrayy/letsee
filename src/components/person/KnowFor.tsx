@@ -119,8 +119,8 @@ const ScrollableCastList: React.FC<ScrollableCastListProps> = ({
                         displayImage
                           ? `https://image.tmdb.org/t/p/w342${displayImage}`
                           : adult
-                          ? "/pixeled.jpg"
-                          : "/no-photo.jpg"
+                          ? "/pixeled.webp"
+                          : "/no-photo.webp"
                       }
                       loading="lazy"
                       alt={displayTitle}
