@@ -53,7 +53,7 @@ export default async function RootLayout({
             <UserPrefrenceProvider>
               <SearchProvider>
                 <div className="w-full flex flex-col min-h-screen">
-                  <header className="sticky top-0 z-50 bg-neutral-900">
+                  <header className="sticky top-0 max-w-[1520px] w-full m-auto z-50 bg-neutral-900">
                     <Navbar />
                   </header>
                   <main className="flex-grow px-3 py-2">{children}</main>
