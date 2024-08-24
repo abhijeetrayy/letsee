@@ -3,11 +3,14 @@ import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 
-function DiscoverUsers({ credits, id, type }: any) {
+interface User {
+  username: string;
+}
+function DiscoverUsers() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
-  const [users, setUser] = useState([]);
+  const [users, setUser] = useState<User[]>([]);
 
   useEffect(() => {
     const getUser = async () => {
