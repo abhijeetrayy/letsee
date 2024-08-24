@@ -106,7 +106,7 @@ export default async function Home() {
                   alt={item.name}
                 />
               </Link>
-              <div className="lg:absolute lg:bottom-0 h-full w-full lg:opacity-0 lg:group-hover:opacity-100">
+              <div className="lg:absolute lg:bottom-0 h-full lg:h-fit w-full lg:opacity-0 lg:group-hover:opacity-100">
                 <div className="  bg-neutral-900 ">
                   <ThreePrefrenceBtn
                     cardId={item.id}
@@ -172,7 +172,7 @@ export default async function Home() {
                   alt={item.name}
                 />
               </Link>
-              <div className="lg:absolute bottom-0 h-full w-full lg:opacity-0 group-hover:opacity-100">
+              <div className="lg:absolute bottom-0 h-full lg:h-fit w-full lg:opacity-0 group-hover:opacity-100">
                 <div className="  bg-neutral-900 ">
                   <ThreePrefrenceBtn
                     cardId={item.id}
