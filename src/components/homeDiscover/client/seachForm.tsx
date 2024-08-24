@@ -87,8 +87,15 @@ const MovieSearch = () => {
         <div>
           {results.total_results == 0 && (
             <div className="h-full w-full flex items-center justify-center">
-              Result for "{decodeURIComponent(query as string)}" is not found -
-              or check you spelling{" "}
+              <p className="text-md">
+                Result for "
+                <span className="text-pink-600">
+                  {decodeURIComponent(query as string)}
+                </span>
+                "{" "}
+                <span className="font-bold text-purple-600">is not found</span>{" "}
+                - or check you spelling{" "}
+              </p>
             </div>
           )}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
