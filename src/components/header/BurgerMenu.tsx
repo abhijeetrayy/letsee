@@ -1,14 +1,15 @@
+// components/BurgerMenu.tsx
 "use client";
+import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { CiSearch } from "react-icons/ci";
 import { FaBars, FaTimes } from "react-icons/fa";
 import SignOut from "../buttons/signOut";
-import RealtimeUnreadCount from "./RealtimeUnreadCount";
 
 interface BurgerMenuProps {
   userID: string | undefined;
-  userId: any;
+  userId: string;
 }
 
 const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID, userId }) => {
@@ -16,6 +17,7 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID, userId }) => {
   const [searchText, setSearchText] = useState("");
 
   const router = useRouter();
+  const supabase = createClient();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -24,12 +26,12 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID, userId }) => {
   async function search(e: React.FormEvent) {
     e.preventDefault();
     router.push(`/app/search/${searchText}`);
-    setIsOpen(!isOpen);
+    setIsOpen(false);
   }
 
   function link(link: string) {
-    router.push(`${link}`);
-    setIsOpen(!isOpen);
+    router.push(link);
+    setIsOpen(false);
   }
 
   return (
@@ -89,15 +91,7 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID, userId }) => {
               Let's see
             </button>
           </li>
-          <li>
-            <button
-              onClick={() => link(`/app/messages`)}
-              className="text-2xl hover:text-gray-400"
-            >
-              Message's{" "}
-              {/* <RealtimeUnreadCount userId={userId} className="text-green-500" /> */}
-            </button>
-          </li>
+
           <li>
             <button
               onClick={() => link(`/app/profile`)}
