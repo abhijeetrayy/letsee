@@ -81,7 +81,7 @@ const MovieDetails = async ({
             src={`${
               movie.backdrop_path && !movie.adult
                 ? `https://image.tmdb.org/t/p/w300${movie.backdrop_path}`
-                : "/backgroundjpeg.jpeg"
+                : "/backgroundjpeg.webp"
             }`}
             width={300}
             height={300}
@@ -96,8 +96,8 @@ const MovieDetails = async ({
                 movie.poster_path && !movie.adult
                   ? `https://image.tmdb.org/t/p/w342${movie.poster_path}`
                   : movie.adult
-                  ? "/pixeled.jpg"
-                  : "/no-photo.jpg"
+                  ? "/pixeled.webp"
+                  : "/no-photo.webp"
               }`}
               width={500}
               height={500}
@@ -241,7 +241,7 @@ const MovieDetails = async ({
                       className="w-full h-auto object-cover"
                       src={
                         movie.adult
-                          ? "/pixeled.jpg"
+                          ? "/pixeled.webp"
                           : `https://image.tmdb.org/t/p/w300${item.file_path}`
                       }
                       alt={item.name}

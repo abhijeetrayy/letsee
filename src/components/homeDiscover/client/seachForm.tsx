@@ -63,7 +63,7 @@ const MovieSearch = () => {
     setLoading(false);
   };
   return (
-    <div className="text-white max-w-7xl w-full min-h-64 mx-auto my-4">
+    <div className="text-white max-w-7xl w-full min-h-44 mx-auto ">
       <form onSubmit={handleSearch} className="mb-8">
         <input
           type="text"
@@ -119,7 +119,7 @@ const MovieSearch = () => {
                           ? `https://image.tmdb.org/t/p/w342${
                               data.poster_path || data.backdrop_path
                             }`
-                          : "/no-photo.jpg"
+                          : "/no-photo.webp"
                       }
                       width={400}
                       height={400}
@@ -188,7 +188,7 @@ const MovieSearch = () => {
                       src={
                         data.profile_path
                           ? `https://image.tmdb.org/t/p/h632${data.profile_path}`
-                          : "/no-photo.jpg"
+                          : "/no-photo.webp"
                       }
                       width={400}
                       height={400}

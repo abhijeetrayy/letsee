@@ -50,7 +50,7 @@ async function page({
             src={`${
               movie.backdrop_path && !movie.adult
                 ? `https://image.tmdb.org/t/p/w300${movie.backdrop_path}`
-                : "/backgroundjpeg.jpeg"
+                : "/backgroundjpeg.webp"
             }`}
             width={300}
             height={300}
@@ -66,8 +66,8 @@ async function page({
                 movie.poster_path && !movie.adult
                   ? `https://image.tmdb.org/t/p/w342${movie.poster_path}`
                   : movie.adult
-                  ? "/pixeled.jpg"
-                  : "/no-photo.jpg"
+                  ? "/pixeled.webp"
+                  : "/no-photo.webp"
               }`}
               width={500}
               height={500}

@@ -63,7 +63,7 @@ function DiscoverUsers() {
   return (
     <div className="max-w-6xl w-full m-auto mb-5">
       <div className="mt-7">
-        <h2 className="text-lg">Discover User's</h2>
+        <h2 className="text-lg font-semibold mb-2">Discover User's</h2>
         <div className="relative">
           <div
             ref={scrollRef}
@@ -72,7 +72,7 @@ function DiscoverUsers() {
             <Link className="group p-3" href={`/app/profile/ray`}>
               <img
                 className="border border-indigo-600 min-w-44 max-w-44 md:min-w-64  md:max-w-64 w-full h-44 md:h-64 object-cover"
-                src="/abhijeetray.jpg"
+                src="/abhijeetray.webp"
                 alt=""
               />
               <h1 className="text-md  break-words group-hover:text-green-500">

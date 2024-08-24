@@ -79,7 +79,7 @@ const Page: React.FC<PageProps> = async ({ params, searchParams }) => {
                         ? `https://image.tmdb.org/t/p/w342${
                             data.poster_path || data.backdrop_path
                           }`
-                        : "/no-photo.jpg"
+                        : "/no-photo.webp"
                     }
                     width={400}
                     height={400}

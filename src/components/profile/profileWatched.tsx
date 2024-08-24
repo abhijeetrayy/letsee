@@ -79,7 +79,7 @@ const WatchedMoviesList = ({ userId }: any): any => {
                 className="relative object-cover h-full w-full"
                 src={
                   item.item_adult
-                    ? "/pixeled.jpg"
+                    ? "/pixeled.webp"
                     : `https://image.tmdb.org/t/p/w185/${item.image_url}`
                 }
                 loading="lazy"

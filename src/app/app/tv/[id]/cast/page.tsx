@@ -51,7 +51,7 @@ async function page({
             src={`${
               show.backdrop_path && !show.adult
                 ? `https://image.tmdb.org/t/p/w300${show.backdrop_path}`
-                : "/backgroundjpeg.jpeg"
+                : "/backgroundjpeg.webp"
             }`}
             width={300}
             height={300}
@@ -65,7 +65,7 @@ async function page({
               className="min-h[500px] rounded-md"
               src={
                 show.adult
-                  ? "/pixeled.jpg"
+                  ? "/pixeled.webp"
                   : `https://image.tmdb.org/t/p/w342${show.poster_path}`
               }
               alt={show.name}

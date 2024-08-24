@@ -60,8 +60,8 @@ function personCredits({ cast, crew, name }: any) {
                             data.poster_path || data.backdrop_path
                           }`
                         : data.adult
-                        ? "/pixeled.jpg"
-                        : "/no-photo.jpg"
+                        ? "/pixeled.webp"
+                        : "/no-photo.webp"
                     }
                     loading="lazy"
                     alt={data.title}
@@ -142,8 +142,8 @@ function personCredits({ cast, crew, name }: any) {
                             data.poster_path || data.backdrop_path
                           }`
                         : data.adult
-                        ? "/pixeled.jpg"
-                        : "/no-photo.jpg"
+                        ? "/pixeled.webp"
+                        : "/no-photo.webp"
                     }
                     alt={data.title}
                   />

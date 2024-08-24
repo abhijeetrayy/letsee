@@ -86,7 +86,7 @@ const ShowDetails = async ({
             src={`${
               show.backdrop_path && !show.adult
                 ? `https://image.tmdb.org/t/p/w300${show.backdrop_path}`
-                : "/backgroundjpeg.jpeg"
+                : "/backgroundjpeg.webp"
             }`}
             width={300}
             height={300}
@@ -100,7 +100,7 @@ const ShowDetails = async ({
               className="rounded-md object-cover h-full max-h-[500px]"
               src={
                 show.adult
-                  ? "/pixeled.jpg"
+                  ? "/pixeled.webp"
                   : `https://image.tmdb.org/t/p/w342${show.poster_path}`
               }
               alt={show.name}
@@ -242,9 +242,9 @@ const ShowDetails = async ({
                 src={`${
                   season.poster_path
                     ? show.adult
-                      ? "/pixeled.jpg"
+                      ? "/pixeled.webp"
                       : `https://image.tmdb.org/t/p/w185${season.poster_path}`
-                    : "/no-photo.jpg"
+                    : "/no-photo.webp"
                 }`}
                 className="min-w-44 max-w-44 h-full object-cover border border-indigo-600"
                 alt={season.name}
@@ -281,7 +281,7 @@ const ShowDetails = async ({
                       className="max-h-96  h-full object-cover mb-3"
                       src={
                         show.adult
-                          ? "/pixeled.jpg"
+                          ? "/pixeled.webp"
                           : `https://image.tmdb.org/t/p/w300${item.file_path}`
                       } // Use item.key instead of item.id
                       alt={item.name}
@@ -291,7 +291,7 @@ const ShowDetails = async ({
                     <img
                       key={item.id} // Add a key to avoid React warnings
                       className="max-h-96  h-full object-cover mb-3"
-                      src={`show.adult ? "/pixeled.jpg" : https://image.tmdb.org/t/p/w185${item.file_path}`} // Use item.key instead of item.id
+                      src={`show.adult ? "/pixeled.webp" : https://image.tmdb.org/t/p/w185${item.file_path}`} // Use item.key instead of item.id
                       alt={item.name}
                     />
                   ))}
