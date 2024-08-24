@@ -6,6 +6,7 @@
 // import Link from "next/link";
 import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
 import SearchForm from "@/components/homeDiscover/client/seachForm";
+import DiscoverUsers from "@components/home/DiscoverUser";
 import Link from "next/link";
 
 async function getData() {
@@ -56,6 +57,9 @@ export default async function Home() {
     <div className="max-w-7xl w-full m-auto">
       <div className="w-full">
         <SearchForm />
+      </div>
+      <div className="my-3">
+        <DiscoverUsers />
       </div>
       <div className="w-full max-w-7xl my-3">
         <h1 className="text-lg font-semibold mb-2">Movie Genres</h1>

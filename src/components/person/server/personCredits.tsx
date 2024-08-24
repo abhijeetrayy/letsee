@@ -25,7 +25,7 @@ function personCredits({ cast, crew, name }: any) {
             <div className="" key={data.id}>
               <div className=" relative group flex flex-col justify-between rounded-md bg-black  w-full h-full  text-gray-300 overflow-hidden duration-300  lg:hover:scale-105 ">
                 <Link
-                  className="relative  "
+                  className="relative flex h-full  "
                   href={`/app/${data.media_type}/${data.id}-${(
                     data.name || data.title
                   )
@@ -53,7 +53,7 @@ function personCredits({ cast, crew, name }: any) {
                     )}
                   </div>
                   <img
-                    className=" h-full w-full object-cover"
+                    className={`${"h-full w-full object-cover"}  `}
                     src={
                       (data.poster_path || data.backdrop_path) && !data.adult
                         ? `https://image.tmdb.org/t/p/w342${
