@@ -2,8 +2,8 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
-
 import Link from "next/link";
+import { FiSend, FiArrowDown } from "react-icons/fi"; // Import icons
 
 interface Message {
   is_read: boolean;
@@ -15,13 +15,19 @@ interface Message {
 }
 
 const options: Intl.DateTimeFormatOptions = {
-  year: "numeric", // Correct type
-  month: "long", // Correct type for month
-  day: "numeric", // Correct type for day
-  hour: "numeric", // Correct type for hour
-  minute: "numeric", // Correct type for minute
-  second: "numeric", // Correct type for second
-  hour12: true, // Correct type for hour12
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+  hour: "numeric",
+  minute: "numeric",
+  second: "numeric",
+  hour12: true,
+};
+
+const dateOptions: Intl.DateTimeFormatOptions = {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
 };
 
 const isRecipientValid = async (recipientId: string): Promise<boolean> => {
@@ -31,13 +37,17 @@ const isRecipientValid = async (recipientId: string): Promise<boolean> => {
     .select("id")
     .eq("id", recipientId)
     .single();
-  return !error && !!data;
+  if (error) {
+    console.error("Error validating recipient:", error.message);
+    return false;
+  }
+  return !!data;
 };
 
 const Chat = () => {
   const [message, setMessage] = useState<string>("");
   const [messages, setMessages] = useState<Message[]>([]);
-  const [user, setUser] = useState(null) as any;
+  const [user, setUser] = useState<any>(null);
   const [recipient, setRecipient] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [disable, setDisable] = useState<boolean>(false);
@@ -45,9 +55,14 @@ const Chat = () => {
     null
   );
   const [isValidRecipient, setIsValidRecipient] = useState<boolean>(true);
-  const { id }: any = useParams();
+  const [loadingMore, setLoadingMore] = useState<boolean>(false);
+  const [newMessageCount, setNewMessageCount] = useState<number>(0);
+  const lastMessageRef = useRef<HTMLDivElement>(null);
+  const [hasMoreMessages, setHasMoreMessages] = useState<boolean>(true);
+  const [offset, setOffset] = useState<number>(0);
+  const { id } = useParams<{ id: string }>();
   const chatRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const supabase = createClient();
 
@@ -64,6 +79,27 @@ const Chat = () => {
         return null;
       }
       return data?.username || null;
+    },
+    [supabase]
+  );
+
+  const fetchMessages = useCallback(
+    async (user: any, recipientId: string, offsetValue: number) => {
+      const { data: messageData, error: messageError } = await supabase
+        .from("messages")
+        .select("*")
+        .or(`sender_id.eq.${user.id},recipient_id.eq.${user.id}`)
+        .or(`sender_id.eq.${recipientId},recipient_id.eq.${recipientId}`)
+        .order("created_at", { ascending: false })
+        .range(offsetValue, offsetValue + 49);
+
+      if (messageError) {
+        console.error(messageError);
+        return [];
+      }
+
+      setHasMoreMessages(messageData.length === 50);
+      return messageData.reverse(); // Reverse so that newer messages are at the bottom
     },
     [supabase]
   );
@@ -88,39 +124,37 @@ const Chat = () => {
           const username = await fetchUsername(id);
           setRecipientUsername(username);
 
-          const { data: messageData, error: messageError } = await supabase
-            .from("messages")
-            .select("*")
-            .or(`sender_id.eq.${user.id},recipient_id.eq.${user.id}`)
-            .or(`sender_id.eq.${id},recipient_id.eq.${id}`)
-            .order("created_at", { ascending: true });
+          const messageData = await fetchMessages(user, id, 0);
+          setMessages(messageData);
 
-          if (messageError) {
-            console.error(messageError);
-          } else {
-            setMessages(messageData);
-
-            // Mark all unread messages as read
-            const unreadMessageIds = messageData
-              .filter(
-                (msg: any) =>
-                  msg.recipient_id === user.id && msg.is_read === false
-              )
-              .map((msg: any) => msg.id);
-
-            if (unreadMessageIds.length > 0) {
-              await supabase
-                .from("messages")
-                .update({ is_read: true })
-                .in("id", unreadMessageIds);
+          // Scroll to the bottom after the initial load
+          setTimeout(() => {
+            if (chatRef.current) {
+              chatRef.current.scrollTop = chatRef.current.scrollHeight;
             }
+          }, 0);
+
+          // Mark all unread messages as read
+          const unreadMessageIds = messageData
+            .filter(
+              (msg: Message) =>
+                msg.recipient_id === user.id && msg.is_read === false
+            )
+            .map((msg: Message) => msg.id);
+
+          if (unreadMessageIds.length > 0) {
+            await supabase
+              .from("messages")
+              .update({ is_read: true })
+              .in("id", unreadMessageIds);
           }
+
           setLoading(false);
         }
       }
     };
     getUserAndMessages();
-  }, [id, supabase, fetchUsername]);
+  }, [id, supabase, fetchUsername, fetchMessages]);
 
   useEffect(() => {
     if (user && recipient && isValidRecipient) {
@@ -140,12 +174,14 @@ const Chat = () => {
               (payload.new.sender_id === recipient &&
                 payload.new.recipient_id === user.id)
             ) {
-              setMessages((prevMessages: any) => [
-                ...prevMessages,
-                payload.new,
-              ]);
+              setMessages((prevMessages) => [...prevMessages, payload.new]);
               if (payload.new.sender_id === user.id) {
-                setDisable(false); // Re-enable the button only if the sent message is confirmed in the state
+                setDisable(false);
+                scrollToBottom();
+              } else if (!isScrolledToBottom()) {
+                setNewMessageCount((prev) => prev + 1);
+              } else {
+                scrollToBottom();
               }
             }
           }
@@ -158,96 +194,194 @@ const Chat = () => {
     }
   }, [user, recipient, isValidRecipient, supabase]);
 
+  const scrollToBottom = () => {
+    if (chatRef.current) {
+      chatRef.current.scrollTo({
+        top: chatRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+  };
+  const isScrolledToBottom = () => {
+    if (chatRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = chatRef.current;
+      return Math.abs(scrollHeight - clientHeight - scrollTop) < 1;
+    }
+    return false;
+  };
+
+  const loadMoreMessages = async () => {
+    if (user && recipient && isValidRecipient) {
+      setLoadingMore(true);
+      console.log("Loading more messages...");
+      console.log("Current offset:", offset);
+
+      if (chatRef.current) {
+        const previousScrollHeight = chatRef.current.scrollHeight;
+        const previousScrollTop = chatRef.current.scrollTop;
+
+        const newOffset = offset + 50;
+        const olderMessages = await fetchMessages(user, recipient, newOffset);
+
+        console.log("Fetched messages:", olderMessages.length);
+
+        setMessages((prevMessages) => [...olderMessages, ...prevMessages]);
+        setOffset(newOffset);
+        setHasMoreMessages(olderMessages.length === 50);
+
+        setTimeout(() => {
+          if (chatRef.current) {
+            chatRef.current.scrollTop =
+              chatRef.current.scrollHeight -
+              previousScrollHeight +
+              previousScrollTop;
+          }
+        }, 0);
+      }
+      setLoadingMore(false);
+    }
+  };
+
   const sendMessage = useCallback(async () => {
     if (message.trim() !== "" && user && recipient && isValidRecipient) {
-      setDisable(true); // Disable the button before processing
+      setDisable(true);
 
       const { error } = await supabase.from("messages").insert([
         {
           sender_id: user.id,
           recipient_id: recipient,
-          content: message,
+          content: message.trim(),
         },
       ]);
 
       if (error) {
         console.error(error);
-        setDisable(false); // Re-enable the button if there's an error
+        setDisable(false);
       } else {
-        setMessage(""); // Clear the input field after sending the message
+        setMessage("");
         setTimeout(() => {
-          inputRef.current?.focus(); // Ensure the input remains focused after sending
-        }, 0); // Ensure focus is set after the message is sent
+          inputRef.current?.focus();
+          scrollToBottom();
+        }, 0);
       }
     }
   }, [message, user, recipient, isValidRecipient, supabase]);
 
-  useEffect(() => {
-    if (chatRef.current) {
-      chatRef.current.scrollTop = chatRef.current.scrollHeight;
-    }
-  }, [messages]);
+  const renderMessagesWithDates = (messages: Message[]) => {
+    const result: JSX.Element[] = [];
+    let lastDate: string | null = null;
 
-  return (
-    <div className="">
-      {!loading ? (
-        <div>
-          <div className="max-w-5xl w-full m-auto my-4">
-            <h1 className="text-xl">
-              Message:{" "}
-              <Link
-                className="text-blue-500 hover:text-blue-600"
-                href={`/app/profile/${recipientUsername}`}
-              >
-                @{recipientUsername}
-              </Link>
-            </h1>
+    messages.forEach((msg, index) => {
+      const messageDate = new Date(msg.created_at).toLocaleDateString(
+        "en-US",
+        dateOptions
+      );
+
+      if (messageDate !== lastDate) {
+        result.push(
+          <div
+            key={`date-${index}`}
+            className="text-center text-gray-400 text-xs my-4"
+          >
+            {messageDate}
           </div>
-          <div className="max-w-3xl w-full m-auto bg-neutral-800 p-2 md:p-4 rounded-lg shadow-md">
-            <div
-              className="md:bg-neutral-700 md:p-4 rounded-lg overflow-y-auto max-h-screen h-full vone-scrollbar"
-              ref={chatRef}
-            >
-              {isValidRecipient ? (
-                messages.map((msg) => (
-                  <div
-                    key={msg.id}
-                    className={`break-words p-2 rounded-lg mb-2 max-w-xs ${
-                      msg.sender_id === user?.id
-                        ? "bg-blue-600 text-white self-end"
-                        : msg.is_read
-                        ? "bg-gray-300 text-black self-start"
-                        : "bg-yellow-300 text-black self-start" // Highlight unread messages
-                    } ${msg.sender_id === user?.id ? "ml-auto" : "mr-auto"}`}
-                  >
-                    <div className="text-xs text-gray-600 mb-1">
-                      {msg.sender_id === user?.id ? (
-                        <span className="text-gray-200">You</span>
-                      ) : (
-                        <Link href={`/app/profile/${recipientUsername}`}>
-                          @{recipientUsername || "Unknown"}
-                        </Link>
-                      )}
-                    </div>
-                    {msg.content}
-                    <span className="block text-xs text-right mt-3  ">
-                      {new Date(msg.created_at).toLocaleString(
-                        "en-US",
-                        options
-                      )}
-                    </span>{" "}
-                  </div>
-                ))
+        );
+        lastDate = messageDate;
+      }
+
+      result.push(
+        <div
+          key={msg.id}
+          ref={index === messages.length - 1 ? lastMessageRef : null}
+          className={`flex ${
+            msg.sender_id === user?.id ? "justify-end" : "justify-start"
+          } mb-4`}
+        >
+          <div
+            className={`break-words p-3 rounded-lg max-w-xs md:max-w-md lg:max-w-lg ${
+              msg.sender_id === user?.id
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200 text-black"
+            }`}
+          >
+            <div className="text-xs text-gray-500 mb-1">
+              {msg.sender_id === user?.id ? (
+                <span className="text-gray-200">You</span>
               ) : (
-                <div className="text-red-500">
-                  Invalid user. Please check the URL.
-                </div>
+                <Link
+                  href={`/app/profile/${recipientUsername}`}
+                  className="hover:underline"
+                >
+                  @{recipientUsername || "Unknown"}
+                </Link>
               )}
             </div>
-            <div className="chat-input mt-4 flex flex-col md:flex-row md:items-center gap-2 md:gap-0 md:space-x-4">
-              <input
-                ref={inputRef} // Attach the ref to the input
-                type="textarea"
+            <p className="text-sm">{msg.content}</p>
+            <span className="block text-xs text-right mt-1 opacity-70">
+              {new Date(msg.created_at).toLocaleTimeString("en-US", {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </span>
+          </div>
+        </div>
+      );
+    });
+
+    return result;
+  };
+
+  return (
+    <div className="chat-container flex flex-col max-w-4xl w-full m-auto ">
+      <div className=" shadow-sm p-4">
+        <h2 className="text-xl font-semibold">
+          Chat with{" "}
+          <Link href={`/app/profile/${recipientUsername}`}>
+            @{recipientUsername}
+          </Link>
+        </h2>
+      </div>
+      {!loading ? (
+        <div className="flex-grow flex flex-col max-h-screen max-w-3xl w-full m-auto">
+          <div
+            className="chat-messages flex-grow overflow-y-auto bg-neutral-700 rounded-md vone-scrollbar p-4 "
+            ref={chatRef}
+          >
+            {isValidRecipient ? (
+              <>
+                {hasMoreMessages && (
+                  <button
+                    className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-4 rounded-full text-sm w-full max-w-xs mx-auto mb-4 transition duration-150 ease-in-out"
+                    onClick={loadMoreMessages}
+                    disabled={loadingMore}
+                  >
+                    {loadingMore ? "Loading..." : "Load More Messages"}
+                  </button>
+                )}
+                {renderMessagesWithDates(messages)}
+              </>
+            ) : (
+              <div className="text-red-500 text-center">
+                Invalid user. Please check the URL.
+              </div>
+            )}
+          </div>
+          {newMessageCount > 0 && (
+            <div
+              className="bg-blue-500 text-white text-center py-2 px-4 cursor-pointer flex items-center justify-center"
+              onClick={() => {
+                scrollToBottom();
+                setNewMessageCount(0);
+              }}
+            >
+              <FiArrowDown className="mr-2" />
+              {newMessageCount} new message{newMessageCount > 1 ? "s" : ""}
+            </div>
+          )}
+          <div className="chat-input p-4 shadow-lg">
+            <div className="flex items-center space-x-2 max-w-4xl mx-auto">
+              <textarea
+                ref={inputRef}
                 placeholder="Type your message..."
                 value={message}
                 onChange={(e) => {
@@ -256,24 +390,39 @@ const Chat = () => {
                   }
                 }}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter" && !disable) {
-                    sendMessage(); // Send the message on Enter
+                  if (e.key === "Enter" && !e.shiftKey && !disable) {
+                    e.preventDefault();
+                    sendMessage();
                   }
                 }}
-                className="bg-white text-neutral-700 p-2 rounded-lg shadow-sm w-full"
+                className="flex-grow bg-gray-100 text-gray-800 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                style={{
+                  minHeight: "2.5rem",
+                  maxHeight: "10rem",
+                  resize: "none",
+                }}
+                onInput={(e) => {
+                  e.currentTarget.style.height = "auto";
+                  e.currentTarget.style.height = `${Math.min(
+                    e.currentTarget.scrollHeight,
+                    160
+                  )}px`;
+                }}
               />
               <button
-                disabled={disable}
+                disabled={disable || message.trim() === ""}
                 onClick={sendMessage}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg"
+                className="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full disabled:opacity-50 transition duration-150 ease-in-out"
               >
-                Send
+                <FiSend size={20} />
               </button>
             </div>
           </div>
         </div>
       ) : (
-        <p>Loading</p>
+        <div className="flex-grow flex items-center justify-center">
+          <p className="">Loading...</p>
+        </div>
       )}
     </div>
   );

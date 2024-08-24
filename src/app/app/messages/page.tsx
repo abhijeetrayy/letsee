@@ -182,23 +182,23 @@ const Conversations = () => {
     fetchConversations();
   }, [user, supabase]);
 
-  const markAsRead = async (senderId: string) => {
-    try {
-      await supabase
-        .from("messages")
-        .update({ is_read: true })
-        .eq("sender_id", senderId)
-        .eq("recipient_id", user.id);
+  // const markAsRead = async (senderId: string) => {
+  //   try {
+  //     await supabase
+  //       .from("messages")
+  //       .update({ is_read: true })
+  //       .eq("sender_id", senderId)
+  //       .eq("recipient_id", user.id);
 
-      setConversations((prevConversations: UserInfo[]) =>
-        prevConversations.map((u) =>
-          u.id === senderId ? { ...u, unreadCount: 0 } : u
-        )
-      );
-    } catch (error) {
-      console.error("Error marking messages as read:", error);
-    }
-  };
+  //     setConversations((prevConversations: UserInfo[]) =>
+  //       prevConversations.map((u) =>
+  //         u.id === senderId ? { ...u, unreadCount: 0 } : u
+  //       )
+  //     );
+  //   } catch (error) {
+  //     console.error("Error marking messages as read:", error);
+  //   }
+  // };
 
   const conversationsMemo = useMemo(() => conversations, [conversations]);
 
@@ -219,7 +219,6 @@ const Conversations = () => {
                   key={conversation.id}
                   className="group w-full flex flex-col mb-2 p-2 bg-neutral-700 hover:bg-opacity-80 rounded-lg shadow-sm"
                   href={`/app/messages/${conversation.id}`}
-                  onClick={() => markAsRead(conversation.id)}
                 >
                   <span
                     className={`text-gray-100  ${
