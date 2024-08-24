@@ -118,15 +118,12 @@ function Page() {
     // Refetch user data after submission
     const {
       data: { user: updatedUser },
-    }: any = await supabase.auth.getUser();
+    } = await supabase.auth.getUser();
     if (updatedUser) {
-      const { data: userData, error: userError } = await supabase
-        .from("users")
-        .select("username")
-        .eq("id", updatedUser.id)
-        .single();
-      router.push(`/app/profile/${userData?.username}`);
+      setUser(updatedUser);
     }
+
+    router.refresh();
   };
 
   if (loading) return <div>Loading...</div>;

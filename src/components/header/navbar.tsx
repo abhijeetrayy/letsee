@@ -33,15 +33,15 @@ async function navbar() {
   // Create a map of unread messages count by sender
 
   return (
-    <div className="w-full flex flex-row items-center justify-between text-white max-w-7xl p-3 h-full z-50">
+    <div className=" w-full flex flex-row items-center justify-between text-white max-w-7xl p-3 h-full z-50">
       <div className="">
         <Link href={"/app"}>Let's see</Link>
       </div>
 
       <div className="flex flex-row gap-3 items-center">
-        <div className="px-4 py-1  rounded-md bg-neutral-600 hover:bg-neutral-500">
+        <div className=" rounded-md bg-neutral-600 hover:bg-neutral-500">
           <Link
-            className="flex flex-row gap-1 items-center justify-center my-1"
+            className="flex flex-row gap-1 items-center justify-center px-4 py-2"
             href={`/app/messages`}
           >
             <LuSend />

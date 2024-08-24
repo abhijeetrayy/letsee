@@ -49,17 +49,14 @@ export default async function RootLayout({
     return (
       <html lang="en" className="">
         <body className={inter.variable}>
-          <div className=" w-full font-inter flex justify-center  bg-neutral-900 text-gray-300">
+          <div className="w-full font-inter flex flex-col justify-center bg-neutral-900 text-gray-300">
             <UserPrefrenceProvider>
               <SearchProvider>
-                <div className=" w-full">
-                  <div
-                    className="w-full h-14 flex justify-center
-                  z-50"
-                  >
+                <div className="w-full flex flex-col min-h-screen">
+                  <header className="sticky top-0 z-50 bg-neutral-900">
                     <Navbar />
-                  </div>
-                  <div className="min-h-screen px-3">{children}</div>
+                  </header>
+                  <main className="flex-grow px-3 pt-14">{children}</main>
                   <Footbar />
                 </div>
                 <ToastContainer />
