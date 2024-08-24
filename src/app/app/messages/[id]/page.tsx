@@ -104,11 +104,11 @@ const Chat = () => {
     [supabase]
   );
 
-  const scrollToBottom = () => {
+  const scrollToBottom = useCallback(() => {
     if (chatRef.current) {
       chatRef.current.scrollTop = chatRef.current.scrollHeight;
     }
-  };
+  }, []);
 
   useEffect(() => {
     const getUserAndMessages = async () => {
@@ -133,8 +133,6 @@ const Chat = () => {
           const messageData = await fetchMessages(user, id, 0);
           setMessages(messageData);
 
-          setTimeout(scrollToBottom, 0);
-
           const unreadMessageIds = messageData
             .filter(
               (msg: Message) =>
@@ -155,6 +153,12 @@ const Chat = () => {
     };
     getUserAndMessages();
   }, [id, supabase, fetchUsername, fetchMessages]);
+
+  useEffect(() => {
+    if (!loading) {
+      scrollToBottom();
+    }
+  }, [loading, scrollToBottom]);
 
   useEffect(() => {
     if (user && recipient && isValidRecipient) {
@@ -192,7 +196,7 @@ const Chat = () => {
         channel.unsubscribe();
       };
     }
-  }, [user, recipient, isValidRecipient, supabase]);
+  }, [user, recipient, isValidRecipient, supabase, scrollToBottom]);
 
   const isScrolledToBottom = () => {
     if (chatRef.current) {
@@ -257,7 +261,7 @@ const Chat = () => {
         }, 0);
       }
     }
-  }, [message, user, recipient, isValidRecipient, supabase]);
+  }, [message, user, recipient, isValidRecipient, supabase, scrollToBottom]);
 
   const renderMessagesWithDates = (messages: Message[]) => {
     const result: JSX.Element[] = [];

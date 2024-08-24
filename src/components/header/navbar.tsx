@@ -22,7 +22,7 @@ async function Navbar() {
   }
 
   return (
-    <div className="w-full flex flex-row items-center justify-between text-white max-w-7xl p-3 h-full z-50">
+    <div className=" flex flex-row justify-between text-white  p-3 h-full ">
       <div>
         <Link href="/app">Let's see</Link>
       </div>
