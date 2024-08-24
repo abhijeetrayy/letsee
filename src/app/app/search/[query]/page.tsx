@@ -82,7 +82,7 @@ function Page() {
                   <span className="font-bold text-purple-600">
                     is not found
                   </span>{" "}
-                  - or check you spelling{" "}
+                  - or check your spelling{" "}
                 </p>
                 <img src="/abhijeetray.webp" alt="not-found" />
               </div>

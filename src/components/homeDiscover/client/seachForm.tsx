@@ -94,7 +94,7 @@ const MovieSearch = () => {
                 </span>
                 "{" "}
                 <span className="font-bold text-purple-600">is not found</span>{" "}
-                - or check you spelling{" "}
+                - or check your spelling{" "}
               </p>
             </div>
           )}
