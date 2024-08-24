@@ -72,9 +72,19 @@ function Page() {
         <div>
           <div className="text-white  w-full   my-4">
             {Sresults.total_results == 0 && (
-              <div className="h-full w-full flex items-center justify-center">
-                Result for "{decodeURIComponent(query as string)}" is not found
-                - or check you spelling{" "}
+              <div className="flex flex-col h-full w-full gap-5 items-center justify-center">
+                <p className="text-lg">
+                  Result for "
+                  <span className="text-pink-600">
+                    {decodeURIComponent(query as string)}
+                  </span>
+                  "{" "}
+                  <span className="font-bold text-purple-600">
+                    is not found
+                  </span>{" "}
+                  - or check you spelling{" "}
+                </p>
+                <img src="/abhijeetray.webp" alt="not-found" />
               </div>
             )}
             <div className="w-fit m-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
