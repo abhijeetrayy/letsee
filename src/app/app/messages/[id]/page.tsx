@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
-import { FiSend, FiArrowDown } from "react-icons/fi"; // Import icons
+import { FiSend, FiArrowDown } from "react-icons/fi";
 
 interface Message {
   is_read: boolean;
@@ -99,10 +99,16 @@ const Chat = () => {
       }
 
       setHasMoreMessages(messageData.length === 50);
-      return messageData.reverse(); // Reverse so that newer messages are at the bottom
+      return messageData.reverse();
     },
     [supabase]
   );
+
+  const scrollToBottom = () => {
+    if (chatRef.current) {
+      chatRef.current.scrollTop = chatRef.current.scrollHeight;
+    }
+  };
 
   useEffect(() => {
     const getUserAndMessages = async () => {
@@ -127,14 +133,8 @@ const Chat = () => {
           const messageData = await fetchMessages(user, id, 0);
           setMessages(messageData);
 
-          // Scroll to the bottom after the initial load
-          setTimeout(() => {
-            if (chatRef.current) {
-              chatRef.current.scrollTop = chatRef.current.scrollHeight;
-            }
-          }, 0);
+          setTimeout(scrollToBottom, 0);
 
-          // Mark all unread messages as read
           const unreadMessageIds = messageData
             .filter(
               (msg: Message) =>
@@ -194,14 +194,6 @@ const Chat = () => {
     }
   }, [user, recipient, isValidRecipient, supabase]);
 
-  const scrollToBottom = () => {
-    if (chatRef.current) {
-      chatRef.current.scrollTo({
-        top: chatRef.current.scrollHeight,
-        behavior: "smooth",
-      });
-    }
-  };
   const isScrolledToBottom = () => {
     if (chatRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = chatRef.current;
@@ -335,16 +327,16 @@ const Chat = () => {
     <div className="chat-container flex flex-col max-w-4xl w-full m-auto ">
       <div className=" shadow-sm p-4">
         <h2 className="text-xl font-semibold">
-          Chat with{" "}
+          Message{" "}
           <Link href={`/app/profile/${recipientUsername}`}>
             @{recipientUsername}
           </Link>
         </h2>
       </div>
       {!loading ? (
-        <div className="flex-grow flex flex-col max-h-screen max-w-3xl w-full m-auto">
+        <div className="flex-grow flex flex-col max-h-[calc(100vh-130px)] max-w-3xl w-full m-auto">
           <div
-            className="chat-messages flex-grow overflow-y-auto bg-neutral-700 rounded-md vone-scrollbar p-4 "
+            className="chat-messages flex-grow overflow-y-auto bg-neutral-700 rounded-t-md vone-scrollbar p-4 "
             ref={chatRef}
           >
             {isValidRecipient ? (
@@ -378,7 +370,7 @@ const Chat = () => {
               {newMessageCount} new message{newMessageCount > 1 ? "s" : ""}
             </div>
           )}
-          <div className="chat-input p-4 shadow-lg">
+          <div className="chat-input p-4 bg-neutral-800 rounded-b-md shadow-lg">
             <div className="flex items-center space-x-2 max-w-4xl mx-auto">
               <textarea
                 ref={inputRef}

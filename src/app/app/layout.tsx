@@ -56,7 +56,7 @@ export default async function RootLayout({
                   <header className="sticky top-0 z-50 bg-neutral-900">
                     <Navbar />
                   </header>
-                  <main className="flex-grow px-3 pt-14">{children}</main>
+                  <main className="flex-grow px-3 py-2">{children}</main>
                   <Footbar />
                 </div>
                 <ToastContainer />
