@@ -1,13 +1,9 @@
 "use client";
-import CardMovieButton from "@/components/buttons/cardButtons";
+import { useSearch } from "@/app/contextAPI/searchContext";
+import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
 import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import React, { useContext, useEffect, useState } from "react";
-import { CiSaveDown1 } from "react-icons/ci";
-import { FcLike } from "react-icons/fc";
-import { IoEyeOutline } from "react-icons/io5";
-import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
-import { useSearch } from "@/app/contextAPI/searchContext";
+import { useEffect, useState } from "react";
 
 function Page() {
   const [Sresults, setSResults] = useState([]) as any;
@@ -60,12 +56,14 @@ function Page() {
 
   return (
     <div className="min-h-screen mx-auto w-full max-w-7xl">
-      <div>
-        <p>
-          Search Results: {decodeURIComponent(query as string)} '
-          {Sresults?.total_results}' items
-        </p>
-      </div>
+      {Sresults.total_results > 0 && (
+        <div>
+          <p>
+            Search Results: {decodeURIComponent(query as string)} '
+            {Sresults?.total_results}' items
+          </p>
+        </div>
+      )}
       {loading ? (
         <div className="min-h-screen w-full flex justify-center items-center">
           Loading..
@@ -73,6 +71,12 @@ function Page() {
       ) : (
         <div>
           <div className="text-white  w-full   my-4">
+            {Sresults.total_results == 0 && (
+              <div className="h-full w-full flex items-center justify-center">
+                Result for "{decodeURIComponent(query as string)}" is not found
+                - or check you spelling{" "}
+              </div>
+            )}
             <div className="w-fit m-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
               {Sresults?.results?.map(
                 (data: any) =>
