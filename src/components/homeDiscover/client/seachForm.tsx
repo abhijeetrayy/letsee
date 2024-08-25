@@ -74,7 +74,7 @@ const MovieSearch = () => {
             setQuery(e.target.value);
             settyping(true);
           }}
-          className="px-4 py-2 w-full bg-gray-800 text-white rounded-md"
+          className="px-4 py-2 w-full bg-neutral-800 text-white rounded-md"
           placeholder="Search for movies, tv shows and people..."
         />
         <button type="submit" className="mt-4 px-4 py-2 bg-blue-600 rounded-md">
