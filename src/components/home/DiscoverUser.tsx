@@ -72,16 +72,56 @@ function DiscoverUsers() {
             <Link className="group p-3" href={`/app/profile/ray`}>
               <img
                 className="border border-indigo-600 min-w-44 max-w-44 md:min-w-64  md:max-w-64 w-full h-44 md:h-64 object-cover"
-                src="/abhijeetray.webp"
+                src="/avatar.svg"
                 alt=""
               />
               <h1 className="text-md  break-words group-hover:text-green-500">
-                @{"ray"} - Says Hi
+                @{"ray"} -{" "}
+                <span className="text-indigo-600 font-semibold">Admin</span>
+              </h1>
+            </Link>
+
+            <Link className="group p-3  " href={`/app/profile/${"saurav"}`}>
+              <img
+                className="border border-indigo-600 min-w-44 max-w-44 md:min-w-64  md:max-w-64 w-full h-44 md:h-64 object-cover"
+                src="/avatar.svg"
+                alt=""
+              />
+              <h1 className="text-md  break-words group-hover:text-green-500">
+                @{"saurav"}
+              </h1>
+            </Link>
+            <Link
+              className="group p-3  "
+              href={`/app/profile/${"abhijeetray"}`}
+            >
+              <img
+                className="border border-indigo-600 min-w-44 max-w-44 md:min-w-64  md:max-w-64 w-full h-44 md:h-64 object-cover"
+                src="/avatar.svg"
+                alt=""
+              />
+              <h1 className="text-md  break-words group-hover:text-green-500">
+                @{"abhijeetray"}
+              </h1>
+            </Link>
+            <Link className="group p-3 " href={`/app/profile/${"arijit"}`}>
+              <img
+                className="border border-indigo-600 min-w-44 max-w-44 md:min-w-64  md:max-w-64 w-full h-44 md:h-64 object-cover"
+                src="/avatar.svg"
+                alt=""
+              />
+              <h1 className="text-md  break-words group-hover:text-green-500">
+                @{"arijit"}
               </h1>
             </Link>
             {users
               ?.filter(
-                (item: any) => item.username !== null && item.username !== "ray"
+                (item: any) =>
+                  item.username !== null &&
+                  item.username !== "ray" &&
+                  item.username !== "saurav" &&
+                  item.username !== "arijit" &&
+                  item.username !== "abhijeetray"
               )
               .map((item: any) => (
                 <Link
