@@ -273,7 +273,7 @@ const ShowDetails = async ({
           <h1 className="text-md md:text-lg my-2 ">{show.name}: Images</h1>
 
           <div className="max-w-7xl w-full m-auto my-3 overflow-x-auto no-scrollbar">
-            <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 m-auto w-fit gap-3 pb-3 snap-x snap-mandatory">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 m-auto w-fit gap-3 pb-3 snap-x snap-mandatory">
               {Bimages.length > 0
                 ? Bimages?.slice(0, 13).map((item: any) => (
                     <img

@@ -8,6 +8,7 @@ const MovieSearch = () => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]) as any;
   const [loading, setLoading] = useState(false);
+  const [typing, settyping] = useState(false);
   const [page, setPage] = useState(1);
 
   const handleSearch = async (e: React.FormEvent) => {
@@ -26,6 +27,7 @@ const MovieSearch = () => {
     console.log(data);
     setResults(data);
     setLoading(false);
+    settyping(false);
   };
 
   const nextPage = async () => {
@@ -68,7 +70,10 @@ const MovieSearch = () => {
         <input
           type="text"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            settyping(true);
+          }}
           className="px-4 py-2 w-full bg-gray-800 text-white rounded-md"
           placeholder="Search for movies, tv shows and people..."
         />
@@ -85,7 +90,7 @@ const MovieSearch = () => {
         </div>
       ) : (
         <div>
-          {results.total_results == 0 && (
+          {results.total_results == 0 && !typing && (
             <div className="h-full w-full flex items-center justify-center">
               <p className="text-md">
                 Result for "

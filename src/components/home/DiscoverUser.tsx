@@ -26,7 +26,7 @@ function DiscoverUsers() {
       }
     };
     getUser();
-  }, []);
+  }, [users]);
 
   const handleScroll = () => {
     const element = scrollRef.current;
