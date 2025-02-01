@@ -8,6 +8,7 @@ import ProfileWatchlater from "@/components/profile/ProfileWatchlater";
 import ProfileWatched from "@/components/profile/profileWatched";
 import UserConnections from "@/components/profile/UserConnections";
 import UserIntrectionBtn from "@/components/profile/UserIntrectionBtn";
+import ChataiReco from "@components/ai/openaiReco";
 
 const getUserData = async (id: any) => {
   const supabase = createClient();
@@ -153,6 +154,7 @@ const page = async ({
             </div>
           </div>
         </div>
+        <ChataiReco userId={DefaultId} />
         {favoriteCount > 0 && (
           <ProfileFavorite
             favorites={favorates}
