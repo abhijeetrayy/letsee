@@ -7,6 +7,7 @@ import SearchBar from "./searchBar";
 import { LuSend } from "react-icons/lu";
 import { IoNotifications } from "react-icons/io5";
 import MessageButton from "./MessageButton";
+import RealtimeNotification from "./RealtimeNotification";
 
 async function Navbar() {
   const supabase = createClient();
@@ -31,10 +32,11 @@ async function Navbar() {
       <div className="flex flex-row gap-3 items-center">
         <MessageButton userId={userData?.id} />
         <Link
-          className="p-2 px-3 bg-neutral-500 font-bold rounded-lg"
+          className="flex items-center justify-center px-4 py-2 rounded-md bg-neutral-600 hover:bg-neutral-500 relative"
           href={"/app/notification"}
         >
-          <IoNotifications />{" "}
+          <IoNotifications />
+          <RealtimeNotification userId={data.user?.id} />
         </Link>
         <div className="hidden md:flex flex-row gap-3 items-center">
           <div className="px-4 py-1 rounded-md bg-neutral-600 hover:bg-neutral-500">
