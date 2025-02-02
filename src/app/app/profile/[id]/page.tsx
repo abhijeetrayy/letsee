@@ -154,7 +154,17 @@ const page = async ({
             </div>
           </div>
         </div>
-        {(id == undefined || UserData.id == YouUser.user.id) && <ChataiReco />}
+        {(id == undefined || UserData.id == YouUser.user.id) && (
+          <div className="flex flex-col gap-3">
+            <h1 className="text-3xl font-bold">Your Personal Recommendation</h1>
+            <p>
+              Favorite List + Watched List with{" "}
+              <span className="text-blue-700">AI</span>
+            </p>
+            <ChataiReco />
+          </div>
+        )}
+
         {favoriteCount > 0 && (
           <ProfileFavorite
             favorites={favorates}
