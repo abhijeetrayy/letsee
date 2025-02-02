@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { FaBars } from "react-icons/fa";
 import SignOut from "../buttons/signOut";
+import { IoNotifications } from "react-icons/io5";
 
 const DropdownMenu = ({ user }: any) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -55,6 +56,13 @@ const DropdownMenu = ({ user }: any) => {
               href={`/app/profile/${user?.username}`}
             >
               My Profile
+            </Link>
+
+            <Link
+              className="p-2 px-3 bg-neutral-500 font-bold rounded-lg"
+              href={"/app/notification"}
+            >
+              <IoNotifications />{" "}
             </Link>
 
             <div className="w-full text-left px-2 py-1 rounded-sm bg-neutral-200 hover:bg-neutral-100">

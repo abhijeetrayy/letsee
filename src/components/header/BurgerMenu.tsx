@@ -100,6 +100,7 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID, userId }) => {
               User's
             </button>
           </li>
+
           <li>
             <button
               onClick={() => link(`/app/profile/${userID}`)}
