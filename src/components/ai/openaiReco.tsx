@@ -2,10 +2,18 @@
 import Link from "next/link";
 import { useState } from "react";
 
-import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
+import ThreePrefrenceBtn from "@components/buttons/threePrefrencebtn";
 
-export default function Recommendations({ userId }: { userId: string }) {
-  const [recommendations, setRecommendations] = useState<any[]>([]);
+interface MovieRecommendation {
+  name: string;
+  poster_url: string | null;
+  tmdb_id: number;
+}
+
+export default function Recommendations() {
+  const [recommendations, setRecommendations] = useState<MovieRecommendation[]>(
+    []
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -14,16 +22,17 @@ export default function Recommendations({ userId }: { userId: string }) {
     setError(null);
 
     try {
-      const response = await fetch(`/api/AiRecommendation/`);
-      console.log(response);
-      if (!response.ok) throw new Error("Failed to fetch recommendations");
+      const response = await fetch(`/api/AiRecommendation`);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to fetch recommendations");
+      }
 
-      const data = await response.json();
-      console.log(data);
+      const data: MovieRecommendation[] = await response.json();
       setRecommendations(data);
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      setError("Failed to load recommendations. Please try again.");
+      setError(err.message);
     } finally {
       setIsLoading(false);
     }
@@ -44,79 +53,46 @@ export default function Recommendations({ userId }: { userId: string }) {
       )}
 
       {recommendations.length > 0 && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 ">
-          {recommendations.map((data: any) => (
-            <div className="" key={data.id}>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+          {recommendations.map((data) => (
+            <div className="" key={data.tmdb_id}>
               <div className=" relative group flex flex-col justify-between rounded-md bg-black  w-full h-full  text-gray-300 overflow-hidden duration-300  lg:hover:scale-105 ">
                 <Link
                   className="relative flex h-full  "
-                  href={`/app/movie/${data.id}-${(data.name || data.title)
+                  href={`/app/movie/${data.tmdb_id}-${data.name
                     .trim()
                     .replace(/[^a-zA-Z0-9]/g, "-")
                     .replace(/-+/g, "-")}`}
                 >
-                  <div className="absolute top-0 left-0 z-10 lg:opacity-0 lg:group-hover:opacity-100">
-                    {data.adult ? (
-                      <p className="p-1 bg-red-600 text-white rounded-br-md text-sm">
-                        Adult
-                      </p>
-                    ) : (
-                      <p className="p-1 bg-black text-white rounded-br-md text-sm">
-                        {data.media_type}
-                      </p>
-                    )}
-                  </div>
-                  <div className="absolute top-0 right-0 z-10">
-                    {(data.release_date || data.first_air_date) && (
-                      <p className="p-1 bg-indigo-600 text-white rounded-tr-sm rounded-bl-md text-sm">
-                        {new Date(data.release_date).getFullYear() ||
-                          new Date(data.first_air_date).getFullYear()}
-                      </p>
-                    )}
-                  </div>
                   <img
                     className={`${"h-full w-full object-cover"}  `}
-                    src={
-                      (data.poster_path || data.backdrop_path) && !data.adult
-                        ? `https://image.tmdb.org/t/p/w342${
-                            data.poster_path || data.backdrop_path
-                          }`
-                        : data.adult
-                        ? "/pixeled.webp"
-                        : "/no-photo.webp"
-                    }
+                    src={data.poster_url ? data.poster_url : "/no-photo"}
                     loading="lazy"
-                    alt={data.title}
+                    alt={data.name}
                   />
                 </Link>
                 <div className="lg:absolute bottom-0 w-full bg-neutral-900 lg:opacity-0 lg:group-hover:opacity-100 z-10">
                   <ThreePrefrenceBtn
-                    cardId={data.id}
-                    cardType={data.media_type}
-                    cardName={data.name || data.title}
-                    cardAdult={data.adult}
-                    cardImg={data.poster_path || data.backdrop_path}
+                    cardId={data.tmdb_id}
+                    cardType={"movie"}
+                    cardName={data.name}
+                    cardAdult={false}
+                    cardImg={data.poster_url}
                   />
 
                   <div
-                    title={data.name || data.title}
+                    title={data.name}
                     className="w-full h-12 lg:h-fit flex flex-col gap-2  px-4  bg-indigo-700  text-gray-200 "
                   >
                     <Link
-                      href={`/app/${data.media_type}/${data.id}-${(
-                        data.name || data.title
-                      )
+                      href={`/app/movie/${data.tmdb_id}-${data.name
                         .trim()
                         .replace(/[^a-zA-Z0-9]/g, "-")
                         .replace(/-+/g, "-")}`}
                       className="h-full"
                     >
                       <span className="">
-                        {data?.title
-                          ? data.title.length > 20
-                            ? data.title?.slice(0, 20) + "..."
-                            : data.title
-                          : data.name.length > 20
+                        {data.name.length > 20
                           ? data.name?.slice(0, 20) + "..."
                           : data.name}
                       </span>

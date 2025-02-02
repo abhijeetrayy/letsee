@@ -154,9 +154,7 @@ const page = async ({
             </div>
           </div>
         </div>
-        {(id == undefined || UserData.id == YouUser.user.id) && (
-          <ChataiReco userId={DefaultId} />
-        )}
+        {(id == undefined || UserData.id == YouUser.user.id) && <ChataiReco />}
         {favoriteCount > 0 && (
           <ProfileFavorite
             favorites={favorates}

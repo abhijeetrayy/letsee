@@ -1,15 +1,7 @@
-// app/api/AIRecommendation/[userId]/route.ts
 import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
-
-interface MovieRecommendation {
-  id: number;
-  title: string;
-  overview: string;
-  poster_path?: string;
-}
 
 export async function GET() {
   const supabase = createClient();
@@ -35,11 +27,9 @@ export async function GET() {
     if (error) throw error;
     if (!favorites?.length) return NextResponse.json([]);
 
-    // Prepare AI prompt
     const movieTitles = favorites.map((movie) => movie.item_name).join(", ");
-    const prompt = `I have watched: ${movieTitles}. Recommend 5 movies I might like. Return only TMDB movie IDs in a comma-separated list.`;
+    const prompt = `Based on my preferences (movies: ${movieTitles}), suggest 5 movie titles which is not in the given movie list.  Just the titles, nothing else.  Return them as a comma-separated list.`;
 
-    // Get AI recommendations
     const geminiResponse = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GOOGLE_KEY}`,
       {
@@ -50,28 +40,53 @@ export async function GET() {
     );
 
     const geminiData = await geminiResponse.json();
-    const recommendationIds =
-      geminiData.candidates?.[0]?.content?.parts?.[0]?.text
-        ?.split(",")
-        .map((id: string) => parseInt(id.trim()))
-        .filter((id: number) => !isNaN(id)) || [];
+    const suggestedTitlesText =
+      geminiData.candidates?.[0]?.content?.parts?.[0]?.text;
 
-    // Fetch movie details from TMDB
-    const moviePromises = recommendationIds.map(async (id: number) => {
-      try {
-        const response = await fetch(
-          `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.TMDB_API_KEY}`
-        );
-        return response.json();
-      } catch (error) {
-        console.error(`Error fetching movie ${id}:`, error);
-        return null;
+    if (!suggestedTitlesText) {
+      return NextResponse.json(
+        { error: "Invalid Gemini response" },
+        { status: 500 }
+      );
+    }
+
+    const suggestedTitles = suggestedTitlesText
+      .split(",")
+      .map((title: string) => title.trim());
+
+    const moviePromises = suggestedTitles.map(
+      async (title: string | number | boolean) => {
+        try {
+          const tmdbSearchResponse = await fetch(
+            `https://api.themoviedb.org/3/search/movie?api_key=${
+              process.env.TMDB_API_KEY
+            }&query=${encodeURIComponent(title)}`
+          );
+          const tmdbSearchData = await tmdbSearchResponse.json();
+
+          if (tmdbSearchData.results && tmdbSearchData.results.length > 0) {
+            const movie = tmdbSearchData.results[0];
+            return {
+              name: movie.title,
+              poster_url: movie.poster_path
+                ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                : null,
+              tmdb_id: movie.id,
+            };
+          } else {
+            console.log(`No TMDB match found for: ${title}`);
+            return null; // Or handle no match differently
+          }
+        } catch (tmdbError) {
+          console.error(`TMDB search error for ${title}:`, tmdbError);
+          return null;
+        }
       }
-    });
+    );
 
-    const movies = (await Promise.all(moviePromises)).filter(Boolean);
-
-    return NextResponse.json<MovieRecommendation[]>(movies.slice(0, 5));
+    const movies = (await Promise.all(moviePromises)).filter(Boolean); // Filter out null results
+    console.log(movies);
+    return NextResponse.json(movies);
   } catch (error) {
     console.error("Recommendation error:", error);
     return NextResponse.json(
