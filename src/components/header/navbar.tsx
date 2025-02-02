@@ -5,6 +5,7 @@ import DropdownMenu from "./dropDownMenu";
 import BurgerMenu from "./BurgerMenu";
 import SearchBar from "./searchBar";
 import { LuSend } from "react-icons/lu";
+import { IoNotifications } from "react-icons/io5";
 import MessageButton from "./MessageButton";
 
 async function Navbar() {
@@ -29,6 +30,12 @@ async function Navbar() {
 
       <div className="flex flex-row gap-3 items-center">
         <MessageButton userId={userData?.id} />
+        <Link
+          className="p-2 px-3 bg-neutral-500 font-bold rounded-lg"
+          href={"/app/notification"}
+        >
+          <IoNotifications />{" "}
+        </Link>
         <div className="hidden md:flex flex-row gap-3 items-center">
           <div className="px-4 py-1 rounded-md bg-neutral-600 hover:bg-neutral-500">
             <Link href="/app/profile">User's</Link>
