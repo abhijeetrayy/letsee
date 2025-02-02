@@ -62,8 +62,12 @@ const RealtimeUnreadCount: React.FC<RealtimeUnreadCountProps> = ({
   }, [userId]);
 
   return (
-    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-      {unreadCount > 0 && <span>({unreadCount})</span>}
+    <span>
+      {unreadCount > 0 && (
+        <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+          ({unreadCount})
+        </span>
+      )}
     </span>
   );
 };
