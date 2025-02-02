@@ -19,17 +19,38 @@ export async function GET() {
 
   try {
     // Fetch user's favorite movies
-    const { data: favorites, error } = await supabase
-      .from("favorite_items")
+    const { data: userFavorites, error: userFavoritesError }: any =
+      await supabase
+        .from("favorite_items")
+        .select("item_name")
+        .eq("user_id", userId);
+
+    const { data: userWatched, error: userWatchedError }: any = await supabase
+      .from("watched_items")
       .select("item_name")
       .eq("user_id", userId);
 
-    if (error) throw error;
-    if (!favorites?.length) return NextResponse.json([]);
+    // if (error) throw error;
+    // if (!favorites?.length) return NextResponse.json([]);
 
-    const movieTitles = favorites.map((movie) => movie.item_name).join(", ");
-    const prompt = `Based on my preferences (movies: ${movieTitles}), suggest 5 movie titles which is not in the given movie list.  Just the titles, nothing else.  Return them as a comma-separated list.`;
+    const favoriteTitles = userFavorites
+      .map((movie: any) => movie.item_name)
+      .join(", ");
+    const watchedTitles = userWatched
+      .map((movie: any) => movie.item_name)
+      .join(", ");
 
+    const prompt = `
+I have watched and liked the following movies: ${favoriteTitles}. 
+Additionally, I have watched these movies: ${watchedTitles}.
+
+Based on my preferences, recommend 5 movies I might like. The recommended movies must:
+1. Not be in the list of movies I have already watched or favorited.
+2. Be relevant to my preferences.
+3. Be returned as a comma-separated list of movie titles only.
+
+Do not include any additional text, explanations, or formatting. Just return the 5 movie titles as a comma-separated list.
+`;
     const geminiResponse = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GOOGLE_KEY}`,
       {

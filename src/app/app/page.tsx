@@ -7,6 +7,7 @@
 import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
 import SearchForm from "@/components/homeDiscover/client/seachForm";
 import DiscoverUsers from "@components/home/DiscoverUser";
+import OpenAiReco from "@components/ai/openaiReco";
 import Link from "next/link";
 
 async function getData() {
@@ -55,14 +56,22 @@ export default async function Home() {
   const TrendingTv = await getTrendingTV();
   return (
     <div className="flex flex-col gap-8 max-w-7xl w-full m-auto">
+      <div className="flex flex-col items-center gap-3">
+        <h1 className="text-3xl font-bold">Your Personal Recommendation</h1>
+        <p>
+          Favorite List + Watched List with{" "}
+          <span className="text-blue-700">AI</span>
+        </p>
+        <OpenAiReco />
+      </div>
       <div className="w-full">
         <SearchForm />
       </div>
       <div className="">
         <DiscoverUsers />
       </div>
-      <div className="w-full max-w-7xl ">
-        <h1 className="text-lg font-semibold mb-2">Movie Genres</h1>
+      <div className="w-full max-w-7xl my-4 mb-4">
+        <h1 className="text-lg font-semibold my-4">Movie Genres</h1>
         <div className="flex flex-row  overflow-x-scroll vone-scrollbar gap-1">
           {genre?.genres.map((genre: any) => (
             <Link

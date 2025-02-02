@@ -40,6 +40,11 @@ export default function Recommendations() {
 
   return (
     <div className="space-y-4">
+      <h1 className="text-3xl font-bold">Your Personal Recommendation</h1>
+      <p>
+        Favorite List + Watched List with{" "}
+        <span className="text-blue-700">AI</span>
+      </p>
       <button
         onClick={handleGetRecommendations}
         disabled={isLoading}
