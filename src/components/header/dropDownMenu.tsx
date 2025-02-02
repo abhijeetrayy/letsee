@@ -58,13 +58,6 @@ const DropdownMenu = ({ user }: any) => {
               My Profile
             </Link>
 
-            <Link
-              className="p-2 px-3 bg-neutral-500 font-bold rounded-lg"
-              href={"/app/notification"}
-            >
-              <IoNotifications />{" "}
-            </Link>
-
             <div className="w-full text-left px-2 py-1 rounded-sm bg-neutral-200 hover:bg-neutral-100">
               <SignOut />
             </div>
