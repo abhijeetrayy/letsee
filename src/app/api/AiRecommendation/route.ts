@@ -11,14 +11,19 @@ interface MovieRecommendation {
   poster_path?: string;
 }
 
-export async function GET(
-  request: Request,
-  { params }: { params: { userId: string } }
-) {
+export async function GET() {
   const supabase = createClient();
-  const { userId } = params;
 
-  console.log(userId);
+  const { data, error } = await supabase.auth.getUser();
+  if (error || !data?.user) {
+    console.log("User isn't logged in");
+    return NextResponse.json(
+      { error: "User isn't logged in" },
+      { status: 401 }
+    );
+  }
+
+  const userId = data.user.id;
 
   try {
     // Fetch user's favorite movies
@@ -26,8 +31,6 @@ export async function GET(
       .from("favorite_items")
       .select("item_name")
       .eq("user_id", userId);
-
-    console.log(favorites);
 
     if (error) throw error;
     if (!favorites?.length) return NextResponse.json([]);

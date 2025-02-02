@@ -1,4 +1,3 @@
-// components/Recommendations.tsx
 "use client";
 import Link from "next/link";
 import { useState } from "react";
@@ -15,7 +14,7 @@ export default function Recommendations({ userId }: { userId: string }) {
     setError(null);
 
     try {
-      const response = await fetch(`/api/AiRecommendation/${userId}`);
+      const response = await fetch(`/api/AiRecommendation/`);
       console.log(response);
       if (!response.ok) throw new Error("Failed to fetch recommendations");
 
