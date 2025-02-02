@@ -1,9 +1,3 @@
-// "use client";
-// import { useState, useEffect } from "react";
-// import axios from "axios";
-// import Movie from "./api/genre/route";
-// import Image from "next/image";
-// import Link from "next/link";
 import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
 import SearchForm from "@/components/homeDiscover/client/seachForm";
 import DiscoverUsers from "@components/home/DiscoverUser";
@@ -56,7 +50,7 @@ export default async function Home() {
   const TrendingTv = await getTrendingTV();
   return (
     <div className="flex flex-col gap-8 max-w-7xl w-full m-auto">
-      <div className="flex flex-col items-center gap-3">
+      <div className="flex flex-col text-center items-center gap-3">
         <h1 className="text-3xl font-bold">Your Personal Recommendation</h1>
         <p>
           Favorite List + Watched List with{" "}
