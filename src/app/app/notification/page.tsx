@@ -11,20 +11,24 @@ const NotificationsPage = () => {
   const supabase = createClient();
   const [requests, setRequests] = useState<any[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchRequests() {
-      const { data: userData } = await supabase.auth.getUser();
-      if (!userData?.user) return;
+    const fetchRequests = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) return;
 
-      setUserId(userData.user.id);
+      setUserId(user.id);
 
       const { data, error } = await supabase
         .from("user_follow_requests")
         .select(
           "id, sender_id, created_at, users!user_follow_requests_sender_id_fkey(username)"
         )
-        .eq("receiver_id", userData.user.id)
+        .eq("receiver_id", user.id)
+        .eq("status", "pending") // Ensure only pending requests are shown
         .order("created_at", { ascending: false });
 
       if (error) {
@@ -32,9 +36,14 @@ const NotificationsPage = () => {
       } else {
         setRequests(data || []);
       }
-    }
+      setLoading(false);
+    };
 
     fetchRequests();
+  }, []);
+
+  useEffect(() => {
+    if (!userId) return;
 
     const subscription = supabase
       .channel("follow_requests")
@@ -44,6 +53,17 @@ const NotificationsPage = () => {
         (payload) => {
           if (payload.new.receiver_id === userId) {
             setRequests((prev) => [payload.new, ...prev]);
+          }
+        }
+      )
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "user_follow_requests" },
+        (payload) => {
+          if (payload.new.status !== "pending") {
+            setRequests((prev) =>
+              prev.filter((req) => req.id !== payload.new.id)
+            );
           }
         }
       )
@@ -61,7 +81,7 @@ const NotificationsPage = () => {
     return () => {
       supabase.removeChannel(subscription);
     };
-  }, [supabase, userId]);
+  }, [userId]);
 
   const handleAccept = async (requestId: number, senderId: string) => {
     if (!userId) return;
@@ -82,7 +102,9 @@ const NotificationsPage = () => {
   return (
     <div className="max-w-3xl mx-auto p-6">
       <h1 className="text-2xl font-bold mb-4">Follow Requests</h1>
-      {requests.length > 0 ? (
+      {loading ? (
+        <p>Loading...</p>
+      ) : requests.length > 0 ? (
         requests.map((req) => (
           <div
             key={req.id}
