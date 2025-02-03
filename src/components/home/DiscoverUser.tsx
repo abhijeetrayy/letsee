@@ -64,7 +64,12 @@ function DiscoverUsers() {
   return (
     <div className="max-w-6xl w-full m-auto mb-5">
       <div className="mt-7">
-        <h2 className="text-lg font-semibold mb-2">Discover User's</h2>
+        <Link
+          href={"/app/profile"}
+          className="text-lg font-semibold mb-2 underline"
+        >
+          Discover User's
+        </Link>
         <div className="relative">
           <div
             ref={scrollRef}

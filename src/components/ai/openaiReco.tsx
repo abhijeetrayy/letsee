@@ -43,7 +43,7 @@ export default function Recommendations() {
       <button
         onClick={handleGetRecommendations}
         disabled={isLoading}
-        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400"
+        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 mb-6"
       >
         {isLoading ? "Generating..." : "Get Recommendations"}
       </button>
@@ -53,7 +53,7 @@ export default function Recommendations() {
       )}
 
       {recommendations.length > 0 && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 ">
           {recommendations.map((data) => (
             <div className="" key={data.tmdb_id}>
               <div className=" relative group flex flex-col justify-between rounded-md bg-black  w-full h-full  text-gray-300 overflow-hidden duration-300  lg:hover:scale-105 ">

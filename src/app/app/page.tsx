@@ -50,13 +50,15 @@ export default async function Home() {
   const TrendingTv = await getTrendingTV();
   return (
     <div className="flex flex-col gap-8 max-w-7xl w-full m-auto">
-      <div className="flex flex-col text-center items-center gap-3">
+      <div className="flex flex-col text-center items-center gap-3 my-10">
         <h1 className="text-3xl font-bold">Your Personal Recommendation</h1>
         <p>
           Favorite List + Watched List with{" "}
           <span className="text-blue-700">AI</span>
         </p>
-        <OpenAiReco />
+        <div className="mt-1">
+          <OpenAiReco />
+        </div>
       </div>
       <div className="w-full">
         <SearchForm />

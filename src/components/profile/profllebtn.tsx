@@ -87,8 +87,8 @@ export function FollowerBtnClient({
         setStatus("follow");
       } else {
         const { error } = await sendFollowRequest(currentUserId, profileId);
-        console.log(error);
         if (!error) setStatus("pending");
+        else console.log(error);
       }
     } catch (error) {
       console.error("Error handling follow action:", error);
