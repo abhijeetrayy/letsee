@@ -1,23 +1,33 @@
-// utils/followerAction.ts
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
 
+/**
+ * Sends a follow request from `senderId` to `receiverId`.
+ * Returns `{ error }` if there's an issue.
+ */
 export const sendFollowRequest = async (
   senderId: string,
   receiverId: string
 ) => {
   const supabase = createClient();
 
-  const { error } = await supabase.from("user_follow_requests").insert({
-    sender_id: senderId,
-    receiver_id: receiverId,
-    status: "pending",
-  });
+  const { data, error } = await supabase
+    .from("user_follow_requests")
+    .insert({
+      sender_id: senderId,
+      receiver_id: receiverId,
+      status: "pending",
+    })
+    .select(); // Returns inserted row for UI sync
 
-  return { error };
+  return { data, error };
 };
 
+/**
+ * Accepts a follow request by moving the request to `user_connections`
+ * and updating the `user_follow_requests` table.
+ */
 export const acceptFollowRequest = async (
   requestId: number,
   senderId: string,
@@ -25,29 +35,35 @@ export const acceptFollowRequest = async (
 ) => {
   const supabase = createClient();
 
-  // Add to user_connections
-  const { error: connError } = await supabase.from("user_connections").insert({
-    follower_id: senderId,
-    followed_id: receiverId,
-  });
+  // Transactional flow: Insert into `user_connections`, then delete request
+  const { data, error: connError } = await supabase
+    .from("user_connections")
+    .insert({
+      follower_id: senderId,
+      followed_id: receiverId,
+    })
+    .select();
 
   if (connError) return { error: connError };
 
-  // Update request status
+  // Remove the follow request after accepting
   const { error } = await supabase
     .from("user_follow_requests")
-    .update({ status: "accepted" })
+    .delete()
     .eq("id", requestId);
 
-  return { error };
+  return { data, error };
 };
 
+/**
+ * Rejects a follow request by deleting it from the `user_follow_requests` table.
+ */
 export const rejectFollowRequest = async (requestId: number) => {
   const supabase = createClient();
 
   const { error } = await supabase
     .from("user_follow_requests")
-    .update({ status: "rejected" })
+    .delete()
     .eq("id", requestId);
 
   return { error };

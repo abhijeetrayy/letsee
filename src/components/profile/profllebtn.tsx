@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { sendFollowRequest } from "@/utils/followerAction";
-
 import Link from "next/link";
 
 interface FollowerBtnClientProps {
@@ -18,54 +17,77 @@ export function FollowerBtnClient({
   initialStatus,
 }: FollowerBtnClientProps) {
   const [status, setStatus] = useState(initialStatus);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const supabase = createClient();
 
   useEffect(() => {
-    async function fetchStatus() {
-      const { data } = await supabase
-        .from("user_connections")
-        .select("*")
-        .eq("follower_id", currentUserId)
-        .eq("followed_id", profileId);
+    const fetchStatus = async () => {
+      setIsLoading(true);
+      try {
+        const { data } = await supabase
+          .from("user_connections")
+          .select("id")
+          .eq("follower_id", currentUserId)
+          .eq("followed_id", profileId);
 
-      if (data?.length) {
-        setStatus("following");
-      } else {
+        if (data?.length) {
+          setStatus("following");
+          return;
+        }
+
         const { data: requestData } = await supabase
           .from("user_follow_requests")
-          .select("*")
+          .select("id")
           .eq("sender_id", currentUserId)
           .eq("receiver_id", profileId);
 
         setStatus(requestData?.length ? "pending" : "follow");
+      } catch (error) {
+        console.error("Error fetching follow status:", error);
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
-    }
+    };
 
     fetchStatus();
+
+    // Subscribe to changes for real-time updates
+    const subscription = supabase
+      .channel("follow_requests")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "user_follow_requests" },
+        fetchStatus
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(subscription);
+    };
   }, [profileId, currentUserId, supabase]);
 
   const handleFollowClick = async () => {
+    if (isLoading) return;
     setIsLoading(true);
 
     try {
       if (status === "following") {
-        const { error } = await supabase
+        await supabase
           .from("user_connections")
           .delete()
           .eq("follower_id", currentUserId)
           .eq("followed_id", profileId);
-        if (!error) setStatus("follow");
+        setStatus("follow");
       } else if (status === "pending") {
-        const { error } = await supabase
+        await supabase
           .from("user_follow_requests")
           .delete()
           .eq("sender_id", currentUserId)
           .eq("receiver_id", profileId);
-        if (!error) setStatus("follow");
+        setStatus("follow");
       } else {
         const { error } = await sendFollowRequest(currentUserId, profileId);
+        console.log(error);
         if (!error) setStatus("pending");
       }
     } catch (error) {
@@ -77,20 +99,20 @@ export function FollowerBtnClient({
 
   return (
     <button
-      className={`px-3 py-2 rounded-md text-gray-200 transition-all duration-200 ${
+      className={`px-4 py-2 rounded ${
         status === "following"
-          ? "bg-neutral-500 hover:bg-neutral-400"
+          ? "bg-gray-500"
           : status === "pending"
-          ? "bg-gray-500 hover:bg-gray-600"
-          : "bg-indigo-600 hover:bg-indigo-500"
-      } ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
+          ? "bg-yellow-500"
+          : "bg-blue-500"
+      } text-white`}
       onClick={handleFollowClick}
       disabled={isLoading}
     >
       {isLoading
         ? "Loading..."
         : status === "following"
-        ? "Following"
+        ? "Unfollow"
         : status === "pending"
         ? "Requested"
         : "Follow"}
