@@ -4,7 +4,7 @@ import { createClient } from "@/utils/supabase/server";
 
 /**
  * Sends a follow request from `senderId` to `receiverId`.
- * Returns `{ error }` if there's an issue.
+ * Ensures duplicate requests aren't inserted.
  */
 export const sendFollowRequest = async (
   senderId: string,
@@ -12,6 +12,21 @@ export const sendFollowRequest = async (
 ) => {
   const supabase = createClient();
 
+  // Check if a request already exists
+  const { data: existingRequest, error: checkError } = await supabase
+    .from("user_follow_requests")
+    .select("id, status")
+    .eq("sender_id", senderId)
+    .eq("receiver_id", receiverId)
+    .maybeSingle();
+
+  if (checkError) return { error: checkError };
+
+  if (existingRequest) {
+    return { error: "Follow request already exists." };
+  }
+
+  // Insert new follow request
   const { data, error } = await supabase
     .from("user_follow_requests")
     .insert({
@@ -19,14 +34,16 @@ export const sendFollowRequest = async (
       receiver_id: receiverId,
       status: "pending",
     })
-    .select(); // Returns inserted row for UI sync
+    .select()
+    .single();
 
   return { data, error };
 };
 
 /**
- * Accepts a follow request by moving the request to `user_connections`
- * and updating the `user_follow_requests` table.
+ * Accepts a follow request:
+ * - Inserts the sender into `user_connections`
+ * - Deletes the request from `user_follow_requests`
  */
 export const acceptFollowRequest = async (
   requestId: number,
@@ -35,28 +52,25 @@ export const acceptFollowRequest = async (
 ) => {
   const supabase = createClient();
 
-  // Transactional flow: Insert into `user_connections`, then delete request
-  const { data, error: connError } = await supabase
-    .from("user_connections")
-    .insert({
-      follower_id: senderId,
-      followed_id: receiverId,
-    })
-    .select();
+  // Add to user_connections
+  const { error: connError } = await supabase.from("user_connections").insert({
+    follower_id: senderId,
+    followed_id: receiverId,
+  });
 
   if (connError) return { error: connError };
 
-  // Remove the follow request after accepting
+  // Update request status to "accepted"
   const { error } = await supabase
     .from("user_follow_requests")
-    .delete()
+    .update({ status: "accepted" })
     .eq("id", requestId);
 
-  return { data, error };
+  return { error };
 };
 
 /**
- * Rejects a follow request by deleting it from the `user_follow_requests` table.
+ * Rejects a follow request by deleting it from `user_follow_requests`.
  */
 export const rejectFollowRequest = async (requestId: number) => {
   const supabase = createClient();
