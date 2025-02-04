@@ -121,9 +121,24 @@ function Page() {
     } = await supabase.auth.getUser();
     if (updatedUser) {
       setUser(updatedUser);
-    }
+      console.log(updatedUser);
+      const { data, error } = await supabase
+        .from("users")
+        .select("username")
+        .eq("id", updatedUser?.id)
+        .single(); // ✅ Use `.single()` to fetch a single row instead of an array
 
-    router.refresh();
+      if (error) {
+        console.error("Error fetching username:", error.message);
+        return;
+      }
+
+      if (data?.username) {
+        router.push(`/app/profile/${data.username}`);
+      } else {
+        console.warn("Username not found for user ID:", updatedUser?.id);
+      }
+    }
   };
 
   if (loading) return <div>Loading...</div>;

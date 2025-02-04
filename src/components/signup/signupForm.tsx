@@ -2,23 +2,17 @@ import Link from "next/link";
 import React, { useState } from "react";
 
 type LoginFormProps = {
-  onLogin: (email: string, password: string) => Promise<void>;
   onSignup: (email: string, password: string) => Promise<void>;
   loading: boolean;
   error: string;
 };
 
-const LoginForm: React.FC<LoginFormProps> = ({
-  onLogin,
-
-  loading,
-  error,
-}) => {
+const LoginForm: React.FC<LoginFormProps> = ({ onSignup, loading, error }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = async () => {
-    await onLogin(email, password);
+    await onSignup(email, password);
   };
 
   return (
@@ -50,7 +44,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
             required
           />
           <label className="text-neutral-100 pl-2" htmlFor="password">
-            Password
+            New Password
           </label>
           <input
             className="text-neutral-700 ring-0 outline-0 px-3 focus:ring-2 rounded-sm focus:ring-indigo-600 py-2"
@@ -62,32 +56,25 @@ const LoginForm: React.FC<LoginFormProps> = ({
             required
           />
           {error && <p className="text-red-500">{error}</p>}
-
-          <p className="mt-3 text-white">
-            Forgot Password,{" "}
-            <Link className="text-blue-500 underline" href={"/forgot-password"}>
-              Click here
-            </Link>
-          </p>
-          <div className="flex flex-col gap-3 mt-1">
+          <div className="flex flex-col gap-3 mt-3">
             <button
               className="text-neutral-100 bg-indigo-700 py-2 rounded-md w-full hover:bg-indigo-600"
               type="button"
               onClick={() => handleSubmit()}
               disabled={loading}
             >
-              Log in
+              Sign up
             </button>
 
             <p className="m-auto text-white">
-              don't have an account,{" "}
-              <Link className="text-blue-500 underline" href={"/signup"}>
-                Sign Up
+              already have an account,{" "}
+              <Link className="text-blue-500 underline" href={"/login"}>
+                Login
               </Link>
             </p>
           </div>
         </form>
-      </div>{" "}
+      </div>
     </div>
   );
 };
