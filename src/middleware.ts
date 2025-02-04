@@ -5,28 +5,34 @@ export async function middleware(request: NextRequest) {
   const url = request.nextUrl.clone();
   const supabase = createClient();
 
-  const { error } = await supabase.auth.getUser();
+  const { data: user, error } = await supabase.auth.getUser();
 
-  // Redirect authenticated users away from auth pages
+  // 🔹 Check if user is accessing /update-password
+  if (url.pathname === "/update-password") {
+    const accessToken = url.searchParams.get("access_token");
+
+    // Allow access only if a valid token is present
+    if (!accessToken) {
+      url.pathname = "/login";
+      return NextResponse.redirect(url);
+    }
+
+    return NextResponse.next();
+  }
+
+  // 🔹 Redirect authenticated users away from auth pages
   if (
     (url.pathname === "/login" ||
       url.pathname === "/signup" ||
       url.pathname === "/forgot-password") &&
-    !error
+    user
   ) {
     url.pathname = "/app";
     return NextResponse.redirect(url);
   }
 
-  // Allow unauthenticated users to access /update-password
-  if (url.pathname === "/update-password" && error) {
-    // If the user is not authenticated but tries to access /update-password,
-    // allow them to proceed (since this is part of the password reset flow)
-    return NextResponse.next();
-  }
-
-  // Protect all /app routes for unauthenticated users
-  if (url.pathname.startsWith("/app") && error) {
+  // 🔹 Protect /app routes for unauthenticated users
+  if (url.pathname.startsWith("/app") && !user) {
     url.pathname = "/login";
     return NextResponse.redirect(url);
   }

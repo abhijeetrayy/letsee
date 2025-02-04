@@ -1,25 +1,25 @@
 "use client"; // Mark as a Client Component
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 
 export default function UpdatePassword() {
   const [newPassword, setNewPassword] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const searchParams = useSearchParams();
   const [message, setMessage] = useState("");
   const router = useRouter();
 
   const supabase = createClient();
 
   useEffect(() => {
-    // Check if the user is authenticated (i.e., they clicked the reset link)
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) {
-        router.push("/login"); // Redirect to login if not authenticated
-      }
-    });
-  }, [router]);
+    const accessToken = searchParams.get("access_token");
+
+    if (!accessToken) {
+      // Redirect to login if no token is found
+      router.replace("/login");
+    }
+  }, [searchParams, router]);
 
   const handleUpdatePassword = async (e: any) => {
     e.preventDefault();
