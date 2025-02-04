@@ -8,17 +8,49 @@ export default function ForgotPassword() {
   const [message, setMessage] = useState("");
 
   const handleResetPassword = async (e: any) => {
-    const supabase = createClient();
     e.preventDefault();
     setLoading(true);
-    setMessage("Sending reset link...");
+    setMessage("Checking email...");
 
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/update-password`, // Redirect URL after clicking the reset link
-    });
+    const supabase = createClient();
+
+    // Step 1: Check if the user exists
+    const { data: userData, error: userError } =
+      await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          shouldCreateUser: false, // Do not create a new user if they don't exist
+        },
+      });
+
+    if (userError) {
+      setLoading(false);
+      if (userError.message === "Email not confirmed") {
+        // User exists but email is not confirmed
+        setMessage("User exists, but email is not confirmed.");
+      } else if (userError.message === "User not found") {
+        // User does not exist
+        setMessage("Error: No user found with this email.");
+      } else {
+        // Other errors
+        console.log(userError.message);
+        setMessage(` No user found with this email`);
+      }
+      return;
+    }
+
+    // Step 2: If the user exists, send the reset password email
+    setMessage("Sending reset link...");
+    const { error: resetError } = await supabase.auth.resetPasswordForEmail(
+      email,
+      {
+        redirectTo: `${window.location.origin}/update-password`, // Redirect URL after clicking the reset link
+      }
+    );
+
     setLoading(false);
-    if (error) {
-      setMessage(`Error: ${error.message}`);
+    if (resetError) {
+      setMessage(`Error: ${resetError.message}`);
     } else {
       setMessage("Check your email for the reset link!");
     }
