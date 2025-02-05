@@ -1,25 +1,28 @@
-"use client"; // Mark as a Client Component
+"use client";
 
 import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 
 export default function UpdatePassword() {
   const [newPassword, setNewPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [accessToken, setAccessToken] = useState<string | null>(null);
   const router = useRouter();
-  const searchParams = useSearchParams();
-
   const supabase = createClient();
 
   useEffect(() => {
-    const accessToken = searchParams.get("access_token");
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get("access_token");
+      setAccessToken(token);
 
-    if (!accessToken) {
-      router.replace("/login"); // Redirect to login if no token is found
+      if (!token) {
+        router.replace("/login"); // Redirect to login if no token is found
+      }
     }
-  }, [router, searchParams]); // Keep only necessary dependencies
+  }, [router]);
 
   const handleUpdatePassword = async (e: React.FormEvent) => {
     e.preventDefault();
