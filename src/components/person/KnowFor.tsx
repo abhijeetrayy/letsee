@@ -2,6 +2,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
+import SendMessageModal from "@components/message/sendCard";
+import { LuSend } from "react-icons/lu";
 
 interface CastData {
   id: string;
@@ -25,6 +27,8 @@ const ScrollableCastList: React.FC<ScrollableCastListProps> = ({
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [cardData, setCardData] = useState([]) as any;
 
   const handleScroll = () => {
     const element = scrollRef.current;
@@ -55,8 +59,18 @@ const ScrollableCastList: React.FC<ScrollableCastListProps> = ({
     }
   }, []);
 
+  const handleCardTransfer = (data: any) => {
+    setCardData(data);
+    setIsModalOpen(true);
+  };
+
   return (
     <div className="relative w-full mb-12">
+      <SendMessageModal
+        data={cardData}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
       <div
         ref={scrollRef}
         className="w-full flex flex-row gap-5 overflow-x-scroll no-scrollbar"
@@ -126,7 +140,7 @@ const ScrollableCastList: React.FC<ScrollableCastListProps> = ({
                       alt={displayTitle}
                     />
                   </Link>
-                  <div className="lg:absolute bottom-0 w-full bg-neutral-900 lg:opacity-0 lg:group-hover:opacity-100 z-10">
+                  <div className="lg:absolute bottom-0 w-full bg-neutral-800 lg:opacity-0 lg:group-hover:opacity-100 z-10">
                     <ThreePrefrenceBtn
                       cardId={id}
                       cardType={media_type}
@@ -134,6 +148,14 @@ const ScrollableCastList: React.FC<ScrollableCastListProps> = ({
                       cardAdult={adult}
                       cardImg={displayImage}
                     />
+                    <div className="py-2 border-t border-neutral-950 hover:bg-neutral-700">
+                      <button
+                        className="w-full  flex justify-center text-lg text-center "
+                        onClick={() => handleCardTransfer(data)}
+                      >
+                        <LuSend />
+                      </button>
+                    </div>
                     <div
                       title={displayTitle}
                       className="w-full flex flex-col gap-2 px-4 bg-indigo-700 text-gray-200"

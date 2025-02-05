@@ -12,6 +12,13 @@ interface Message {
   recipient_id: string;
   content: string;
   created_at: string;
+  message_type: string;
+  metadata: {
+    media_id: string;
+    media_name: string;
+    media_image: string;
+    media_type: string;
+  };
 }
 
 const options: Intl.DateTimeFormatOptions = {
@@ -263,68 +270,61 @@ const Chat = () => {
     }
   }, [message, user, recipient, isValidRecipient, supabase, scrollToBottom]);
 
-  const renderMessagesWithDates = (messages: Message[]) => {
-    const result: JSX.Element[] = [];
-    let lastDate: string | null = null;
-
-    messages.forEach((msg, index) => {
-      const messageDate = new Date(msg.created_at).toLocaleDateString(
-        "en-US",
-        dateOptions
-      );
-
-      if (messageDate !== lastDate) {
-        result.push(
-          <div
-            key={`date-${index}`}
-            className="text-center text-gray-400 text-xs my-4"
-          >
-            {messageDate}
-          </div>
-        );
-        lastDate = messageDate;
-      }
-
-      result.push(
+  const renderMessages = (messages: Message[]) => {
+    return messages.map((msg) => (
+      <div
+        key={msg.id}
+        className={`flex ${
+          msg.sender_id === user?.id ? "justify-end" : "justify-start"
+        } mb-4`}
+      >
         <div
-          key={msg.id}
-          ref={index === messages.length - 1 ? lastMessageRef : null}
-          className={`flex ${
-            msg.sender_id === user?.id ? "justify-end" : "justify-start"
-          } mb-4`}
+          className={`break-words p-3 rounded-lg max-w-xs md:max-w-md lg:max-w-lg ${
+            msg.sender_id === user?.id
+              ? "bg-blue-600 text-white"
+              : "bg-gray-200 text-black"
+          }`}
         >
-          <div
-            className={`break-words p-3 rounded-lg max-w-xs md:max-w-md lg:max-w-lg ${
-              msg.sender_id === user?.id
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200 text-black"
-            }`}
-          >
-            <div className="text-xs text-gray-500 mb-1">
-              {msg.sender_id === user?.id ? (
-                <span className="text-gray-200">You</span>
-              ) : (
-                <Link
-                  href={`/app/profile/${recipientUsername}`}
-                  className="hover:underline"
-                >
-                  @{recipientUsername || "Unknown"}
-                </Link>
-              )}
-            </div>
-            <p className="text-sm">{msg.content}</p>
-            <span className="block text-xs text-right mt-1 opacity-70">
-              {new Date(msg.created_at).toLocaleTimeString("en-US", {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-            </span>
+          <div className="text-xs text-gray-500 mb-1">
+            {msg.sender_id === user?.id ? (
+              <span className="text-gray-200">You</span>
+            ) : (
+              <Link href={`/app/profile/${recipientUsername}`}>
+                @{recipientUsername || "Unknown"}
+              </Link>
+            )}
           </div>
-        </div>
-      );
-    });
 
-    return result;
+          {msg.message_type === "text" ? (
+            <p className="text-sm">{msg.content}</p>
+          ) : (
+            <div className="flex flex-col gap-2">
+              <Link
+                href={`/app/${msg.metadata.media_type}/${msg.metadata.media_id}`}
+                className="bg-gray-100 p-3 rounded-lg flex flex-col gap-2"
+              >
+                <img
+                  src={`https://image.tmdb.org/t/p/w342${msg.metadata.media_image}`}
+                  alt={msg.metadata.media_name}
+                  className="w-full h-40 object-cover rounded-lg mb-2"
+                />
+                <h3 className="text-gray-900 font-semibold">
+                  {msg.metadata.media_name}
+                </h3>
+              </Link>
+              <p className="text-sm ">{msg.content}</p>
+            </div>
+          )}
+
+          <span className="block text-xs text-right mt-1 opacity-70">
+            {new Date(msg.created_at).toLocaleTimeString("en-US", {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </span>
+        </div>
+      </div>
+    ));
   };
 
   return (
@@ -354,7 +354,7 @@ const Chat = () => {
                     {loadingMore ? "Loading..." : "Load More Messages"}
                   </button>
                 )}
-                {renderMessagesWithDates(messages)}
+                {renderMessages(messages)}
               </>
             ) : (
               <div className="text-red-500 text-center">

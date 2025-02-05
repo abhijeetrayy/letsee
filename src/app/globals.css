@@ -56,3 +56,7 @@
     overflow-clip-margin: 4rem;
   }
 }
+
+.modal {
+  will-change: opacity, transform;
+}

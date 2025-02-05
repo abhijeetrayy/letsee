@@ -73,6 +73,7 @@ export default function Recommendations() {
                 </Link>
                 <div className="lg:absolute bottom-0 w-full bg-neutral-900 lg:opacity-0 lg:group-hover:opacity-100 z-10">
                   <ThreePrefrenceBtn
+                    data={data}
                     cardId={data.tmdb_id}
                     cardType={"movie"}
                     cardName={data.name}
