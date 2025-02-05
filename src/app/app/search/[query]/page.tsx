@@ -1,14 +1,18 @@
 "use client";
 import { useSearch } from "@/app/contextAPI/searchContext";
 import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
+import SendMessageModal from "@components/message/sendCard";
 import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { LuSend } from "react-icons/lu";
 
 function Page() {
   const [Sresults, setSResults] = useState([]) as any;
   const [loading, setLoading] = useState(false);
   const { setIsSearchLoading } = useSearch();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [cardData, setCardData] = useState([]) as any;
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -54,8 +58,17 @@ function Page() {
     router.push(`/app/search/${query}?${newSearchParams.toString()}`);
   };
 
+  const handleCardTransfer = (data: any) => {
+    setCardData(data);
+    setIsModalOpen(true);
+  };
   return (
     <div className="min-h-screen mx-auto w-full max-w-7xl">
+      <SendMessageModal
+        data={cardData}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
       {Sresults.total_results > 0 && (
         <div>
           <p>
@@ -136,6 +149,14 @@ function Page() {
                           cardAdult={data.adult}
                           cardImg={data.poster_path || data.backdrop_path}
                         />
+                        <div className="py-2 border-t border-neutral-950 bg-neutral-800 hover:bg-neutral-700">
+                          <button
+                            className="w-full  flex justify-center text-lg text-center "
+                            onClick={() => handleCardTransfer(data)}
+                          >
+                            <LuSend />
+                          </button>
+                        </div>
 
                         <div
                           title={data.name || data.title}

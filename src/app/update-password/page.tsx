@@ -1,4 +1,5 @@
 "use client"; // Mark as a Client Component
+
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
@@ -6,9 +7,9 @@ import { createClient } from "@/utils/supabase/client";
 export default function UpdatePassword() {
   const [newPassword, setNewPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const searchParams = useSearchParams();
   const [message, setMessage] = useState("");
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const supabase = createClient();
 
@@ -16,12 +17,11 @@ export default function UpdatePassword() {
     const accessToken = searchParams.get("access_token");
 
     if (!accessToken) {
-      // Redirect to login if no token is found
-      router.replace("/login");
+      router.replace("/login"); // Redirect to login if no token is found
     }
-  }, [searchParams, router]);
+  }, [router, searchParams]); // Keep only necessary dependencies
 
-  const handleUpdatePassword = async (e: any) => {
+  const handleUpdatePassword = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setMessage("Updating password...");
@@ -43,46 +43,64 @@ export default function UpdatePassword() {
   };
 
   return (
-    <div className="w-full min-h-screen flex flex-col p-2 justify-center items-center bg-neutral-900">
-      <div className="w-full z-10">
+    <UpdatePasswordForm
+      loading={loading}
+      onSubmit={handleUpdatePassword}
+      newPassword={newPassword}
+      setNewPassword={setNewPassword}
+      message={message}
+    />
+  );
+}
+
+// Separate Form Component
+function UpdatePasswordForm({
+  loading,
+  onSubmit,
+  newPassword,
+  setNewPassword,
+  message,
+}: {
+  loading: boolean;
+  onSubmit: (e: React.FormEvent) => void;
+  newPassword: string;
+  setNewPassword: React.Dispatch<React.SetStateAction<string>>;
+  message: string;
+}) {
+  return (
+    <div className="w-full min-h-screen flex flex-col p-4 justify-center items-center bg-neutral-900">
+      <div className="w-full max-w-md">
         <div
-          className={
-            loading
-              ? "animate-bounce m-auto w-fit text-neutral-100 mb-5"
-              : "m-auto w-fit text-neutral-100 mb-5"
-          }
+          className={`m-auto text-center text-neutral-100 mb-5 ${
+            loading ? "animate-bounce" : ""
+          }`}
         >
-          <h1 className="text-7xl font-extrabold text-neutral-100">
-            Let's See
-          </h1>
+          <h1 className="text-5xl font-extrabold">Let's See</h1>
           <p>Social media for cinema.</p>
         </div>
         <form
-          onSubmit={handleUpdatePassword}
-          className={"flex flex-col max-w-sm w-full m-auto gap-2"}
+          onSubmit={onSubmit}
+          className="flex flex-col w-full gap-4 bg-neutral-800 p-6 rounded-md shadow-lg"
         >
           <label className="text-neutral-100 pl-2" htmlFor="password">
-            Update password
+            New Password
           </label>
           <input
-            className="text-neutral-700 ring-0 outline-0 px-3 focus:ring-2 rounded-sm focus:ring-indigo-600 py-2"
+            className="text-neutral-700 px-3 py-2 rounded-md focus:ring-2 focus:ring-indigo-600 outline-none"
             type="password"
             placeholder="Enter new password"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
             required
           />
-
-          {message && <p className="text-white">{message}</p>}
-          <div className="flex flex-col gap-3 mt-3">
-            <button
-              className="text-neutral-100 bg-indigo-700 py-2 rounded-md w-full hover:bg-indigo-600"
-              disabled={loading}
-              type="submit"
-            >
-              Update Password
-            </button>
-          </div>
+          {message && <p className="text-white text-sm">{message}</p>}
+          <button
+            className="text-white bg-indigo-700 py-2 rounded-md w-full hover:bg-indigo-600 disabled:bg-indigo-400"
+            disabled={loading}
+            type="submit"
+          >
+            {loading ? "Updating..." : "Update Password"}
+          </button>
         </form>
       </div>
     </div>

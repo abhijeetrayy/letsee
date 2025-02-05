@@ -1,12 +1,16 @@
 "use client";
 import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
+import SendMessageModal from "@components/message/sendCard";
 import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { LuSend } from "react-icons/lu";
 
 function Page() {
   const [Sresults, setSResults] = useState([]) as any;
   const [loading, setLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [cardData, setCardData] = useState([]) as any;
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -43,6 +47,11 @@ function Page() {
     fetchData();
   }, [id, page]);
 
+  const handleCardTransfer = (data: any) => {
+    setCardData(data);
+    setIsModalOpen(true);
+  };
+
   const changePage = (newPage: number) => {
     setLoading(true);
     const newSearchParams = new URLSearchParams(searchParams);
@@ -52,6 +61,11 @@ function Page() {
 
   return (
     <div className="min-h-screen mx-auto w-full max-w-7xl">
+      <SendMessageModal
+        data={cardData}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
       <div>
         <p>
           Search Results: {decodeURIComponent(id as string)} '
@@ -112,7 +126,14 @@ function Page() {
                       cardAdult={data.adult}
                       cardImg={data.poster_path || data.backdrop_path}
                     />
-
+                    <div className="py-2 border-t border-neutral-950 bg-neutral-800 hover:bg-neutral-700">
+                      <button
+                        className="w-full  flex justify-center text-lg text-center "
+                        onClick={() => handleCardTransfer(data)}
+                      >
+                        <LuSend />
+                      </button>
+                    </div>
                     <div
                       title={data.name || data.title}
                       className="w-full flex flex-col gap-2  px-4  bg-indigo-700  text-gray-200 "

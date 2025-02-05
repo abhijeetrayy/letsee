@@ -3,6 +3,8 @@ import SearchForm from "@/components/homeDiscover/client/seachForm";
 import DiscoverUsers from "@components/home/DiscoverUser";
 import OpenAiReco from "@components/ai/openaiReco";
 import Link from "next/link";
+import WeeklyTop from "@components/clientComponent/weeklyTop";
+import Tvtop from "@components/clientComponent/topTv";
 
 async function getData() {
   const res = await fetch(
@@ -88,54 +90,7 @@ export default async function Home() {
       </div> */}
       <div className="">
         <h2 className="text-2xl my-4 font-bold">Weekly Top 20</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 max-w-6xl w-full m-auto">
-          {data?.results.map((item: any) => (
-            <div className="group relative flex flex-col justify-between w-full h-full bg-neutral-700 rounded-md overflow-hidden ">
-              <div className="absolute top-0 left-0">
-                <p className="px-1 py-1 bg-neutral-950  text-white rounded-br-md">
-                  {item.media_type}
-                </p>
-              </div>
-              <Link
-                className="w-full  h-full"
-                href={`/app/${item.media_type}/${item.id}-${(
-                  item?.name || item?.title
-                )
-                  .trim()
-                  .replace(/[^a-zA-Z0-9]/g, "-")
-                  .replace(/-+/g, "-")}`}
-              >
-                <img
-                  className="h-fit w-full"
-                  src={`https://image.tmdb.org/t/p/w342${item.poster_path}`}
-                  alt={item.name}
-                />
-              </Link>
-              <div className="lg:absolute lg:bottom-0  w-full lg:opacity-0 lg:group-hover:opacity-100">
-                <div className="  bg-neutral-900 ">
-                  <ThreePrefrenceBtn
-                    cardId={item.id}
-                    cardType={item.media_type}
-                    cardName={item.name || item.title}
-                    cardAdult={item.adult}
-                    cardImg={item.poster_path || item.backdrop_path}
-                  />
-                </div>
-                <div className=" min-h-14 flex flex-col justify-center px-3 pb-1   w-full bg-indigo-700 text-gray-100 ">
-                  <p className="">
-                    {item.name?.length > 40 || item.title?.length > 40 ? (
-                      <span>
-                        {item.name?.slice(0, 40) || item.title?.slice(0, 40)}..
-                      </span>
-                    ) : (
-                      item.name || item.title
-                    )}{" "}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+        <WeeklyTop data={data} />
       </div>
       <div className="w-full max-w-7xl ">
         <h1 className="text-lg font-semibold mb-2">Tv Show Genres</h1>
@@ -154,54 +109,7 @@ export default async function Home() {
       </div>
       <div className="w-full  ">
         <h2 className="text-2xl my-4 font-bold">Trending Tv Show's</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 max-w-6xl w-full m-auto">
-          {TrendingTv?.results.map((item: any) => (
-            <div className="group relative flex flex-col justify-between w-full h-full bg-neutral-700 rounded-md overflow-hidden">
-              <Link
-                className="relative h-full w-full"
-                href={`/app/${item.media_type}/${item.id}-${(
-                  item?.name || item?.title
-                )
-                  .trim()
-                  .replace(/[^a-zA-Z0-9]/g, "-")
-                  .replace(/-+/g, "-")}`}
-              >
-                <div className="absolute top-0 left-0">
-                  <p className="px-1 py-1 bg-neutral-950  text-white rounded-br-md">
-                    {item.media_type}
-                  </p>
-                </div>
-                <img
-                  className="h-fit w-full"
-                  src={`https://image.tmdb.org/t/p/w342${item.poster_path}`}
-                  alt={item.name}
-                />
-              </Link>
-              <div className="lg:absolute bottom-0  w-full lg:opacity-0 group-hover:opacity-100">
-                <div className="  bg-neutral-900 ">
-                  <ThreePrefrenceBtn
-                    cardId={item.id}
-                    cardType={item.media_type}
-                    cardName={item.name || item.title}
-                    cardAdult={item.adult}
-                    cardImg={item.poster_path || item.backdrop_path}
-                  />
-                </div>
-                <div className=" min-h-14 flex flex-col justify-center px-3 pb-1   w-full bg-indigo-700 text-gray-100 ">
-                  <p className="">
-                    {item.name?.length > 40 || item.title?.length > 40 ? (
-                      <span>
-                        {item.name?.slice(0, 40) || item.title?.slice(0, 40)}..
-                      </span>
-                    ) : (
-                      item.name || item.title
-                    )}{" "}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+        <Tvtop TrendingTv={TrendingTv} />
       </div>
     </div>
   );

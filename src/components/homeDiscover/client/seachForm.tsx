@@ -3,6 +3,8 @@ import Link from "next/link";
 import React, { useState } from "react";
 // import CardMovieButton from "@/components/buttons/cardMovieButton";
 import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
+import { LuSend } from "react-icons/lu";
+import SendMessageModal from "@components/message/sendCard";
 
 const MovieSearch = () => {
   const [query, setQuery] = useState("");
@@ -10,6 +12,14 @@ const MovieSearch = () => {
   const [loading, setLoading] = useState(false);
   const [typing, settyping] = useState(false);
   const [page, setPage] = useState(1);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [cardData, setCardData] = useState([]) as any;
+
+  const handleCardTransfer = (data: any) => {
+    setCardData(data);
+    setIsModalOpen(true);
+  };
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,6 +76,11 @@ const MovieSearch = () => {
   };
   return (
     <div className="text-white max-w-7xl w-full min-h-44 mx-auto ">
+      <SendMessageModal
+        data={cardData}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
       <form onSubmit={handleSearch} className="mb-8">
         <input
           type="text"
@@ -154,7 +169,14 @@ const MovieSearch = () => {
                         cardAdult={data.adult}
                         cardImg={data.poster_path || data.backdrop_path}
                       />
-
+                      <div className="py-2 border-t border-neutral-950 bg-neutral-800 hover:bg-neutral-700">
+                        <button
+                          className="w-full  flex justify-center text-lg text-center "
+                          onClick={() => handleCardTransfer(data)}
+                        >
+                          <LuSend />
+                        </button>
+                      </div>
                       <div
                         title={data.name || data.title}
                         className="w-full flex flex-col gap-2  px-4  bg-indigo-700  text-gray-200 "

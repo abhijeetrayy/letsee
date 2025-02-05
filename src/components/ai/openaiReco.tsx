@@ -3,6 +3,8 @@ import Link from "next/link";
 import { useState } from "react";
 
 import ThreePrefrenceBtn from "@components/buttons/threePrefrencebtn";
+import SendMessageModal from "@components/message/sendCard";
+import { LuSend } from "react-icons/lu";
 
 interface MovieRecommendation {
   name: string;
@@ -16,6 +18,13 @@ export default function Recommendations() {
   );
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [cardData, setCardData] = useState([]) as any;
+
+  const handleCardTransfer = (data: any) => {
+    setCardData(data);
+    setIsModalOpen(true);
+  };
 
   const handleGetRecommendations = async () => {
     setIsLoading(true);
@@ -40,6 +49,11 @@ export default function Recommendations() {
 
   return (
     <div className="space-y-4">
+      <SendMessageModal
+        data={cardData}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
       <button
         onClick={handleGetRecommendations}
         disabled={isLoading}
@@ -80,6 +94,14 @@ export default function Recommendations() {
                     cardAdult={false}
                     cardImg={data.poster_url}
                   />
+                  <div className="py-2 border-t border-neutral-950 bg-neutral-800 hover:bg-neutral-700">
+                    <button
+                      className="w-full  flex justify-center text-lg text-center "
+                      onClick={() => handleCardTransfer(data)}
+                    >
+                      <LuSend />
+                    </button>
+                  </div>
 
                   <div
                     title={data.name}
