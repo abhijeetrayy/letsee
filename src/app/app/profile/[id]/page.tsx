@@ -148,13 +148,14 @@ export default async function ProfilePage({
                   initialStatus={isFollowing ? "following" : "follow"}
                 />
               )}
-
-              <Link
-                className="bg-blue-600 p-2 rounded-md"
-                href={`/app/messages/${profileId}`}
-              >
-                Message
-              </Link>
+              {!isOwner && (
+                <Link
+                  className="bg-blue-600 p-2 rounded-md"
+                  href={`/app/messages/${profileId}`}
+                >
+                  Message
+                </Link>
+              )}
             </div>
 
             {/* Followers & Following */}
