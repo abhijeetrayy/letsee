@@ -6,8 +6,8 @@ import Navbar from "@/components/header/navbar";
 import SetupComp from "@/components/setupComponents/SetupComp";
 import { createClient } from "@/utils/supabase/server";
 import localfont from "next/font/local";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+// import { ToastContainer } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
 
 import { SearchProvider } from "../contextAPI/searchContext";
 import "../globals.css";
@@ -59,7 +59,7 @@ export default async function RootLayout({
                   <main className="flex-grow px-3 py-2">{children}</main>
                   <Footbar />
                 </div>
-                <ToastContainer />
+                {/* <ToastContainer /> */}
               </SearchProvider>
             </UserPrefrenceProvider>
           </div>
