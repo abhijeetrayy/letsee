@@ -9,9 +9,7 @@ import {
 } from "@/components/profile/profllebtn";
 import ChataiReco from "@/components/ai/openaiReco";
 import ProfileContent from "@components/profile/profileContent";
-import Image from "next/image";
-
-import Avatar from "../../../.././../public/avatar.svg";
+import Visibility from "@components/profile/visibility";
 
 // Fetch user data and statistics
 const getUserData = async (id: string) => {
@@ -50,7 +48,7 @@ export default async function ProfilePage({
   // Fetch user data by username
   const { data: user, error } = await supabase
     .from("users")
-    .select("id, username, about")
+    .select("id, username, about, visibility")
     .eq("username", id)
     .single();
 
@@ -91,7 +89,9 @@ export default async function ProfilePage({
 
   const isFollowing = !!connection?.id;
   const isOwner = currentUserId === profileId;
-  const canViewContent = isOwner || isFollowing;
+  const canViewContent =
+    user.visibility === "public" ||
+    (isFollowing && user.visibility === "followers");
 
   return (
     <div className="flex flex-col items-center w-full">
@@ -119,6 +119,7 @@ export default async function ProfilePage({
               >
                 @{user.username}
               </Link>
+
               {isOwner && (
                 <Link
                   className="w-fit px-1 text-lg border rounded-md hover:text-neutral-100"
@@ -128,8 +129,13 @@ export default async function ProfilePage({
                 </Link>
               )}
             </div>
+            {isOwner && <Visibility />}
 
-            {user.about && <p className="text-sm">About: {user.about}</p>}
+            {user.about && (
+              <p className="text-sm">
+                <span className="text-neutral-400">bio: </span> {user.about}
+              </p>
+            )}
           </div>
 
           {/* User Stats & Follow Button */}
@@ -142,14 +148,13 @@ export default async function ProfilePage({
                   initialStatus={isFollowing ? "following" : "follow"}
                 />
               )}
-              {!isOwner && isFollowing && (
-                <Link
-                  className="bg-blue-600 p-2 rounded-md"
-                  href={`/app/messages/${profileId}`}
-                >
-                  Message
-                </Link>
-              )}
+
+              <Link
+                className="bg-blue-600 p-2 rounded-md"
+                href={`/app/messages/${profileId}`}
+              >
+                Message
+              </Link>
             </div>
 
             {/* Followers & Following */}
@@ -194,7 +199,13 @@ export default async function ProfilePage({
         )}
 
         {/* Conditional Content */}
-        {!canViewContent ? (
+        {user.visibility === "private" && !isOwner ? (
+          <div className="text-center py-10">
+            <p className="text-lg text-gray-600">
+              This profile is private, Only user can see.
+            </p>
+          </div>
+        ) : !canViewContent && !isOwner ? (
           <div className="text-center py-10">
             <p className="text-lg text-gray-600">
               This profile is private. Follow to see content and message.
