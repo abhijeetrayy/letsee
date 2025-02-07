@@ -109,7 +109,7 @@ export default async function ProfilePage({
               width={300}
               height={300}
               className="h-72 w-72 object-cover mb-4"
-              src={Avatar}
+              src={"/avatar.svg"}
               alt="Profile"
             />
             <div className="flex flex-row gap-3 my-2 items-center">
