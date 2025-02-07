@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
 import { FiSend, FiArrowDown } from "react-icons/fi";
+import Image from "next/image";
 
 interface Message {
   is_read: boolean;
@@ -303,7 +304,7 @@ const Chat = () => {
                 href={`/app/${msg.metadata.media_type}/${msg.metadata.media_id}`}
                 className="bg-gray-100 p-3 rounded-lg flex flex-col gap-2"
               >
-                <img
+                <Image
                   src={`https://image.tmdb.org/t/p/w342${msg.metadata.media_image}`}
                   alt={msg.metadata.media_name}
                   className="w-full h-40 object-cover rounded-lg mb-2"

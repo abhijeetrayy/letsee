@@ -56,7 +56,7 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID, userId }) => {
         </button>
 
         <div className="absolute top-5 w-full ">
-          <h1 className="text-3xl font-bold w-fit m-auto">Let's see</h1>
+          <h1 className="text-3xl font-bold w-fit m-auto">Let&apos;s see</h1>
         </div>
 
         <ul className="flex flex-col items-center justify-center h-full space-y-8 text-white">
@@ -88,7 +88,7 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID, userId }) => {
               onClick={() => link("/app")}
               className="text-2xl hover:text-gray-400"
             >
-              Let's see
+              Let&apos;s see
             </button>
           </li>
 
@@ -97,7 +97,7 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID, userId }) => {
               onClick={() => link(`/app/profile`)}
               className="text-2xl hover:text-gray-400"
             >
-              User's
+              User&apos;s
             </button>
           </li>
 

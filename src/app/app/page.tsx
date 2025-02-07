@@ -1,4 +1,3 @@
-import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
 import SearchForm from "@/components/homeDiscover/client/seachForm";
 import DiscoverUsers from "@components/home/DiscoverUser";
 import OpenAiReco from "@components/ai/openaiReco";

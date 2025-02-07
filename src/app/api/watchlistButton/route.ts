@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
   const { itemId, name, mediaType, imgUrl, adult } = body;
   console.log(body, "body");
 
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { data, error } = await supabase.auth.getUser();
   if (error || !data?.user) {

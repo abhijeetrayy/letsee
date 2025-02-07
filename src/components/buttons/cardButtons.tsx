@@ -1,7 +1,7 @@
 "use client";
 
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+// import { toast } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
 import React, { useContext } from "react";
 import UserPrefrenceContext from "@/app/contextAPI/userPrefrence";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
@@ -46,7 +46,7 @@ const CardMovieButton: React.FC<CardMovieButtonProps> = ({
     if (loading) {
       return;
     }
-    const toastId = toast.loading(state ? "Removing..." : "Adding...");
+    // const toastId = toast.loading(state ? "Removing..." : "Adding...");
     let apiUrl = "";
     let apiDeleteUrl = "";
     let successMessage = "";
@@ -72,12 +72,12 @@ const CardMovieButton: React.FC<CardMovieButtonProps> = ({
           : "Added to favorites";
         break;
       default:
-        toast.update(toastId, {
-          render: "Invalid action",
-          type: "error",
-          isLoading: false,
-          autoClose: 5000,
-        });
+        // toast.update(toastId, {
+        //   render: "Invalid action",
+        //   type: "error",
+        //   isLoading: false,
+        //   autoClose: 5000,
+        // });
         return;
     }
 
@@ -131,12 +131,12 @@ const CardMovieButton: React.FC<CardMovieButtonProps> = ({
           return updatedPrefrence;
         });
 
-        toast.update(toastId, {
-          render: successMessage,
-          type: "success",
-          isLoading: false,
-          autoClose: 2000,
-        });
+        // toast.update(toastId, {
+        //   render: successMessage,
+        //   type: "success",
+        //   isLoading: false,
+        //   autoClose: 2000,
+        // });
       }
       if (funcType === "watched" && !state) {
         const response = await fetch("/api/watchedButton", {
@@ -187,12 +187,12 @@ const CardMovieButton: React.FC<CardMovieButtonProps> = ({
           return updatedPrefrence;
         });
 
-        toast.update(toastId, {
-          render: successMessage,
-          type: "success",
-          isLoading: false,
-          autoClose: 2000,
-        });
+        // toast.update(toastId, {
+        //   render: successMessage,
+        //   type: "success",
+        //   isLoading: false,
+        //   autoClose: 2000,
+        // });
       } else {
         const url = state ? apiDeleteUrl : apiUrl;
         const response = await fetch(url, {
@@ -229,20 +229,20 @@ const CardMovieButton: React.FC<CardMovieButtonProps> = ({
           return updatedPrefrence;
         });
 
-        toast.update(toastId, {
-          render: successMessage,
-          type: "success",
-          isLoading: false,
-          autoClose: 2000,
-        });
+        // toast.update(toastId, {
+        //   render: successMessage,
+        //   type: "success",
+        //   isLoading: false,
+        //   autoClose: 2000,
+        // });
       }
     } catch (error: any) {
-      toast.update(toastId, {
-        render: error.message || "An error occurred",
-        type: "error",
-        isLoading: false,
-        autoClose: 5000,
-      });
+      // toast.update(toastId, {
+      //   render: error.message || "An error occurred",
+      //   type: "error",
+      //   isLoading: false,
+      //   autoClose: 5000,
+      // });
       console.error(error);
     }
   }

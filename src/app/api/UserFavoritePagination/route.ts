@@ -1,24 +1,24 @@
-// pages/api/watched-movies.ts
-import { NextApiRequest, NextApiResponse } from "next";
-import { createClient } from "../../../utils/supabase/server";
+// app/api/watched-movies/route.ts
 import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@/utils/supabase/server"; // Adjust import if needed
 
-export async function POST(req: NextRequest, res: NextResponse) {
-  const requestClone = req.clone();
-  const body = await requestClone.json();
-  const { userID, page = 1, limit = 7 } = body;
-  console.log(userID);
-  const supabase = createClient();
-
-  if (!userID) {
-    return NextResponse.json({ error: "User ID is required" });
-  }
-
-  const pageNumber = Number(page);
-  const itemsPerPage = Number(limit);
-  const offset = (pageNumber - 1) * itemsPerPage;
-
+export async function POST(req: NextRequest) {
   try {
+    const body = await req.json();
+    const { userID, page = 1, limit = 7 } = body;
+
+    if (!userID) {
+      return NextResponse.json(
+        { error: "User ID is required" },
+        { status: 400 }
+      );
+    }
+
+    const supabase = await createClient();
+    const pageNumber = Number(page);
+    const itemsPerPage = Number(limit);
+    const offset = (pageNumber - 1) * itemsPerPage;
+
     // Fetch total count
     const { count } = await supabase
       .from("favorite_items")
@@ -31,22 +31,20 @@ export async function POST(req: NextRequest, res: NextResponse) {
       .select("*")
       .eq("user_id", userID)
       .range(offset, offset + itemsPerPage - 1);
-    if (error) throw error;
 
-    const totalPages = Math.ceil((count || 0) / itemsPerPage);
-    const perloadLength = data.length;
+    if (error) throw error;
 
     return NextResponse.json({
       data,
       page: pageNumber,
-      totalPages,
+      totalPages: Math.ceil((count || 0) / itemsPerPage),
       totalItems: count,
-      perloadLength,
+      perloadLength: data.length,
     });
   } catch (error) {
-    return NextResponse.json({
-      errorOccur: "An error occurred while fetching data",
-      error,
-    });
+    return NextResponse.json(
+      { error: "An error occurred", details: error },
+      { status: 500 }
+    );
   }
 }

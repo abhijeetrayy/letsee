@@ -9,10 +9,13 @@ import {
 } from "@/components/profile/profllebtn";
 import ChataiReco from "@/components/ai/openaiReco";
 import ProfileContent from "@components/profile/profileContent";
+import Image from "next/image";
+
+import Avatar from "../../../.././../public/avatar.svg";
 
 // Fetch user data and statistics
 const getUserData = async (id: string) => {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const [
     { count: watchedCount },
@@ -41,13 +44,14 @@ export default async function ProfilePage({
 }: {
   params: { id: string };
 }) {
-  const supabase = createClient();
+  const supabase = await createClient();
+  const { id } = params;
 
   // Fetch user data by username
   const { data: user, error } = await supabase
     .from("users")
     .select("id, username, about")
-    .eq("username", params.id)
+    .eq("username", id)
     .single();
 
   if (!user || error) return notFound();
@@ -85,7 +89,7 @@ export default async function ProfilePage({
     getUserData(profileId),
   ]);
 
-  const isFollowing = !!connection;
+  const isFollowing = !!connection?.id;
   const isOwner = currentUserId === profileId;
   const canViewContent = isOwner || isFollowing;
 
@@ -101,11 +105,11 @@ export default async function ProfilePage({
         <div className="w-full flex flex-col lg:flex-row p-6">
           {/* Profile Info */}
           <div className="flex-1 flex flex-col">
-            <img
+            <Image
               width={300}
               height={300}
               className="h-72 w-72 object-cover mb-4"
-              src="/avatar.svg"
+              src={Avatar}
               alt="Profile"
             />
             <div className="flex flex-row gap-3 my-2 items-center">

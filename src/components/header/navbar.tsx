@@ -10,7 +10,7 @@ import MessageButton from "./MessageButton";
 import RealtimeNotification from "./RealtimeNotification";
 
 async function Navbar() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data, error } = await supabase.auth.getUser();
   const { data: userData, error: userError } = await supabase
     .from("users")
@@ -26,7 +26,7 @@ async function Navbar() {
   return (
     <div className=" flex flex-row justify-between text-white  p-3 h-full ">
       <div>
-        <Link href="/app">Let's see</Link>
+        <Link href="/app">Let&apos;s see</Link>
       </div>
 
       <div className="flex flex-row gap-3 items-center">
@@ -40,7 +40,7 @@ async function Navbar() {
         </Link>
         <div className="hidden md:flex flex-row gap-3 items-center">
           <div className="px-4 py-1 rounded-md bg-neutral-600 hover:bg-neutral-500">
-            <Link href="/app/profile">User's</Link>
+            <Link href="/app/profile">User&apos;s</Link>
           </div>
           <SearchBar />
           <DropdownMenu user={userData} />

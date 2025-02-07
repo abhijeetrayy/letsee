@@ -108,11 +108,11 @@ const MovieSearch = () => {
           {results.total_results == 0 && !typing && (
             <div className="h-full w-full flex items-center justify-center">
               <p className="text-md">
-                Result for "
+                Result for &quot;
                 <span className="text-pink-600">
                   {decodeURIComponent(query as string)}
                 </span>
-                "{" "}
+                &quot;{" "}
                 <span className="font-bold text-purple-600">is not found</span>{" "}
                 - or check your spelling{" "}
               </p>

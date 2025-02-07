@@ -9,34 +9,30 @@ export async function watched(
   imgUrl: any,
   adult: any
 ) {
-  
-   
-    const supabase = createClient();
+  const supabase = await createClient();
 
-    const { data, error } = await supabase.auth.getUser();
-    if (error) {
-      console.log("user isn't loged in ");
-      return;
-    }
+  const { data, error } = await supabase.auth.getUser();
+  if (error) {
+    console.log("user isn't loged in ");
+    return;
+  }
 
-    const userId = data?.user.id;
-  
-    const { error: insertError } = await supabase
-      .from("watched_items")
-      .insert({
-        user_id: userId,
-        item_name: name,
-        item_id: itemId,
-        item_type: mediaType,
-        image_url: imgUrl,
-        item_adult: adult,
-      });
-      if(insertError){
-        console.log(insertError);
-        return "insertError"
-      }
-      return "Added"
-  
+  const userId = data?.user.id;
+
+  const { error: insertError } = await supabase.from("watched_items").insert({
+    user_id: userId,
+    item_name: name,
+    item_id: itemId,
+    item_type: mediaType,
+    image_url: imgUrl,
+    item_adult: adult,
+  });
+  if (insertError) {
+    console.log(insertError);
+    return "insertError";
+  }
+  return "Added";
+
   // return (
   //   <form>
   //     <button
@@ -56,68 +52,58 @@ export async function favorite(
   imgUrl: any,
   adult: any
 ) {
-  
-   
-    const supabase = createClient();
+  const supabase = await createClient();
 
-    const { data, error } = await supabase.auth.getUser();
-    if (error) {
-      console.log("user isn't loged in ");
-      return;
-    }
-
-    const userId = data?.user.id;
-    console.log(userId);
-
-    const { error: insertError } = await supabase
-      .from("favorite_items")
-      .insert({
-        user_id: userId,
-        item_name: name,
-        item_id: itemId,
-        item_type: mediaType,
-        image_url: imgUrl,
-        item_adult: adult,
-      });
-
-    console.log(insertError);
+  const { data, error } = await supabase.auth.getUser();
+  if (error) {
+    console.log("user isn't loged in ");
+    return;
   }
 
+  const userId = data?.user.id;
+  console.log(userId);
 
+  const { error: insertError } = await supabase.from("favorite_items").insert({
+    user_id: userId,
+    item_name: name,
+    item_id: itemId,
+    item_type: mediaType,
+    image_url: imgUrl,
+    item_adult: adult,
+  });
 
-  export async function watchLater(
-    itemId: any,
-    name: any,
-    mediaType: any,
-    imgUrl: any,
-    adult: any
-  ) {
-    
-     
-      const supabase = createClient();
-  
-      const { data, error } = await supabase.auth.getUser();
-      if (error) {
-        console.log("user isn't loged in ");
-        return;
-      }
-  
-      const userId = data?.user.id;
-      console.log(userId);
-  
-      const { error: insertError } = await supabase
-        .from("user_watchlist")
-        .insert({
-          user_id: userId,
-          item_name: name,
-          item_id: itemId,
-          item_type: mediaType,
-          item_img: imgUrl,
-          item_adult: adult,
-        });
-  
-      console.log(insertError);
-    }
+  console.log(insertError);
+}
+
+export async function watchLater(
+  itemId: any,
+  name: any,
+  mediaType: any,
+  imgUrl: any,
+  adult: any
+) {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase.auth.getUser();
+  if (error) {
+    console.log("user isn't loged in ");
+    return;
+  }
+
+  const userId = data?.user.id;
+  console.log(userId);
+
+  const { error: insertError } = await supabase.from("user_watchlist").insert({
+    user_id: userId,
+    item_name: name,
+    item_id: itemId,
+    item_type: mediaType,
+    item_img: imgUrl,
+    item_adult: adult,
+  });
+
+  console.log(insertError);
+}
 //   return (
 //     <form>
 //       <button

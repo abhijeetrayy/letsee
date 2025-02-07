@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import UserPrefrenceContext from "./userPrefrence";
 
-const userPrefrenceProvider = ({ children }: { children: React.ReactNode }) => {
+const UserPrefrenceProvider = ({ children }: { children: React.ReactNode }) => {
   const [userPrefrence, setUserPrefrence] = useState({
     watched: [],
     favorite: [],
@@ -20,7 +20,7 @@ const userPrefrenceProvider = ({ children }: { children: React.ReactNode }) => {
         },
       });
       const res = await prefrence.json();
-      console.log(res);
+
       setUserPrefrence(res);
       setloading(false);
     }
@@ -35,4 +35,4 @@ const userPrefrenceProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export default userPrefrenceProvider;
+export default UserPrefrenceProvider;

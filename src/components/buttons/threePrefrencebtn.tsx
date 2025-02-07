@@ -7,7 +7,6 @@ import { MdOutlineWatchLater } from "react-icons/md";
 import { PiEyeBold } from "react-icons/pi";
 import { RiEyeCloseLine } from "react-icons/ri";
 import CardMovieButton from "./cardButtons";
-import { LuSend } from "react-icons/lu";
 
 export default function ThreePrefrencebtn({
   cardId,

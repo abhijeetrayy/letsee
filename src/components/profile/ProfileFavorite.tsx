@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import ThreePrefrenceBtn from "../buttons/threePrefrencebtn";
 import SendMessageModal from "@components/message/sendCard";
 import { LuSend } from "react-icons/lu";
@@ -57,7 +58,7 @@ function FavoritesList({ favorites, favoriteCount }: any) {
         onClose={() => setIsModalOpen(false)}
       />
       <div className="my-3">
-        <div>Favorites "{favoriteCount}"</div>
+        <div>Favorites &quot;{favoriteCount}&quot;</div>
       </div>
       <div className="relative w-full">
         <div
@@ -82,14 +83,16 @@ function FavoritesList({ favorites, favoriteCount }: any) {
                   className="h-[270px] w-[200px]"
                   href={`/app/${item.item_type}/${item.item_id}`}
                 >
-                  <img
-                    className="h-full w-full object-cover"
+                  <Image
+                    className="object-cover"
                     src={
                       item.item_adult
                         ? "/pixeled.webp"
                         : `https://image.tmdb.org/t/p/w185/${item.image_url}`
                     }
-                    loading="lazy"
+                    fill
+                    sizes="200px"
+                    priority={false}
                     alt={item.item_name}
                   />
                 </Link>
@@ -140,7 +143,7 @@ function FavoritesList({ favorites, favoriteCount }: any) {
               boxShadow: "0 4px 15px rgba(0, 0, 0, 0.9)", // Outer shadow
             }}
           >
-            {"<"}
+            &#9830;
           </button>
         )}
         {canScrollRight && (
@@ -151,7 +154,7 @@ function FavoritesList({ favorites, favoriteCount }: any) {
               boxShadow: "0 4px 15px rgba(0, 0, 0, .9)", // Outer shadow
             }}
           >
-            {">"}
+            &#9830;
           </button>
         )}
       </div>

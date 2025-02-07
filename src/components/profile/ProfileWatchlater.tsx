@@ -118,7 +118,7 @@ function WatchLaterList({ watchlist, watchlistCount }: any) {
               boxShadow: "0 4px 15px rgba(0, 0, 0, 0.9)", // Outer shadow
             }}
           >
-            {"<"}
+            &#9830;
           </button>
         )}
         {canScrollRight && (
@@ -129,7 +129,7 @@ function WatchLaterList({ watchlist, watchlistCount }: any) {
               boxShadow: "0 4px 15px rgba(0, 0, 0, .9)", // Outer shadow
             }}
           >
-            {">"}
+            &#9830;
           </button>
         )}
       </div>

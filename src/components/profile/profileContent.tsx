@@ -5,7 +5,7 @@ import ProfileWatchlater from "./ProfileWatchlater";
 import ProfileWatched from "./profileWatched";
 
 const getUserData = async (id: any) => {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const { count: watchedCount, error: countError } = await supabase
     .from("watched_items")
@@ -41,10 +41,9 @@ async function profileContent({ profileId }: any) {
     favorates,
     watchlist,
   }: any = await getUserData(profileId);
-
+  console.log(watchedCount, favoriteCount, watchlistCount);
   return (
     <div>
-      {" "}
       {favoriteCount > 0 && (
         <ProfileFavorite favorites={favorates} favoriteCount={favoriteCount} />
       )}
@@ -57,9 +56,7 @@ async function profileContent({ profileId }: any) {
       {watchedCount > 0 && (
         <div className="z-40">
           <div className="my-3">
-            <div>
-              Watched {""} "{watchedCount}"
-            </div>
+            <div>Watched &quot;{watchedCount}&quot;</div>
           </div>
           <ProfileWatched userId={profileId} />
         </div>

@@ -67,8 +67,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSignup, loading, error }) => {
             </button>
 
             <p className="m-auto text-white">
-              already have an account,{" "}
-              <Link className="text-blue-500 underline" href={"/login"}>
+              already have an account,
+              <Link className="pl-2 text-blue-500 underline" href={"/login"}>
                 Login
               </Link>
             </p>

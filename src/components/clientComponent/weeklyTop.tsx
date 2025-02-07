@@ -22,7 +22,10 @@ export default function weeklyTop({ data }: any) {
       />{" "}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 max-w-6xl w-full m-auto">
         {data?.results.map((item: any) => (
-          <div className="group relative flex flex-col justify-between w-full h-full bg-neutral-700 rounded-md overflow-hidden ">
+          <div
+            key={item.id}
+            className="group relative flex flex-col justify-between w-full h-full bg-neutral-700 rounded-md overflow-hidden "
+          >
             <div className="absolute top-0 left-0">
               <p className="px-1 py-1 bg-neutral-950  text-white rounded-br-md">
                 {item.media_type}

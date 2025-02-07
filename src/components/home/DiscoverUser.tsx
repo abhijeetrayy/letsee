@@ -68,7 +68,7 @@ function DiscoverUsers() {
           href={"/app/profile"}
           className="text-lg font-semibold mb-2 underline"
         >
-          Discover User's
+          Discover User&apos;s
         </Link>
         <div className="relative">
           <div
@@ -78,19 +78,21 @@ function DiscoverUsers() {
             {users
               .filter((item) => item.username !== null)
               .map((item: any) => (
-                <Link
-                  className="group p-3"
-                  href={`/app/profile/${item.username}`}
-                >
-                  <img
-                    className=" min-w-44 md:min-w-64 h-fit object-cover"
-                    src="/avatar.svg"
-                    alt=""
-                  />
-                  <h1 className="text-md  break-words group-hover:text-green-500">
-                    @{item.username}
-                  </h1>
-                </Link>
+                <>
+                  <Link
+                    className="group p-3"
+                    href={`/app/profile/${item.username}`}
+                  >
+                    <img
+                      className=" min-w-44 md:min-w-64 h-fit object-cover"
+                      src="/avatar.svg"
+                      alt=""
+                    />
+                    <h1 className="text-md  break-words group-hover:text-green-500">
+                      @{item.username}
+                    </h1>
+                  </Link>
+                </>
               ))}
 
             <div className="">
@@ -100,7 +102,7 @@ function DiscoverUsers() {
               >
                 more..
               </Link>
-              <p className="opacity-0 ml-2">""</p>
+              <p className="opacity-0 ml-2">&quot;&quot;</p>
             </div>
           </div>
           {canScrollLeft && (

@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 };
 
 async function getUsername() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: userData } = await supabase.auth.getUser();
   const { data: profileData }: any = await supabase
     .from("users")

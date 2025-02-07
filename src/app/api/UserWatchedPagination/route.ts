@@ -3,12 +3,12 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { createClient } from "../../../utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: NextRequest, res: NextResponse) {
+export async function POST(req: NextRequest) {
   const requestClone = req.clone();
   const body = await requestClone.json();
   const { userID, page = 1, limit = 30 } = body;
   console.log(userID);
-  const supabase = createClient();
+  const supabase = await createClient();
 
   if (!userID) {
     return NextResponse.json({ error: "User ID is required" });
@@ -46,9 +46,9 @@ export async function POST(req: NextRequest, res: NextResponse) {
       perloadLength,
     });
   } catch (error) {
-    return NextResponse.json({
-      errorOccur: "An error occurred while fetching data",
-      error,
-    });
+    return NextResponse.json(
+      { error: "An error occurred", details: error },
+      { status: 500 }
+    );
   }
 }

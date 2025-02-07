@@ -6,7 +6,7 @@ export async function POST(req: NextRequest) {
   const body = await requestClone.json();
   const { userId } = body;
 
-  const supabase = createClient();
+  const supabase = await createClient();
 
   // Get user details from Supabase (authenticated user)
   const { data: userData, error: userError } = await supabase.auth.getUser();

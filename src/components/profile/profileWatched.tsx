@@ -1,60 +1,73 @@
 "use client";
 
-import userPrefrenceContext from "@/app/contextAPI/userPrefrence";
 import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
+import Image from "next/image";
 import Link from "next/link";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 
-const WatchedMoviesList = ({ userId }: any): any => {
+const WatchedMoviesList = ({ userId }: { userId: string }) => {
   const [movies, setMovies] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  const { userPrefrence }: any = useContext(userPrefrenceContext);
-  console.log(userPrefrence);
+  console.log("Rendering WatchedMoviesList with userId:", userId);
 
-  const userID = userId;
+  const fetchMovies = useCallback(
+    async (page: number) => {
+      if (loading) return; // Prevent multiple simultaneous fetches
+      console.log("Fetching movies for page:", page);
+      setLoading(true);
+
+      try {
+        const response = await fetch(`/api/UserWatchedPagination`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userID: userId, page }),
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch");
+
+        const data = await response.json();
+        console.log("Fetched data:", data);
+
+        setMovies((prevMovies) =>
+          page === 1 ? data.data : [...prevMovies, ...data.data]
+        );
+        setTotalItems(data.totalItems);
+        setTotalPages(data.totalPages);
+      } catch (error) {
+        console.error("Error fetching watched movies:", error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [userId]
+  ); // Removed `loading` dependency to prevent stale closures
 
   useEffect(() => {
+    console.log("useEffect triggered for currentPage:", currentPage);
     fetchMovies(currentPage);
-  }, [currentPage]);
-
-  const fetchMovies = async (page: number) => {
-    setLoading(true);
-    try {
-      const response = await fetch(`/api/UserWatchedPagination`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userID, page }),
-      });
-      const data = await response.json();
-
-      setMovies((previous) => [...previous, ...data.data]);
-
-      setTotalItems(data.totalItems);
-      setTotalPages(data.totalPages);
-    } catch (error) {
-      console.error("Error fetching watched movies:", error);
-    }
-    setLoading(false);
-  };
+  }, [currentPage]); // Ensures fetch only triggers when `currentPage` changes
 
   const memoizedMovies = useMemo(() => movies, [movies]);
 
-  const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage);
-  };
+  const handlePageChange = useCallback(() => {
+    if (currentPage < totalPages && !loading) {
+      console.log("Loading next page:", currentPage + 1);
+      setCurrentPage((prev) => prev + 1);
+    }
+  }, [currentPage, totalPages, loading]);
 
   return (
     <div>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-3 z-40">
-        {memoizedMovies?.map((item: any) => (
+        {memoizedMovies.map((item: any) => (
           <div
-            className="z-40 relative group flex flex-col justify-between  bg-black  text-gray-300 rounded-md overflow-hidden duration-300 lg:hover:scale-105"
+            className="z-40 relative group flex flex-col justify-between bg-black text-gray-300 rounded-md overflow-hidden duration-300 lg:hover:scale-105"
             key={item.id}
           >
             <Link
@@ -75,7 +88,7 @@ const WatchedMoviesList = ({ userId }: any): any => {
                   </p>
                 )}
               </div>
-              <img
+              <Image
                 className="relative object-cover h-full w-full"
                 src={
                   item.item_adult
@@ -84,9 +97,11 @@ const WatchedMoviesList = ({ userId }: any): any => {
                 }
                 loading="lazy"
                 alt={item.item_name}
+                width={185}
+                height={278}
               />
             </Link>
-            <div className="w-full h-[100px] bg-indigo-700 z-10  flex flex-col justify-between">
+            <div className="w-full h-[100px] bg-indigo-700 z-10 flex flex-col justify-between">
               <ThreePrefrenceBtn
                 cardId={item.item_id}
                 cardType={item.item_type}
@@ -116,19 +131,17 @@ const WatchedMoviesList = ({ userId }: any): any => {
           </div>
         ))}
 
-        <div>
-          {memoizedMovies.length < totalItems && (
-            <div>
-              <button
-                className="w-full h-full text-gray-300 border min-h-[330px] bg-neutral-700 rounded-md hover:bg-neutral-800"
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={loading}
-              >
-                {loading ? "Loading.." : "More.."}
-              </button>
-            </div>
-          )}
-        </div>
+        {memoizedMovies.length < totalItems && (
+          <div>
+            <button
+              className="w-full h-full text-gray-300 border min-h-[330px] bg-neutral-700 rounded-md hover:bg-neutral-800"
+              onClick={handlePageChange}
+              disabled={loading}
+            >
+              {loading ? "Loading..." : "More..."}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

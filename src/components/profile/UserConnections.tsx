@@ -3,7 +3,7 @@ import React from "react";
 import { ShowFollower, ShowFollowing } from "./profllebtn";
 
 async function UserConnections({ userId }: any) {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: userData, error } = await supabase.auth.getUser();
   const { count: followedby } = await supabase
     .from("user_connections")

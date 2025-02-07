@@ -1,10 +1,5 @@
-import { Metadata } from "next";
+// These styles apply to every route in the application
 import "./globals.css";
-
-export const metadata: Metadata = {
-  title: "let's see - Unisocial",
-  description: "Cinema Social Media",
-};
 
 export default function RootLayout({
   children,
