@@ -10,8 +10,8 @@ function FavoritesList({ favorites, favoriteCount }: any) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [cardData, setCardData] = useState([]) as any;
+  // const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [cardData, setCardData] = useState([]) as any;
 
   const handleScroll = () => {
     const element = scrollRef.current;
@@ -45,18 +45,18 @@ function FavoritesList({ favorites, favoriteCount }: any) {
       return () => element.removeEventListener("scroll", handleScroll);
     }
   }, []);
-  const handleCardTransfer = (data: any) => {
-    setCardData(data);
-    setIsModalOpen(true);
-  };
+  // const handleCardTransfer = (data: any) => {
+  //   setCardData(data);
+  //   setIsModalOpen(true);
+  // };
 
   return (
     <div className="">
-      <SendMessageModal
+      {/* <SendMessageModal
         data={cardData}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-      />
+      /> */}
       <div className="my-3">
         <div>Favorites &quot;{favoriteCount}&quot;</div>
       </div>
@@ -105,14 +105,14 @@ function FavoritesList({ favorites, favoriteCount }: any) {
                     cardAdult={item.item_adult}
                     cardImg={item.image_url}
                   />
-                  <div className="py-2 border-t border-neutral-950 hover:bg-neutral-700">
+                  {/* <div className="py-2 border-t border-neutral-950 hover:bg-neutral-700">
                     <button
                       className="w-full  flex justify-center text-lg text-center "
                       onClick={() => handleCardTransfer(item)}
                     >
                       <LuSend />
                     </button>
-                  </div>
+                  </div> */}
 
                   <div
                     title={item.name || item.title}
