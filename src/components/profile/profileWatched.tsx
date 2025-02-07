@@ -88,7 +88,7 @@ const WatchedMoviesList = ({ userId }: { userId: string }) => {
                   </p>
                 )}
               </div>
-              <Image
+              <img
                 className="relative object-cover h-full w-full"
                 src={
                   item.item_adult

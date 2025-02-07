@@ -83,16 +83,14 @@ function FavoritesList({ favorites, favoriteCount }: any) {
                   className="h-[270px] w-[200px]"
                   href={`/app/${item.item_type}/${item.item_id}`}
                 >
-                  <Image
+                  <img
                     className="object-cover"
                     src={
                       item.item_adult
                         ? "/pixeled.webp"
                         : `https://image.tmdb.org/t/p/w185/${item.image_url}`
                     }
-                    fill
                     sizes="200px"
-                    priority={false}
                     alt={item.item_name}
                   />
                 </Link>

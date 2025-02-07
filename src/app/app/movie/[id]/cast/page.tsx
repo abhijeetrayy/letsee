@@ -98,7 +98,7 @@ export default async function Page({ params, searchParams }: PageProps) {
                   "linear-gradient(to left, #171717, transparent 60%, #171717, #171717)",
               }}
             />
-            <Image
+            <img
               className="object-cover max-w-[2100px] w-full h-full m-auto opacity-20"
               src={
                 movie.backdrop_path && !movie.adult
@@ -108,13 +108,12 @@ export default async function Page({ params, searchParams }: PageProps) {
               width={300}
               height={300}
               alt={`${movie.title} backdrop`}
-              priority
             />
           </div>
 
           <div className="max-w-6xl w-full relative z-10 flex flex-row gap-5">
             <div className="flex-1">
-              <Image
+              <img
                 className="rounded-md object-cover h-full max-h-[500px]"
                 src={
                   movie.poster_path && !movie.adult
@@ -126,7 +125,6 @@ export default async function Page({ params, searchParams }: PageProps) {
                 width={500}
                 height={500}
                 alt={`${movie.title} poster`}
-                priority
               />
             </div>
             <div className="flex-[2] w-full">
@@ -161,7 +159,7 @@ export default async function Page({ params, searchParams }: PageProps) {
                   .replace(/-+/g, "-")}`}
               >
                 <div className="flex flex-col md:flex-row gap-4 mb-4">
-                  <Image
+                  <img
                     className="max-w-[100px] object-cover rounded-md h-full"
                     src={
                       item.profile_path
@@ -195,7 +193,7 @@ export default async function Page({ params, searchParams }: PageProps) {
                 className="hover:bg-neutral-800 p-2 rounded-md transition-colors"
               >
                 <div className="flex flex-col md:flex-row gap-4">
-                  <Image
+                  <img
                     className="w-32 md:max-w-[120px] md:min-h-44 h-full object-cover rounded-md"
                     src={
                       item.profile_path

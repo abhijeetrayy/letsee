@@ -105,7 +105,7 @@ export default async function ProfilePage({
         <div className="w-full flex flex-col lg:flex-row p-6">
           {/* Profile Info */}
           <div className="flex-1 flex flex-col">
-            <Image
+            <img
               width={300}
               height={300}
               className="h-72 w-72 object-cover mb-4"
