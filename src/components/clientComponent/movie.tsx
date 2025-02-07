@@ -9,7 +9,7 @@ import Video from "@components/movie/Video";
 import { LuSend } from "react-icons/lu";
 import SendMessageModal from "@components/message/sendCard";
 
-export default function movie({
+export default function Movie({
   CountryName,
   movie,
   Bimages,
@@ -92,8 +92,10 @@ export default function movie({
                 <div className=" flex flex-row gap-2 my-2 text-sm ">
                   <div>Country: </div>
                   <div>
-                    {CountryName.slice(0, 2).map((item: any) => (
-                      <p className=" ">{item[0].english_name}</p>
+                    {CountryName.slice(0, 2).map((item: any, index: number) => (
+                      <p key={index} className=" ">
+                        {item[0].english_name}
+                      </p>
                     ))}
                   </div>
                 </div>

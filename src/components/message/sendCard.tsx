@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { FaCheck } from "react-icons/fa";
 
@@ -8,19 +8,23 @@ interface User {
   username: string;
 }
 
-interface Movie {
+interface Media {
   id: string;
-  name: string;
-  image: string;
+  name?: string;
+  title?: string;
+  poster_path?: string;
+  backdrop_path?: string;
+  media_type?: string;
+  seasons?: any[]; // For TV shows
 }
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  data?: Movie; // Movie or TV show data from props
+  data?: Media; // Movie or TV show data from props
 }
 
-const SendMessageModal: React.FC<Props> = ({ isOpen, onClose, data }: any) => {
+const SendMessageModal: React.FC<Props> = ({ isOpen, onClose, data }) => {
   const [search, setSearch] = useState("");
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
@@ -30,19 +34,25 @@ const SendMessageModal: React.FC<Props> = ({ isOpen, onClose, data }: any) => {
   const [success, setSuccess] = useState<string | null>(null);
   const [warning, setWarning] = useState<string | null>(null);
   const [sender, setSender] = useState<User | null>(null);
+
   const supabase = createClient();
 
+  // Fetch sender info on mount
   useEffect(() => {
     const fetchSender = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      const { data: userData, error: userError } =
+        await supabase.auth.getUser();
 
-      if (user) {
+      if (userError) {
+        console.error("Error fetching sender info:", userError.message);
+        return;
+      }
+
+      if (userData.user) {
         const { data, error } = await supabase
           .from("users")
           .select("id, username")
-          .eq("id", user.id)
+          .eq("id", userData.user.id)
           .single();
 
         if (error) {
@@ -54,10 +64,11 @@ const SendMessageModal: React.FC<Props> = ({ isOpen, onClose, data }: any) => {
     };
 
     fetchSender();
-  }, []);
+  }, [supabase]);
 
+  // Fetch users based on search query
   useEffect(() => {
-    if (search.trim() === "") {
+    if (!search.trim() || !sender) {
       setUsers([]);
       return;
     }
@@ -68,7 +79,7 @@ const SendMessageModal: React.FC<Props> = ({ isOpen, onClose, data }: any) => {
         .from("users")
         .select("id, username")
         .ilike("username", `%${search}%`)
-        .neq("id", sender?.id) // Exclude sender from search results
+        .neq("id", sender.id) // Exclude sender from search results
         .limit(10);
 
       if (error) {
@@ -80,24 +91,29 @@ const SendMessageModal: React.FC<Props> = ({ isOpen, onClose, data }: any) => {
       setLoading(false);
     };
 
-    if (sender) fetchUsers();
-  }, [search, sender]);
+    fetchUsers();
+  }, [search, sender, supabase]);
 
-  const toggleUserSelection = (user: User) => {
-    if (selectedUsers.some((u) => u.id === user.id)) {
-      setSelectedUsers((prev) => prev.filter((u) => u.id !== user.id));
-      setWarning(null);
-    } else {
-      if (selectedUsers.length >= 5) {
-        setWarning("You can select up to 5 users only.");
-        return;
+  // Toggle user selection
+  const toggleUserSelection = useCallback(
+    (user: User) => {
+      if (selectedUsers.some((u) => u.id === user.id)) {
+        setSelectedUsers((prev) => prev.filter((u) => u.id !== user.id));
+        setWarning(null);
+      } else {
+        if (selectedUsers.length >= 5) {
+          setWarning("You can select up to 5 users only.");
+          return;
+        }
+        setSelectedUsers((prev) => [...prev, user]);
+        setWarning(null);
       }
-      setSelectedUsers((prev) => [...prev, user]);
-      setWarning(null);
-    }
-  };
+    },
+    [selectedUsers]
+  );
 
-  const sendMessage = async () => {
+  // Send message
+  const sendMessage = useCallback(async () => {
     if (!message && !data) {
       setError("Please enter a message or attach a movie/TV show.");
       return;
@@ -125,7 +141,11 @@ const SendMessageModal: React.FC<Props> = ({ isOpen, onClose, data }: any) => {
         message_type: data ? "cardmix" : "text", // Identify message type
         metadata: data
           ? {
-              media_type: data.media_type,
+              media_type: data.media_type
+                ? data.media_type
+                : data.seasons
+                ? "tv"
+                : "movie",
               media_id: data.id,
               media_name: data.name || data.title,
               media_image: data.poster_path || data.backdrop_path,
@@ -149,7 +169,7 @@ const SendMessageModal: React.FC<Props> = ({ isOpen, onClose, data }: any) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [data, message, selectedUsers, sender, supabase, onClose]);
 
   if (!isOpen) return null;
 
@@ -158,7 +178,7 @@ const SendMessageModal: React.FC<Props> = ({ isOpen, onClose, data }: any) => {
       <div className="bg-neutral-700 w-full h-fit max-w-3xl sm:rounded-lg p-5 shadow-xl">
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-white text-lg font-semibold">
-            Send Message :{(data.name || data.title)?.slice(0, 10)}..
+            Send Message: {(data?.name || data?.title)?.slice(0, 10)}..
           </h2>
           <button onClick={onClose} className="text-white hover:text-gray-300">
             ✖
@@ -214,17 +234,6 @@ const SendMessageModal: React.FC<Props> = ({ isOpen, onClose, data }: any) => {
 
           {warning && <p className="text-yellow-500 text-sm mb-2">{warning}</p>}
 
-          {/* {data && (
-            <div className="bg-gray-800 p-3 rounded-lg mb-4 flex items-center gap-3">
-              <img
-                src={data.image}
-                alt={data.name}
-                className="w-12 h-12 rounded-lg"
-              />
-              <span className="text-white">{data.name}</span>
-            </div>
-          )} */}
-
           <textarea
             className="text-neutral-800 w-full border rounded-lg p-2 mb-4"
             placeholder="Type your message..."
@@ -239,6 +248,7 @@ const SendMessageModal: React.FC<Props> = ({ isOpen, onClose, data }: any) => {
           <button
             className="w-full bg-blue-500 text-white p-2 rounded-lg"
             onClick={sendMessage}
+            disabled={loading}
           >
             {loading ? "Sending..." : "Send Message"}
           </button>

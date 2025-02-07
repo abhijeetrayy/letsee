@@ -305,6 +305,8 @@ const Chat = () => {
                 className="bg-gray-100 p-3 rounded-lg flex flex-col gap-2"
               >
                 <Image
+                  width={342}
+                  height={513}
                   src={`https://image.tmdb.org/t/p/w342${msg.metadata.media_image}`}
                   alt={msg.metadata.media_name}
                   className="w-full h-40 object-cover rounded-lg mb-2"

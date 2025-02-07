@@ -68,8 +68,8 @@ function Page() {
       />
       <div>
         <p>
-          Search Results: {decodeURIComponent(id as string)} '
-          {Sresults?.total_results}' items
+          Search Results: {decodeURIComponent(id as string)} &apos;
+          {Sresults?.total_results}&apos; items
         </p>
       </div>
       {loading ? (
