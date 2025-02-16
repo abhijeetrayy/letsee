@@ -1,66 +1,58 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { createClient } from "./server";
 
 export async function updateSession(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
-    request,
-  });
+  console.log("🔄 Updating Supabase session for:", request.nextUrl.pathname);
+  let supabaseResponse = NextResponse.next({ request });
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          );
-        },
-      },
-    }
-  );
+  try {
+    const supabase = await createClient();
 
-  // Get the current user session
-  const { data, error } = await supabase.auth.getUser();
-  const user = data?.user;
+    // Refresh session
+    console.log("🔄 Refreshing session...");
+    await supabase.auth.refreshSession();
 
-  // Handle authentication errors
-  if (error) {
-    console.error("Authentication error:", error.message);
-  }
-
-  // Allow access to auth pages if the user is NOT logged in
-  if (!user) {
-    if (
-      request.nextUrl.pathname.startsWith("/login") ||
-      request.nextUrl.pathname.startsWith("/signup") ||
-      request.nextUrl.pathname.startsWith("/forgot-password") ||
-      request.nextUrl.pathname.startsWith("/update-password")
-    ) {
+    // Fetch user session
+    const { data, error } = await supabase.auth.getUser();
+    if (error) {
+      console.warn("⚠️ No session found:", error.message);
       return supabaseResponse;
     }
 
-    // Redirect unauthenticated users trying to access other pages to login
-    const url = request.nextUrl.clone();
-    url.pathname = "/login";
-    return NextResponse.redirect(url);
-  }
+    const user = data?.user;
+    console.log("✅ User session:", user?.email || "No user");
 
-  // Redirect authenticated users away from auth pages
-  if (
-    user &&
-    (request.nextUrl.pathname.startsWith("/login") ||
-      request.nextUrl.pathname.startsWith("/signup") ||
-      request.nextUrl.pathname.startsWith("/forgot-password"))
-  ) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/app"; // Redirect to a default authenticated route
-    return NextResponse.redirect(url);
-  }
+    // Handle authentication pages
+    const authPages = [
+      "/login",
+      "/signup",
+      "/forgot-password",
+      "/update-password",
+    ];
+    if (!user) {
+      if (authPages.includes(request.nextUrl.pathname)) {
+        console.log("🔓 Allowing access to authentication pages");
+        return supabaseResponse;
+      }
 
-  // Return the response with updated session data
-  return supabaseResponse;
+      console.log("🔐 Unauthorized access - Redirecting to /login");
+      const url = request.nextUrl.clone();
+      url.pathname = "/login";
+      return NextResponse.redirect(url);
+    }
+
+    // Redirect authenticated users away from auth pages
+    if (user && authPages.includes(request.nextUrl.pathname)) {
+      console.log("🔄 Redirecting authenticated user to /app");
+      const url = request.nextUrl.clone();
+      url.pathname = "/app";
+      return NextResponse.redirect(url);
+    }
+
+    return supabaseResponse;
+  } catch (error) {
+    console.error("❌ Error in updateSession:", error);
+    return new NextResponse("Internal Server Error", { status: 500 });
+  }
 }

@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useParams } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
@@ -22,36 +22,6 @@ interface Message {
   };
 }
 
-const options: Intl.DateTimeFormatOptions = {
-  year: "numeric",
-  month: "long",
-  day: "numeric",
-  hour: "numeric",
-  minute: "numeric",
-  second: "numeric",
-  hour12: true,
-};
-
-const dateOptions: Intl.DateTimeFormatOptions = {
-  year: "numeric",
-  month: "long",
-  day: "numeric",
-};
-
-const isRecipientValid = async (recipientId: string): Promise<boolean> => {
-  const supabase = createClient();
-  const { data, error } = await supabase
-    .from("users")
-    .select("id")
-    .eq("id", recipientId)
-    .single();
-  if (error) {
-    console.error("Error validating recipient:", error.message);
-    return false;
-  }
-  return !!data;
-};
-
 const Chat = () => {
   const [message, setMessage] = useState<string>("");
   const [messages, setMessages] = useState<Message[]>([]);
@@ -65,7 +35,6 @@ const Chat = () => {
   const [isValidRecipient, setIsValidRecipient] = useState<boolean>(true);
   const [loadingMore, setLoadingMore] = useState<boolean>(false);
   const [newMessageCount, setNewMessageCount] = useState<number>(0);
-  const lastMessageRef = useRef<HTMLDivElement>(null);
   const [hasMoreMessages, setHasMoreMessages] = useState<boolean>(true);
   const [offset, setOffset] = useState<number>(0);
   const { id } = useParams<{ id: string }>();
@@ -73,6 +42,20 @@ const Chat = () => {
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const supabase = createClient();
+
+  const isRecipientValid = async (recipientId: string): Promise<boolean> => {
+    const { data, error } = await supabase
+      .from("users")
+      .select("id")
+      .eq("id", recipientId)
+      .single();
+
+    if (error) {
+      console.error("Error validating recipient:", error.message);
+      return false;
+    }
+    return !!data;
+  };
 
   const fetchUsername = useCallback(
     async (userId: string) => {
@@ -118,16 +101,71 @@ const Chat = () => {
     }
   }, []);
 
+  const isScrolledToBottom = useCallback(() => {
+    if (chatRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = chatRef.current;
+      return Math.abs(scrollHeight - clientHeight - scrollTop) < 1;
+    }
+    return false;
+  }, []);
+
+  const loadMoreMessages = useCallback(async () => {
+    if (user && recipient && isValidRecipient) {
+      setLoadingMore(true);
+      const newOffset = offset + 50;
+      const olderMessages = await fetchMessages(user, recipient, newOffset);
+
+      setMessages((prevMessages) => [...olderMessages, ...prevMessages]);
+      setOffset(newOffset);
+      setHasMoreMessages(olderMessages.length === 50);
+      setLoadingMore(false);
+    }
+  }, [user, recipient, isValidRecipient, offset, fetchMessages]);
+
+  const sendMessage = useCallback(async () => {
+    if (message.trim() !== "" && user && recipient && isValidRecipient) {
+      setDisable(true);
+
+      const { error } = await supabase.from("messages").insert([
+        {
+          sender_id: user.id,
+          recipient_id: recipient,
+          content: message.trim(),
+        },
+      ]);
+
+      if (error) {
+        console.error(error);
+        setDisable(false);
+      } else {
+        setMessage("");
+        setTimeout(() => {
+          inputRef.current?.focus();
+          scrollToBottom();
+        }, 0);
+      }
+    }
+  }, [message, user, recipient, isValidRecipient, supabase, scrollToBottom]);
+
   useEffect(() => {
     const getUserAndMessages = async () => {
-      const { data: userData, error: userError } =
-        await supabase.auth.getUser();
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+
       if (userError) {
-        console.error(userError);
+        console.error("Authentication error:", userError);
+        // Redirect to login page if the user is not authenticated
+        window.location.href = "/login";
         return;
       }
 
-      const user = userData.user;
+      if (!user) {
+        console.error("No authenticated user found.");
+        window.location.href = "/login";
+        return;
+      }
       setUser(user);
 
       if (id) {
@@ -204,74 +242,16 @@ const Chat = () => {
         channel.unsubscribe();
       };
     }
-  }, [user, recipient, isValidRecipient, supabase, scrollToBottom]);
+  }, [
+    user,
+    recipient,
+    isValidRecipient,
+    supabase,
+    scrollToBottom,
+    isScrolledToBottom,
+  ]);
 
-  const isScrolledToBottom = () => {
-    if (chatRef.current) {
-      const { scrollTop, scrollHeight, clientHeight } = chatRef.current;
-      return Math.abs(scrollHeight - clientHeight - scrollTop) < 1;
-    }
-    return false;
-  };
-
-  const loadMoreMessages = async () => {
-    if (user && recipient && isValidRecipient) {
-      setLoadingMore(true);
-      console.log("Loading more messages...");
-      console.log("Current offset:", offset);
-
-      if (chatRef.current) {
-        const previousScrollHeight = chatRef.current.scrollHeight;
-        const previousScrollTop = chatRef.current.scrollTop;
-
-        const newOffset = offset + 50;
-        const olderMessages = await fetchMessages(user, recipient, newOffset);
-
-        console.log("Fetched messages:", olderMessages.length);
-
-        setMessages((prevMessages) => [...olderMessages, ...prevMessages]);
-        setOffset(newOffset);
-        setHasMoreMessages(olderMessages.length === 50);
-
-        setTimeout(() => {
-          if (chatRef.current) {
-            chatRef.current.scrollTop =
-              chatRef.current.scrollHeight -
-              previousScrollHeight +
-              previousScrollTop;
-          }
-        }, 0);
-      }
-      setLoadingMore(false);
-    }
-  };
-
-  const sendMessage = useCallback(async () => {
-    if (message.trim() !== "" && user && recipient && isValidRecipient) {
-      setDisable(true);
-
-      const { error } = await supabase.from("messages").insert([
-        {
-          sender_id: user.id,
-          recipient_id: recipient,
-          content: message.trim(),
-        },
-      ]);
-
-      if (error) {
-        console.error(error);
-        setDisable(false);
-      } else {
-        setMessage("");
-        setTimeout(() => {
-          inputRef.current?.focus();
-          scrollToBottom();
-        }, 0);
-      }
-    }
-  }, [message, user, recipient, isValidRecipient, supabase, scrollToBottom]);
-
-  const renderMessages = (messages: Message[]) => {
+  const renderMessages = useMemo(() => {
     return messages.map((msg) => (
       <div
         key={msg.id}
@@ -326,7 +306,7 @@ const Chat = () => {
         </div>
       </div>
     ));
-  };
+  }, [messages, user, recipientUsername]);
 
   return (
     <div className="chat-container flex flex-col max-w-4xl w-full m-auto ">
@@ -355,7 +335,7 @@ const Chat = () => {
                     {loadingMore ? "Loading..." : "Load More Messages"}
                   </button>
                 )}
-                {renderMessages(messages)}
+                {renderMessages}
               </>
             ) : (
               <div className="text-red-500 text-center">

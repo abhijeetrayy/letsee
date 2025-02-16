@@ -80,6 +80,7 @@ function DiscoverUsers() {
               .map((item: any) => (
                 <>
                   <Link
+                    key={item.username}
                     className="group p-3"
                     href={`/app/profile/${item.username}`}
                   >

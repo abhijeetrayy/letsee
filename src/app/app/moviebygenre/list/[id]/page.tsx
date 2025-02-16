@@ -15,13 +15,15 @@ const getMovieByGenre = async (page: number, genreId: string) => {
   return data;
 };
 
+type Params = Promise<{ id: string }>;
+
 interface PageProps {
-  params: { id: string };
+  params: Params;
   searchParams: { page?: string };
 }
 
 const Page: React.FC<PageProps> = async ({ params, searchParams }) => {
-  const { id } = params;
+  const { id } = await params;
   let { page = "1" } = searchParams;
 
   const currentPage = Number(page);

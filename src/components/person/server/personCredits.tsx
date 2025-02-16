@@ -38,8 +38,8 @@ function PersonCredits({ cast, crew, name }: any) {
       <div>
         <h1 className="my-3">Timeline - </h1>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-          {sortedCast.map((data: any) => (
-            <div className="relative" key={data.id}>
+          {sortedCast.map((data: any, index: number) => (
+            <div key={`movie-${index}`} className="relative">
               <div className="group flex flex-col justify-between rounded-md bg-black w-full h-full text-gray-300 overflow-hidden duration-300 lg:hover:scale-105">
                 <Link
                   className="relative flex h-full"
@@ -135,8 +135,8 @@ function PersonCredits({ cast, crew, name }: any) {
         <h3 className="col-span-5 p-3 font-semibold">In prod. ~ crew</h3>
       )}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-        {crew?.map((data: any) => (
-          <div className="rounded-md overflow-hidden" key={data.id}>
+        {crew?.map((data: any, index: number) => (
+          <div className="rounded-md overflow-hidden" key={`movie-${index}`}>
             <div className="relative group flex flex-col bg-black w-full h-full text-gray-300">
               <div className="absolute top-0 left-0 z-30">
                 <p className="p-1 bg-black text-white rounded-br-md text-sm">

@@ -1,66 +1,74 @@
+"use server";
+
 import { NextResponse, type NextRequest } from "next/server";
-import { createServerClient } from "@supabase/ssr";
+
+import { createClient } from "./utils/supabase/server";
 
 export async function middleware(request: NextRequest) {
-  let response = NextResponse.next({
-    request,
-  });
+  console.log("🔍 Middleware triggered for:", request.nextUrl.pathname);
+  let response = NextResponse.next({ request });
 
-  // Initialize Supabase client
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            response.cookies.set(name, value, options)
-          );
-        },
-      },
+  try {
+    const supabase = await createClient();
+
+    const url = request.nextUrl.clone();
+
+    // Routes that unauthenticated users CAN access
+    const publicRoutes = [
+      "/login",
+      "/signup",
+      "/forgot-password",
+      "/update-password",
+    ];
+
+    // PROTECTED ROUTES: Refresh session only when accessing protected areas
+    if (
+      !publicRoutes.includes(url.pathname) &&
+      url.pathname.startsWith("/app")
+    ) {
+      console.log("🔄 Refreshing Supabase session...");
+      await supabase.auth.refreshSession();
     }
-  );
 
-  // Get the current user session
-  const { data, error } = await supabase.auth.getUser();
-  const user = data?.user;
+    // Fetch user session
+    const { data, error } = await supabase.auth.getUser();
+    const user = data?.user;
 
-  // Handle authentication errors
-  if (error) {
-    console.error("Authentication error:", error.message);
+    if (error || !user) {
+      console.warn(
+        "⚠️ No authenticated session found:",
+        error?.message || "No user session"
+      );
+
+      // Allow unauthenticated users to access public routes
+      if (publicRoutes.includes(url.pathname)) {
+        console.log("🟢 Allowing access to public route:", url.pathname);
+        return response;
+      }
+
+      // Redirect unauthenticated users to login
+      console.log("🔐 Redirecting to /login due to missing session.");
+      url.pathname = "/login";
+      return NextResponse.redirect(url);
+    }
+
+    console.log("✅ Authenticated User:", user.email);
+
+    // Redirect authenticated users away from auth pages
+    if (publicRoutes.includes(url.pathname)) {
+      console.log("🔄 Redirecting authenticated user to /app");
+      url.pathname = "/app";
+      return NextResponse.redirect(url);
+    }
+
+    return response;
+  } catch (error) {
+    console.error("❌ Middleware error:", error);
+    return new NextResponse("Internal Server Error", { status: 500 });
   }
-
-  const url = request.nextUrl.clone();
-
-  // Redirect authenticated users away from auth pages
-  if (
-    user &&
-    (url.pathname === "/" ||
-      url.pathname === "/login" ||
-      url.pathname === "/signup" ||
-      url.pathname === "/forgot-password")
-  ) {
-    url.pathname = "/app";
-    return NextResponse.redirect(url);
-  }
-
-  // Allow unauthenticated users to access /update-password
-  if (url.pathname === "/update-password" && !user) {
-    return NextResponse.next();
-  }
-
-  // Protect all /app routes for unauthenticated users
-  if (url.pathname.startsWith("/app") && !user) {
-    url.pathname = "/login";
-    return NextResponse.redirect(url);
-  }
-
-  return response;
 }
 
+// Matcher ensures middleware is applied only to relevant routes
 export const config = {
   matcher: [
     "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",

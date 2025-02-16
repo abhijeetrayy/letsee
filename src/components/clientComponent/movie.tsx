@@ -136,7 +136,7 @@ export default function Movie({
                 <p className="text-md my-2 text-neutral-300">
                   {movie.runtime} min.
                 </p>
-                <p className="text-base mb-2" text-neutral-300>
+                <p className="text-base mb-2 text-neutral-300">
                   {movie.release_date}
                 </p>
                 <div className="flex gap-2 mb-4 text-neutral-300">
@@ -219,8 +219,11 @@ export default function Movie({
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 w-fit m-auto gap-3 pb-3 snap-x snap-mandatory">
                 {(Bimages.length > 0 ? Bimages : Pimages)
                   ?.slice(0, 13)
-                  .map((item: any) => (
-                    <div key={item.id} className="snap-center shrink-0 mb-2">
+                  .map((item: any, index: number) => (
+                    <div
+                      key={item.id || `image-${index}`}
+                      className="snap-center shrink-0 mb-2"
+                    >
                       <img
                         className="w-full h-auto object-cover"
                         src={
