@@ -78,22 +78,20 @@ function DiscoverUsers() {
             {users
               .filter((item) => item.username !== null)
               .map((item: any) => (
-                <>
-                  <Link
-                    key={item.username}
-                    className="group p-3"
-                    href={`/app/profile/${item.username}`}
-                  >
-                    <img
-                      className=" min-w-44 md:min-w-64 h-fit object-cover"
-                      src="/avatar.svg"
-                      alt=""
-                    />
-                    <h1 className="text-md  break-words group-hover:text-green-500">
-                      @{item.username}
-                    </h1>
-                  </Link>
-                </>
+                <Link
+                  key={item.username}
+                  className="group p-3"
+                  href={`/app/profile/${item.username}`}
+                >
+                  <img
+                    className=" min-w-44 md:min-w-64 h-fit object-cover"
+                    src="/avatar.svg"
+                    alt=""
+                  />
+                  <h1 className="text-md  break-words group-hover:text-green-500">
+                    @{item.username}
+                  </h1>
+                </Link>
               ))}
 
             <div className="">

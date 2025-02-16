@@ -5,7 +5,7 @@ import { Countrydata } from "@/staticData/countryName";
 import Movie from "@components/clientComponent/movie";
 
 type PageProps = {
-  params: params;
+  params: Promise<{ id: string }>;
 };
 
 type params = Promise<{ id: string }>;
@@ -46,8 +46,8 @@ async function getImages(id: any) {
   return data;
 }
 
-const MovieDetails = async ({ params }: { params: PageProps["params"] }) => {
-  const { id }: any = params;
+const MovieDetails = async ({ params }: PageProps) => {
+  const { id } = await params;
   const movie = await getMovieDetails(id);
   const credits = await getCredit(id);
   const { results: videos } = await getVideos(id);

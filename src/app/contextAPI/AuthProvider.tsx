@@ -12,12 +12,10 @@ export default function AuthProvider({
   const supabase = createClient();
 
   useEffect(() => {
-    // 🔹 Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
     });
 
-    // 🔹 Listen for auth state changes
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setSession(session);
