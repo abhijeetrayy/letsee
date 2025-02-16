@@ -97,7 +97,6 @@ function MovieCast({ credits, id, type }: any) {
               >
                 more..
               </Link>
-              <p className="opacity-0 ml-2">""</p>
             </div>
           </div>
           {canScrollLeft && (

@@ -46,15 +46,12 @@ async function getExternalIds(id: any) {
   const data = await response.json();
   return data;
 }
+interface PageProps {
+  params: Promise<{ id: string }>;
+}
 
-const ShowDetails = async ({
-  params,
-  searchParams,
-}: {
-  params: { id: string };
-  searchParams?: { [key: string]: string | string[] | undefined };
-}) => {
-  const { id } = params;
+const ShowDetails = async ({ params }: PageProps) => {
+  const { id } = await params;
   const show = await getShowDetails(id);
   const ExternalIDs = await getExternalIds(id);
   const { cast, crew } = await getShowCredit(id);
@@ -64,8 +61,8 @@ const ShowDetails = async ({
   return (
     <div>
       <Tv
-       show={show}
-       ExternalIDs={ExternalIDs}
+        show={show}
+        ExternalIDs={ExternalIDs}
         videos={videos}
         Pimages={Pimages}
         Bimages={Bimages}

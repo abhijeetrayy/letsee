@@ -32,7 +32,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
           }
         >
           <h1 className="text-7xl font-extrabold text-neutral-100">
-            Let's See
+            Let&apos;s See
           </h1>
           <p>Social media for cinema.</p>
         </div>
@@ -80,7 +80,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
             </button>
 
             <p className="m-auto text-white">
-              don't have an account,{" "}
+              don&apos;t have an account,{" "}
               <Link className="text-blue-500 underline" href={"/signup"}>
                 Sign Up
               </Link>

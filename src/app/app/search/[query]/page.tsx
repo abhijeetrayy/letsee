@@ -72,8 +72,8 @@ function Page() {
       {Sresults.total_results > 0 && (
         <div>
           <p>
-            Search Results: {decodeURIComponent(query as string)} '
-            {Sresults?.total_results}' items
+            Search Results: {decodeURIComponent(query as string)} &apos;
+            {Sresults?.total_results}&apos; items
           </p>
         </div>
       )}
@@ -87,11 +87,11 @@ function Page() {
             {Sresults.total_results == 0 && (
               <div className="flex flex-col h-full w-full gap-5 items-center justify-center">
                 <p className="text-lg">
-                  Result for "
+                  Result for &quot;
                   <span className="text-pink-600">
                     {decodeURIComponent(query as string)}
                   </span>
-                  "{" "}
+                  &quot;{" "}
                   <span className="font-bold text-purple-600">
                     is not found
                   </span>{" "}

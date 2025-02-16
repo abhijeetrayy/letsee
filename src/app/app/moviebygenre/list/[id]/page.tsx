@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import CardMovieButton from "@/components/buttons/cardButtons";
 import { CiSaveDown1 } from "react-icons/ci";
 import { FcLike } from "react-icons/fc";
@@ -15,26 +16,28 @@ const getMovieByGenre = async (page: number, genreId: string) => {
   return data;
 };
 
+type SearchParams = Promise<{ page: number | number[] | undefined }>;
 type Params = Promise<{ id: string }>;
 
 interface PageProps {
   params: Params;
-  searchParams: { page?: string };
+  searchParams: SearchParams;
 }
 
-const Page: React.FC<PageProps> = async ({ params, searchParams }) => {
+const Page = async ({ params, searchParams }: PageProps) => {
   const { id } = await params;
-  let { page = "1" } = searchParams;
+  const currentPage = Number((await searchParams).page) || 1;
 
-  const currentPage = Number(page);
+  if (!id) return notFound();
+
   const Sresults = await getMovieByGenre(currentPage, id);
 
   return (
     <div className="min-h-screen mx-auto w-full max-w-7xl">
       <div>
         <p>
-          Search Results: {decodeURIComponent(id)} '{Sresults?.total_results}'
-          items
+          Search Results: {decodeURIComponent(id)} &apos;
+          {Sresults?.total_results}&apos; items
         </p>
       </div>
       <MoviebyGenre Sresults={Sresults} />

@@ -107,7 +107,7 @@ export default async function Home() {
         </div>
       </div>
       <div className="w-full  ">
-        <h2 className="text-2xl my-4 font-bold">Trending Tv Show's</h2>
+        <h2 className="text-2xl my-4 font-bold">Trending Tv Show&apos;s</h2>
         <Tvtop TrendingTv={TrendingTv} />
       </div>
     </div>

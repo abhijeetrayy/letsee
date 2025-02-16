@@ -21,15 +21,28 @@ interface Media {
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  data?: Media; // Movie or TV show data from props
+  data?: Media | null; // Movie or TV show data from props (optional)
+}
+
+interface Message {
+  sender_id: string;
+  recipient_id: string;
+  content: string;
+  message_type: "cardmix" | "text";
+  metadata: {
+    media_type?: string;
+    media_id?: string;
+    media_name?: string;
+    media_image?: string;
+  } | null;
 }
 
 const SendMessageModal: React.FC<Props> = ({ isOpen, onClose, data }) => {
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState<string>("");
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [warning, setWarning] = useState<string | null>(null);
@@ -134,7 +147,7 @@ const SendMessageModal: React.FC<Props> = ({ isOpen, onClose, data }) => {
     setSuccess(null);
 
     try {
-      const messages = selectedUsers.map((user) => ({
+      const messages: Message[] = selectedUsers.map((user) => ({
         sender_id: sender.id,
         recipient_id: user.id,
         content: message.trim() || "", // Store message content

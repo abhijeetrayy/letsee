@@ -37,13 +37,13 @@ const getUserData = async (id: string) => {
   return { watchedCount, favoriteCount, watchlistCount };
 };
 
-export default async function ProfilePage({
-  params,
-}: {
-  params: { id: string };
-}) {
+interface PageProps {
+  params: Promise<{ id: string }>;
+}
+
+export default async function ProfilePage({ params }: PageProps) {
+  const { id } = await params;
   const supabase = await createClient();
-  const { id } = params;
 
   // Fetch user data by username
   const { data: user, error } = await supabase

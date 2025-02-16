@@ -5,9 +5,10 @@ import Image from "next/image";
 
 // Types
 type PageProps = {
-  params: { id: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+  params: params;
 };
+
+type params = Promise<{ id: string }>;
 
 interface MovieDetails {
   id: number;
@@ -65,7 +66,7 @@ async function getMovieDetails(id: string): Promise<MovieDetails> {
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
-  const slugParts = params.id.split("-");
+  const slugParts = (await params).id.split("-");
   const id = slugParts[0];
   const movie = await getMovieDetails(id);
 
@@ -75,8 +76,8 @@ export async function generateMetadata({
   };
 }
 
-export default async function Page({ params, searchParams }: PageProps) {
-  const slugParts = params.id.split("-");
+export default async function Page({ params }: PageProps) {
+  const slugParts = (await params).id.split("-");
   const id = slugParts[0];
 
   if (!id) {

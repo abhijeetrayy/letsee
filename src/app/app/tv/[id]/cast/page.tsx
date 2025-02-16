@@ -1,13 +1,13 @@
 import Link from "next/link";
 import React from "react";
 
-async function page({
-  params,
-  searchParams,
-}: {
-  params: { slug: string };
-  searchParams?: { [key: string]: string | string[] | undefined };
-}) {
+interface PageProps {
+  params: Promise<{ id: string }>;
+}
+
+async function page({ params }: PageProps) {
+  const { id }: any = await params;
+
   async function getShowDetails(id: string) {
     const response = await fetch(
       `https://api.themoviedb.org/3/tv/${id}?api_key=${process.env.TMDB_API_KEY}`
@@ -24,7 +24,6 @@ async function page({
     const data = await response.json();
     return data;
   }
-  const { id }: any = await params;
   const show = await getShowDetails(id);
 
   const { cast, crew } = await getShowCredit(id);
@@ -125,6 +124,7 @@ async function page({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {cast?.map((item: any) => (
             <Link
+              key={item.id}
               className="border border-neutral-900 bg-neutral-800 py-2 px-2 rounded-md hover:border-indigo-600"
               href={`/app/person/${item.id}-${item.name
                 .trim()
@@ -153,6 +153,7 @@ async function page({
         <div className="grid grid-cols-1">
           {crew?.map((item: any) => (
             <Link
+              key={item.id}
               href={`/app/person/${item.id}-${item.name
                 .trim()
                 .replace(/[^a-zA-Z0-9]/g, "-")

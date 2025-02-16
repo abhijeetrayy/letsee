@@ -44,7 +44,7 @@ function WatchLaterList({ watchlist, watchlistCount }: any) {
   return (
     <div className="my-10">
       <div className="my-3">
-        <div>WatchLater "{watchlistCount}"</div>
+        <div>WatchLater &quot;{watchlistCount}&quot;</div>
       </div>
       <div className="relative w-full">
         <div

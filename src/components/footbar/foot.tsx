@@ -5,7 +5,7 @@ function foot() {
   return (
     <div className=" w-full flex justify-center my-10">
       <div className="max-w-7xl flex gap-5 text-center">
-        <h1>Let's see</h1>
+        <h1>Let&apos;s see</h1>
         <span>
           <span>Developer: </span>
           <span>

@@ -3,8 +3,12 @@ import MovieCast from "@/components/movie/MovieCast";
 import Video from "@/components/movie/Video";
 import { Countrydata } from "@/staticData/countryName";
 import Movie from "@components/clientComponent/movie";
-import Link from "next/link";
-import { LiaImdb } from "react-icons/lia";
+
+type PageProps = {
+  params: params;
+};
+
+type params = Promise<{ id: string }>;
 
 // import { likedButton as LikedButton } from "@/components/buttons/intrectionButton";
 async function getMovieDetails(id: any) {
@@ -42,13 +46,7 @@ async function getImages(id: any) {
   return data;
 }
 
-const MovieDetails = async ({
-  params,
-  searchParams,
-}: {
-  params: { slug: string };
-  searchParams?: { [key: string]: string | string[] | undefined };
-}) => {
+const MovieDetails = async ({ params }: { params: PageProps["params"] }) => {
   const { id }: any = params;
   const movie = await getMovieDetails(id);
   const credits = await getCredit(id);

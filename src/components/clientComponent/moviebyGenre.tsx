@@ -19,28 +19,35 @@ interface Movie {
   adult: boolean;
 }
 
-function moviebyGenre({ Sresults }: any) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [cardData, setCardData] = useState([]) as any;
+interface MovieByGenreProps {
+  Sresults: {
+    results: Movie[];
+  };
+}
 
-  const handleCardTransfer = (data: any) => {
+function MovieByGenre({ Sresults }: MovieByGenreProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [cardData, setCardData] = useState<Movie | null>(null);
+
+  const handleCardTransfer = (data: Movie) => {
     setCardData(data);
     setIsModalOpen(true);
   };
+
   return (
     <div>
       <SendMessageModal
-        data={cardData}
+        data={cardData ? { ...cardData, id: cardData.id.toString() } : null}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-      />{" "}
+      />
       <div>
-        <div className="text-white w-full  my-4">
+        <div className="text-white w-full my-4">
           <div className="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {Sresults?.results?.map((data: Movie) => (
               <div
                 key={data.id}
-                className="overflow-hidden relative group flex flex-col bg-indigo-700  w-full h-full text-gray-300 rounded-sm duration-300 lg:hover:scale-105 hover:z-30"
+                className="overflow-hidden relative group flex flex-col bg-indigo-700 w-full h-full text-gray-300 rounded-sm duration-300 lg:hover:scale-105 hover:z-30"
               >
                 <div className="absolute top-0 left-0 flex flex-row justify-between w-full z-20">
                   <p className="p-1 bg-black text-white rounded-br-md text-sm">
@@ -58,7 +65,7 @@ function moviebyGenre({ Sresults }: any) {
                     .trim()
                     .replace(/[^a-zA-Z0-9]/g, "-")
                     .replace(/-+/g, "-")}`}
-                  className=" w-full"
+                  className="w-full"
                 >
                   <img
                     className="relative object-cover max-w-full h-[270px] sm:h-[300px] md:h-[330px]"
@@ -84,7 +91,7 @@ function moviebyGenre({ Sresults }: any) {
                   />
                   <div className="py-2 border-t border-neutral-950 bg-neutral-800 hover:bg-neutral-700">
                     <button
-                      className="w-full  flex justify-center text-lg text-center "
+                      className="w-full flex justify-center text-lg text-center"
                       onClick={() => handleCardTransfer(data)}
                     >
                       <LuSend />
@@ -124,4 +131,4 @@ function moviebyGenre({ Sresults }: any) {
   );
 }
 
-export default moviebyGenre;
+export default MovieByGenre;

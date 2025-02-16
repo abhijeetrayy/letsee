@@ -26,7 +26,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSignup, loading, error }) => {
           }
         >
           <h1 className="text-7xl font-extrabold text-neutral-100">
-            Let's See
+            Let&apos;s See
           </h1>
           <p>Social media for cinema.</p>
         </div>
