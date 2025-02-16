@@ -173,7 +173,7 @@ export function ShowFollowing({ followingCount, userId }: any) {
 
             {loading ? (
               <p>Loading...</p>
-            ) : following.length > 0 ? (
+            ) : following.length !== 0 ? (
               <ul className="text-neutral-700">
                 {following.map((user: any) => (
                   <Link

@@ -10,6 +10,7 @@ import {
 import ChataiReco from "@/components/ai/openaiReco";
 import ProfileContent from "@components/profile/profileContent";
 import Visibility from "@components/profile/visibility";
+import StatisticsGenre from "@components/profile/statisticsGenre";
 
 // Fetch user data and statistics
 const getUserData = async (id: string) => {
@@ -187,6 +188,11 @@ export default async function ProfilePage({ params }: PageProps) {
             </div>
           </div>
         </div>
+
+        <div>
+          <StatisticsGenre userId={profileId} />
+        </div>
+        {/* AI Recommendation */}
 
         {isOwner && (
           <div className="flex flex-col gap-3">

@@ -106,7 +106,7 @@ Do not include any additional text, explanations, or formatting. Just return the
     );
 
     const movies = (await Promise.all(moviePromises)).filter(Boolean); // Filter out null results
-    console.log(movies);
+
     return NextResponse.json(movies);
   } catch (error) {
     console.error("Recommendation error:", error);

@@ -30,14 +30,16 @@ const page = async () => {
         {Users?.filter(
           (item: any) => item.username !== null && item.username !== "ray"
         ).map((item: any) => (
-          <>
-            <Link className="group p-3" href={`/app/profile/${item.username}`}>
-              <img className=" object-cover" src="/avatar.svg" alt="" />
-              <h1 className="text-md  break-words group-hover:text-green-500">
-                @{item.username}
-              </h1>
-            </Link>
-          </>
+          <Link
+            key={item.id}
+            className="group p-3"
+            href={`/app/profile/${item.username}`}
+          >
+            <img className=" object-cover" src="/avatar.svg" alt="" />
+            <h1 className="text-md  break-words group-hover:text-green-500">
+              @{item.username}
+            </h1>
+          </Link>
         ))}
       </div>
     </div>
