@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import ThreeUserPrefrenceBtn from "@components/buttons/threePrefrencebtn";
 import SendMessageModal from "@components/message/sendCard";
 import { LuSend } from "react-icons/lu";
+import { GenreList } from "@/staticData/genreList";
 
 interface Movie {
   id: number;
@@ -17,7 +18,7 @@ interface Movie {
   backdrop_path: string;
   media_type: string;
   adult: boolean;
-  genres: any;
+  genre_ids: any;
 }
 
 interface MovieByGenreProps {
@@ -84,7 +85,14 @@ function MovieByGenre({ Sresults }: MovieByGenreProps) {
                 </Link>
                 <div className="lg:absolute bottom-0 w-full lg:opacity-0 lg:group-hover:opacity-100 z-10">
                   <ThreeUserPrefrenceBtn
-                    genres={data.genres.map((genre: any) => genre.name)}
+                    genres={data.genre_ids
+                      .map((id: number) => {
+                        const genre = GenreList.genres.find(
+                          (g: any) => g.id === id
+                        );
+                        return genre ? genre.name : null;
+                      })
+                      .filter(Boolean)}
                     cardId={data.id}
                     cardType={"movie"}
                     cardName={data.name || data.title}

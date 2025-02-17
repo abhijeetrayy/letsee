@@ -1,7 +1,17 @@
+import { GenreList } from "@/staticData/genreList";
 import { createClient } from "@/utils/supabase/server";
 import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
+
+// Fetch genre list from TMDB
+async function fetchMovieGenres() {
+  const response = await fetch(
+    `https://api.themoviedb.org/3/genre/movie/list?api_key=${process.env.TMDB_API_KEY}`
+  );
+  const data = await response.json();
+  return data.genres; // Returns an array of genre objects: { id: number, name: string }
+}
 
 export async function GET() {
   const supabase = await createClient();
@@ -30,9 +40,6 @@ export async function GET() {
       .select("item_name")
       .eq("user_id", userId);
 
-    // if (error) throw error;
-    // if (!favorites?.length) return NextResponse.json([]);
-
     const favoriteTitles = userFavorites
       .map((movie: any) => movie.item_name)
       .join(", ");
@@ -40,8 +47,7 @@ export async function GET() {
       .map((movie: any) => movie.item_name)
       .join(", ");
 
-    const prompt = `
-I have watched and liked the following movies: ${favoriteTitles}. 
+    const prompt = `I have watched and liked the following movies: ${favoriteTitles}. 
 Additionally, I have watched these movies: ${watchedTitles}.
 
 Based on my preferences, recommend 5 movies I might like. The recommended movies must:
@@ -75,6 +81,9 @@ Do not include any additional text, explanations, or formatting. Just return the
       .split(",")
       .map((title: string) => title.trim());
 
+    // Fetch genre list from TMDB
+    const { genres } = GenreList;
+
     const moviePromises = suggestedTitles.map(
       async (title: string | number | boolean) => {
         try {
@@ -87,12 +96,22 @@ Do not include any additional text, explanations, or formatting. Just return the
 
           if (tmdbSearchData.results && tmdbSearchData.results.length > 0) {
             const movie = tmdbSearchData.results[0];
+
+            // Map genre IDs to genre names
+            const genreNames = movie.genre_ids
+              .map((id: number) => {
+                const genre = genres.find((g: any) => g.id === id);
+                return genre ? genre.name : null;
+              })
+              .filter(Boolean); // Remove null values
+
             return {
               name: movie.title,
               poster_url: movie.poster_path
                 ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
                 : null,
               tmdb_id: movie.id,
+              genres: genreNames, // Use genre names instead of IDs
             };
           } else {
             console.log(`No TMDB match found for: ${title}`);
@@ -106,7 +125,6 @@ Do not include any additional text, explanations, or formatting. Just return the
     );
 
     const movies = (await Promise.all(moviePromises)).filter(Boolean); // Filter out null results
-
     return NextResponse.json(movies);
   } catch (error) {
     console.error("Recommendation error:", error);

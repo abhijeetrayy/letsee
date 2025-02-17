@@ -4,6 +4,7 @@ import Link from "next/link";
 import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
 import SendMessageModal from "@components/message/sendCard";
 import { LuSend } from "react-icons/lu";
+import { GenreList } from "@/staticData/genreList";
 
 interface CastData {
   id: string;
@@ -15,7 +16,7 @@ interface CastData {
   backdrop_path?: string;
   release_date?: string;
   first_air_date?: string;
-  genres?: any;
+  genre_ids?: any;
 }
 
 interface ScrollableCastListProps {
@@ -91,7 +92,7 @@ const ScrollableCastList: React.FC<ScrollableCastListProps> = ({
               backdrop_path,
               release_date,
               first_air_date,
-              genres,
+              genre_ids,
             } = data;
 
             const displayTitle = title ?? name ?? ""; // Ensure title or name exists
@@ -144,7 +145,14 @@ const ScrollableCastList: React.FC<ScrollableCastListProps> = ({
                   </Link>
                   <div className="lg:absolute bottom-0 w-full bg-neutral-800 lg:opacity-0 lg:group-hover:opacity-100 z-10">
                     <ThreePrefrenceBtn
-                      genres={genres.map((genre: any) => genre.name)}
+                      genres={genre_ids
+                        .map((id: number) => {
+                          const genre = GenreList.genres.find(
+                            (g: any) => g.id === id
+                          );
+                          return genre ? genre.name : null;
+                        })
+                        .filter(Boolean)}
                       cardId={id}
                       cardType={media_type}
                       cardName={displayTitle}

@@ -1,8 +1,10 @@
 "use client";
 import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
+import { GenreList } from "@/staticData/genreList";
 import SendMessageModal from "@components/message/sendCard";
 import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
+import React from "react";
 import { useEffect, useState } from "react";
 import { LuSend } from "react-icons/lu";
 
@@ -120,7 +122,14 @@ function Page() {
 
                   <div className="lg:absolute bottom-0 w-full bg-indigo-700 lg:opacity-0 lg:group-hover:opacity-100 z-10">
                     <ThreePrefrenceBtn
-                      genres={data.genres.map((genre: any) => genre.name)}
+                      genres={data.genre_ids
+                        .map((id: number) => {
+                          const genre = GenreList.genres.find(
+                            (g: any) => g.id === id
+                          );
+                          return genre ? genre.name : null;
+                        })
+                        .filter(Boolean)}
                       cardId={data.id}
                       cardType={"tv"}
                       cardName={data.name || data.title}

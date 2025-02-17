@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import ThreePrefrenceBtn from "@components/buttons/threePrefrencebtn";
 import SendMessageModal from "@components/message/sendCard";
 import { LuSend } from "react-icons/lu";
+import { GenreList } from "@/staticData/genreList";
 
 export default function tvTop({ TrendingTv }: any) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -49,7 +50,14 @@ export default function tvTop({ TrendingTv }: any) {
             <div className="lg:absolute lg:bottom-0  w-full lg:opacity-0 lg:group-hover:opacity-100">
               <div className="  bg-neutral-900 ">
                 <ThreePrefrenceBtn
-                  genres={item.genres.map((genre: any) => genre.name)}
+                  genres={item.genre_ids
+                    .map((id: number) => {
+                      const genre = GenreList.genres.find(
+                        (g: any) => g.id === id
+                      );
+                      return genre ? genre.name : null;
+                    })
+                    .filter(Boolean)}
                   cardId={item.id}
                   cardType={item.media_type}
                   cardName={item.name || item.title}

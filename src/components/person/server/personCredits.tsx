@@ -5,6 +5,7 @@ import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
 import { useState } from "react";
 import SendMessageModal from "@components/message/sendCard";
 import { LuSend } from "react-icons/lu";
+import { GenreList } from "@/staticData/genreList";
 
 function PersonCredits({ cast, crew, name }: any) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -86,7 +87,14 @@ function PersonCredits({ cast, crew, name }: any) {
                 </Link>
                 <div className="flex flex-col gap-1 bottom-0 w-full bg-neutral-800 z-20">
                   <ThreePrefrenceBtn
-                    genres={data.genres.map((genre: any) => genre.name)}
+                    genres={data.genre_ids
+                      .map((id: number) => {
+                        const genre = GenreList.genres.find(
+                          (g: any) => g.id === id
+                        );
+                        return genre ? genre.name : null;
+                      })
+                      .filter(Boolean)}
                     cardId={data.id}
                     cardType={data.media_type}
                     cardName={data.name || data.title}
@@ -174,7 +182,14 @@ function PersonCredits({ cast, crew, name }: any) {
                 </Link>
                 <div className="bottom-0 w-full  bg-neutral-800 z-20">
                   <ThreePrefrenceBtn
-                    genres={data.genres.map((genre: any) => genre.name)}
+                    genres={data.genre_ids
+                      .map((id: number) => {
+                        const genre = GenreList.genres.find(
+                          (g: any) => g.id === id
+                        );
+                        return genre ? genre.name : null;
+                      })
+                      .filter(Boolean)}
                     cardId={data.id}
                     cardType={data.media_type}
                     cardName={data.name || data.title}

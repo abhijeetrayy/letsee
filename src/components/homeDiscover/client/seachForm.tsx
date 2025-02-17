@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
 import { LuSend } from "react-icons/lu";
 import SendMessageModal from "@components/message/sendCard";
+import { GenreList } from "@/staticData/genreList";
 
 const MovieSearch = () => {
   const [query, setQuery] = useState("");
@@ -163,7 +164,14 @@ const MovieSearch = () => {
 
                     <div className="lg:absolute bottom-0 w-full bg-neutral-900 lg:opacity-0 lg:group-hover:opacity-100 ">
                       <ThreePrefrenceBtn
-                        genres={data.genres.map((genre: any) => genre.name)}
+                        genres={data.genre_ids
+                          .map((id: number) => {
+                            const genre = GenreList.genres.find(
+                              (g: any) => g.id === id
+                            );
+                            return genre ? genre.name : null;
+                          })
+                          .filter(Boolean)}
                         cardId={data.id}
                         cardType={data.media_type}
                         cardName={data.name || data.title}

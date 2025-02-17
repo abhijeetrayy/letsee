@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { LuSend } from "react-icons/lu";
+import { GenreList } from "@/staticData/genreList";
 
 function Page() {
   const [Sresults, setSResults] = useState([]) as any;
@@ -39,6 +40,7 @@ function Page() {
         }
 
         const data = await response.json();
+        console.log(data.results);
         setSResults(data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -143,7 +145,14 @@ function Page() {
 
                       <div className=" lg:absolute lg:bottom-0 w-full bg-neutral-900 lg:opacity-0 lg:group-hover:opacity-100">
                         <ThreePrefrenceBtn
-                          genres={data.genres.map((genre: any) => genre.name)}
+                          genres={data.genre_ids
+                            .map((id: number) => {
+                              const genre = GenreList.genres.find(
+                                (g: any) => g.id === id
+                              );
+                              return genre ? genre.name : null;
+                            })
+                            .filter(Boolean)}
                           cardId={data.id}
                           cardType={data.media_type}
                           cardName={data.name || data.title}

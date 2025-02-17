@@ -88,7 +88,7 @@ export default function Recommendations() {
                 </Link>
                 <div className="lg:absolute bottom-0 w-full bg-neutral-900 lg:opacity-0 lg:group-hover:opacity-100 z-10">
                   <ThreePrefrenceBtn
-                    genres={data.genres.map((genre: any) => genre.name)}
+                    genres={data.genres}
                     data={data}
                     cardId={data.tmdb_id}
                     cardType={"movie"}
