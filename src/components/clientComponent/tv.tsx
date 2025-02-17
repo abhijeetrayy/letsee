@@ -89,6 +89,7 @@ export default function tv({
               </h1>
               <div className=" w-full bg-neutral-900 rounded-md overflow-hidden my-2">
                 <ThreePrefrenceBtn
+                  genres={show.genres.map((genre: any) => genre.name)}
                   cardId={show.id}
                   cardType={"tv"}
                   cardName={show.name || show.title}

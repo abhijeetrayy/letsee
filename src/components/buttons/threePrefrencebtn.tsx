@@ -1,6 +1,6 @@
 "use client";
 import UserPrefrenceContext from "@/app/contextAPI/userPrefrence";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { CiHeart } from "react-icons/ci";
 import { FcLike } from "react-icons/fc";
 import { MdOutlineWatchLater } from "react-icons/md";
@@ -14,6 +14,7 @@ export default function ThreePrefrencebtn({
   cardName,
   cardAdult,
   cardImg,
+  genres,
 }: any) {
   const { userPrefrence }: any = useContext(UserPrefrenceContext);
 
@@ -39,6 +40,7 @@ export default function ThreePrefrencebtn({
       <div className="w-full bg-neutral-900 overflow-hidden">
         <div className="w-full h-14 grid grid-cols-3">
           <CardMovieButton
+            genres={genres}
             itemId={cardId}
             mediaType={cardType}
             name={cardName}
@@ -58,6 +60,7 @@ export default function ThreePrefrencebtn({
             }
           />
           <CardMovieButton
+            genres={genres}
             itemId={cardId}
             mediaType={cardType}
             name={cardName}
@@ -71,6 +74,7 @@ export default function ThreePrefrencebtn({
             icon={isItemPreferred(cardId) ? <FcLike /> : <CiHeart />}
           />
           <CardMovieButton
+            genres={genres}
             itemId={cardId}
             mediaType={cardType}
             name={cardName}

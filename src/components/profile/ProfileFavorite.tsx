@@ -1,10 +1,11 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 import ThreePrefrenceBtn from "../buttons/threePrefrencebtn";
-import SendMessageModal from "@components/message/sendCard";
-import { LuSend } from "react-icons/lu";
+
+interface TMDBGenre {
+  name: string;
+}
 
 function FavoritesList({ favorites, favoriteCount }: any) {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -97,6 +98,7 @@ function FavoritesList({ favorites, favoriteCount }: any) {
                 <div className="w-full bg-neutral-800 z-10">
                   {/* Assuming ThreePrefrenceBtn is a valid component */}
                   <ThreePrefrenceBtn
+                    genres={item.genres}
                     cardId={item.item_id}
                     cardType={item.item_type}
                     cardName={item.item_name}

@@ -15,6 +15,7 @@ interface CastData {
   backdrop_path?: string;
   release_date?: string;
   first_air_date?: string;
+  genres?: any;
 }
 
 interface ScrollableCastListProps {
@@ -90,6 +91,7 @@ const ScrollableCastList: React.FC<ScrollableCastListProps> = ({
               backdrop_path,
               release_date,
               first_air_date,
+              genres,
             } = data;
 
             const displayTitle = title ?? name ?? ""; // Ensure title or name exists
@@ -142,6 +144,7 @@ const ScrollableCastList: React.FC<ScrollableCastListProps> = ({
                   </Link>
                   <div className="lg:absolute bottom-0 w-full bg-neutral-800 lg:opacity-0 lg:group-hover:opacity-100 z-10">
                     <ThreePrefrenceBtn
+                      genres={genres.map((genre: any) => genre.name)}
                       cardId={id}
                       cardType={media_type}
                       cardName={displayTitle}

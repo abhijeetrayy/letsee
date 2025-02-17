@@ -18,6 +18,7 @@ interface CardMovieButtonProps {
   Wstate: boolean;
   WLstate: boolean;
   Favstate: boolean;
+  genres: [];
 }
 
 const CardMovieButton: React.FC<CardMovieButtonProps> = ({
@@ -29,6 +30,7 @@ const CardMovieButton: React.FC<CardMovieButtonProps> = ({
   imgUrl,
   adult,
   state,
+  genres,
   Wstate,
   WLstate,
   Favstate,
@@ -88,7 +90,14 @@ const CardMovieButton: React.FC<CardMovieButtonProps> = ({
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ itemId, name, mediaType, imgUrl, adult }),
+          body: JSON.stringify({
+            itemId,
+            name,
+            mediaType,
+            imgUrl,
+            adult,
+            genres,
+          }),
         });
 
         const data = await response.json();
@@ -144,7 +153,14 @@ const CardMovieButton: React.FC<CardMovieButtonProps> = ({
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ itemId, name, mediaType, imgUrl, adult }),
+          body: JSON.stringify({
+            itemId,
+            name,
+            mediaType,
+            imgUrl,
+            adult,
+            genres,
+          }),
         });
 
         const data = await response.json();
@@ -200,7 +216,14 @@ const CardMovieButton: React.FC<CardMovieButtonProps> = ({
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ itemId, name, mediaType, imgUrl, adult }),
+          body: JSON.stringify({
+            itemId,
+            name,
+            mediaType,
+            imgUrl,
+            adult,
+            genres,
+          }),
         });
 
         const data = await response.json();

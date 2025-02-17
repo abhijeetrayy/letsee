@@ -88,7 +88,7 @@ export async function POST(req: Request) {
 
     // Fetch watched items with null genres
     const { data: watchedItems, error } = await supabase
-      .from("watched_items")
+      .from("favorite_items")
       .select("*")
       .is("genres", null);
 
@@ -109,7 +109,7 @@ export async function POST(req: Request) {
       const genres = await fetchGenres(item);
       if (genres) {
         const { error: updateError } = await supabase
-          .from("watched_items")
+          .from("favorite_items")
           .update({ genres })
           .eq("id", item.id);
 

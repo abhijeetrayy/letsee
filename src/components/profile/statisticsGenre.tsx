@@ -50,10 +50,12 @@ export default async function StatisticsGenre({ userId }: { userId?: any }) {
   };
 
   return (
-    <div className="flex flex-col   p-6 ">
-      <h2 className="text-xl font-semibold mb-6 text-gray-100">Top Genres</h2>
+    <div className="flex flex-col items-center justify-center  p-6 ">
+      <div className="w-full max-w-6xl">
+        <h2 className="text-xl font-semibold mb-6 text-gray-100">Top Genres</h2>
+      </div>
       {topGenres.length > 0 ? (
-        <div className="w-full  bg-neutral-800 p-6 rounded-lg shadow-md h-96">
+        <div className="w-full max-w-5xl  bg-neutral-800 p-6 rounded-lg shadow-md h-96">
           <BarChart data={chartData} />
         </div>
       ) : (

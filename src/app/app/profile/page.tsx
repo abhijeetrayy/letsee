@@ -14,7 +14,7 @@ const getUserData = async () => {
 
 const page = async () => {
   const { Users } = await getUserData();
-  console.log(Users);
+
   return (
     <div className=" max-w-6xl w-full m-auto ">
       <h1 className="text-xl font-bold my-3">User&apos;s</h1>
@@ -31,7 +31,7 @@ const page = async () => {
           (item: any) => item.username !== null && item.username !== "ray"
         ).map((item: any) => (
           <Link
-            key={item.id}
+            key={item.username}
             className="group p-3"
             href={`/app/profile/${item.username}`}
           >

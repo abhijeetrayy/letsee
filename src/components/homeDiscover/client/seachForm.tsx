@@ -163,6 +163,7 @@ const MovieSearch = () => {
 
                     <div className="lg:absolute bottom-0 w-full bg-neutral-900 lg:opacity-0 lg:group-hover:opacity-100 ">
                       <ThreePrefrenceBtn
+                        genres={data.genres.map((genre: any) => genre.name)}
                         cardId={data.id}
                         cardType={data.media_type}
                         cardName={data.name || data.title}

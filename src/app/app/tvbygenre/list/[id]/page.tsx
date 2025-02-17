@@ -120,6 +120,7 @@ function Page() {
 
                   <div className="lg:absolute bottom-0 w-full bg-indigo-700 lg:opacity-0 lg:group-hover:opacity-100 z-10">
                     <ThreePrefrenceBtn
+                      genres={data.genres.map((genre: any) => genre.name)}
                       cardId={data.id}
                       cardType={"tv"}
                       cardName={data.name || data.title}

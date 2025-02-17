@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
   const requestClone = req.clone();
   const body = await requestClone.json();
-  const { itemId, name, mediaType, imgUrl, adult } = body;
+  const { itemId, name, mediaType, imgUrl, adult, genres } = body;
 
   const supabase = await createClient();
 
@@ -63,6 +63,7 @@ export async function POST(req: NextRequest) {
       item_type: mediaType,
       image_url: imgUrl,
       item_adult: adult,
+      genres: genres,
     });
 
     if (insertError) {

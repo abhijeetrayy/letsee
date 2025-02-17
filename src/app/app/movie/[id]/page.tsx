@@ -1,6 +1,3 @@
-import ThreeUserPrefrenceBtn from "@/components/buttons/threePrefrencebtn";
-import MovieCast from "@/components/movie/MovieCast";
-import Video from "@/components/movie/Video";
 import { Countrydata } from "@/staticData/countryName";
 import Movie from "@components/clientComponent/movie";
 

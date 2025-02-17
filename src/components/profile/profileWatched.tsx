@@ -1,9 +1,8 @@
 "use client";
 
 import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
-import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState, useCallback } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 const WatchedMoviesList = ({ userId }: { userId: string }) => {
   const [movies, setMovies] = useState<any[]>([]);
@@ -103,6 +102,7 @@ const WatchedMoviesList = ({ userId }: { userId: string }) => {
             </Link>
             <div className="w-full h-[100px] bg-indigo-700 z-10 flex flex-col justify-between">
               <ThreePrefrenceBtn
+                genres={item.genres}
                 cardId={item.item_id}
                 cardType={item.item_type}
                 cardName={item.item_name}

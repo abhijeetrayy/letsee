@@ -49,6 +49,7 @@ export default function weeklyTop({ data }: any) {
             <div className="lg:absolute lg:bottom-0  w-full lg:opacity-0 lg:group-hover:opacity-100">
               <div className="  bg-neutral-900 ">
                 <ThreePrefrenceBtn
+                  genres={item.genres.map((genre: any) => genre.name)}
                   cardId={item.id}
                   cardType={item.media_type}
                   cardName={item.name || item.title}

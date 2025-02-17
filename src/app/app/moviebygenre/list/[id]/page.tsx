@@ -1,11 +1,6 @@
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import CardMovieButton from "@/components/buttons/cardButtons";
-import { CiSaveDown1 } from "react-icons/ci";
-import { FcLike } from "react-icons/fc";
-import { IoEyeOutline } from "react-icons/io5";
 import Pagination from "@/components/buttons/serchbygenreBtn";
-import ThreeUserPrefrenceBtn from "@/components/buttons/threePrefrencebtn";
+import { notFound } from "next/navigation";
+
 import MoviebyGenre from "@components/clientComponent/moviebyGenre";
 
 const getMovieByGenre = async (page: number, genreId: string) => {

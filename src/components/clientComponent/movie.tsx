@@ -100,6 +100,7 @@ export default function Movie({
                   </div>
                 </div>
                 <ThreeUserPrefrenceBtn
+                  genres={movie.genres.map((genre: any) => genre.name)}
                   cardId={movie.id}
                   cardType={"movie"}
                   cardName={movie.name || movie.title}

@@ -1,9 +1,4 @@
-import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
 import Tv from "@components/clientComponent/tv";
-import MovieCast from "@components/movie/MovieCast";
-import Video from "@components/movie/Video";
-import Link from "next/link";
-import { LiaImdb } from "react-icons/lia";
 
 async function getShowDetails(id: string) {
   const response = await fetch(

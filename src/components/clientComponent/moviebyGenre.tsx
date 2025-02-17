@@ -17,6 +17,7 @@ interface Movie {
   backdrop_path: string;
   media_type: string;
   adult: boolean;
+  genres: any;
 }
 
 interface MovieByGenreProps {
@@ -83,6 +84,7 @@ function MovieByGenre({ Sresults }: MovieByGenreProps) {
                 </Link>
                 <div className="lg:absolute bottom-0 w-full lg:opacity-0 lg:group-hover:opacity-100 z-10">
                   <ThreeUserPrefrenceBtn
+                    genres={data.genres.map((genre: any) => genre.name)}
                     cardId={data.id}
                     cardType={"movie"}
                     cardName={data.name || data.title}

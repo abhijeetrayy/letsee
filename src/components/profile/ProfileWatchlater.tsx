@@ -83,6 +83,7 @@ function WatchLaterList({ watchlist, watchlistCount }: any) {
                 <div className="w-full bg-neutral-900 z-10">
                   {/* Assuming ThreePrefrenceBtn is a valid component */}
                   <ThreePrefrenceBtn
+                    genres={item.genres}
                     cardId={item.item_id}
                     cardType={item.item_type}
                     cardName={item.item_name}

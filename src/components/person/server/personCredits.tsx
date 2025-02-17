@@ -86,6 +86,7 @@ function PersonCredits({ cast, crew, name }: any) {
                 </Link>
                 <div className="flex flex-col gap-1 bottom-0 w-full bg-neutral-800 z-20">
                   <ThreePrefrenceBtn
+                    genres={data.genres.map((genre: any) => genre.name)}
                     cardId={data.id}
                     cardType={data.media_type}
                     cardName={data.name || data.title}
@@ -173,6 +174,7 @@ function PersonCredits({ cast, crew, name }: any) {
                 </Link>
                 <div className="bottom-0 w-full  bg-neutral-800 z-20">
                   <ThreePrefrenceBtn
+                    genres={data.genres.map((genre: any) => genre.name)}
                     cardId={data.id}
                     cardType={data.media_type}
                     cardName={data.name || data.title}
