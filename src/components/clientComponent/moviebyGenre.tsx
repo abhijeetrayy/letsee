@@ -112,9 +112,7 @@ function MovieByGenre({ Sresults }: MovieByGenreProps) {
                     className="w-full flex flex-col gap-2 px-4 bg-indigo-700 text-gray-200"
                   >
                     <Link
-                      href={`/app/${data.media_type}/${data.id}-${(
-                        data.name || data.title
-                      )
+                      href={`/app/movie/${data.id}-${(data.name || data.title)
                         .trim()
                         .replace(/[^a-zA-Z0-9]/g, "-")
                         .replace(/-+/g, "-")}`}

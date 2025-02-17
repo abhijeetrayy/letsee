@@ -152,7 +152,7 @@ export function ShowFollowing({ followingCount, userId }: any) {
   return (
     <>
       <button
-        className="border border-gray-300 w-full rounded-l-md px-4 py-2 hover:bg-neutral-800"
+        className=" text-gray-200 bg-neutral-700  w-full rounded-md px-4 py-2 hover:bg-neutral-600"
         onClick={() => setModal(true)}
       >
         {followingCount} Following
@@ -227,7 +227,7 @@ export function ShowFollower({ followerCount, userId }: any) {
   return (
     <>
       <button
-        className="border border-gray-300 w-full rounded-r-md px-4 py-2 hover:bg-neutral-800"
+        className=" text-gray-200 bg-neutral-700  w-full rounded-md px-4 py-2 hover:bg-neutral-600"
         onClick={() => setModal(true)}
       >
         {followerCount} Follower

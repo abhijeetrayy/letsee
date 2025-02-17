@@ -95,53 +95,49 @@ export default async function ProfilePage({ params }: PageProps) {
     (isFollowing && user.visibility === "followers");
 
   return (
-    <div className="flex flex-col items-center w-full">
-      <div className="flex flex-col max-w-6xl w-full min-h-screen gap-5">
-        {isOwner && (
-          <p className="text-sm w-fit my-2 font-sans py-1 px-1 bg-neutral-700 rounded-md">
-            My Profile
-          </p>
-        )}
-
-        <div className="w-full flex flex-col lg:flex-row p-6">
-          {/* Profile Info */}
-          <div className="flex-1 flex flex-col">
+    <div className="flex flex-col items-center w-full bg-neutral-900 min-h-screen">
+      <div className="flex flex-col max-w-6xl w-full gap-8 p-6">
+        {/* Profile Header */}
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Profile Picture */}
+          <div className="flex flex-col items-center lg:items-start">
             <img
-              width={300}
-              height={300}
-              className="h-72 w-72 object-cover mb-4"
+              width={200}
+              height={200}
+              className="h-48 w-48 rounded-full object-cover border-4 border-neutral-600 shadow-lg"
               src={"/avatar.svg"}
               alt="Profile"
             />
-            <div className="flex flex-row gap-3 my-2 items-center">
-              <Link
-                className="w-fit text-xl hover:text-green-600"
-                href={`/app/profile/${user.username}`}
-              >
-                @{user.username}
-              </Link>
+          </div>
 
+          {/* Profile Info */}
+          <div className="flex-1 flex flex-col gap-4">
+            <div className="flex items-center gap-4">
+              <h1 className="text-3xl font-bold text-neutral-100">
+                @{user.username}
+              </h1>
               {isOwner && (
                 <Link
-                  className="w-fit px-1 text-lg border rounded-md hover:text-neutral-100"
                   href="/app/profile/setup"
+                  className="p-2 rounded-full bg-neutral-200 hover:bg-neutral-300 transition-colors"
                 >
-                  <FaEdit />
+                  <FaEdit className="text-neutral-600" />
                 </Link>
               )}
             </div>
-            {isOwner && <Visibility />}
 
+            {/* Bio */}
             {user.about && (
-              <p className="text-sm">
-                <span className="text-neutral-400">bio: </span> {user.about}
+              <p className="text-neutral-400">
+                <span className="font-semibold">Bio:</span> {user.about}
               </p>
             )}
-          </div>
 
-          {/* User Stats & Follow Button */}
-          <div className="flex-[2] mt-6 flex flex-col gap-4">
-            <div className="flex flex-col md:flex-row gap-2">
+            {/* Visibility */}
+            {isOwner && <Visibility />}
+
+            {/* Follow Button & Message */}
+            <div className="flex gap-4">
               {currentUserId && !isOwner && (
                 <FollowerBtnClient
                   profileId={profileId}
@@ -151,8 +147,8 @@ export default async function ProfilePage({ params }: PageProps) {
               )}
               {!isOwner && (
                 <Link
-                  className="bg-blue-600 p-2 rounded-md"
                   href={`/app/messages/${profileId}`}
+                  className="px-4 py-2 bg-neutral-700 text-white rounded-md hover:bg-neutral-800 transition-colors"
                 >
                   Message
                 </Link>
@@ -160,46 +156,52 @@ export default async function ProfilePage({ params }: PageProps) {
             </div>
 
             {/* Followers & Following */}
-            <div className="flex w-full">
+            <div className="flex gap-6">
               <ShowFollowing
                 followingCount={followingCount}
                 userId={profileId}
               />
               <ShowFollower followerCount={followersCount} userId={profileId} />
             </div>
-
-            {/* Statistics */}
-            <div className="w-full flex flex-col md:flex-row min-h-64 h-full">
-              <StatBox
-                count={userStats.watchedCount}
-                label="Movies/TV Watched"
-                hoverColor="orange"
-              />
-              <StatBox
-                count={userStats.favoriteCount}
-                label="Favorites"
-                hoverColor="indigo"
-              />
-              <StatBox
-                count={userStats.watchlistCount}
-                label="WatchList"
-                hoverColor="green"
-              />
-            </div>
           </div>
         </div>
 
-        <div>
+        {/* Statistics */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <StatBox
+            count={userStats.watchedCount}
+            label="Movies/TV Watched"
+            color="neutral"
+          />
+          <StatBox
+            count={userStats.favoriteCount}
+            label="Favorites"
+            color="neutral"
+          />
+          <StatBox
+            count={userStats.watchlistCount}
+            label="WatchList"
+            color="neutral"
+          />
+        </div>
+
+        {/* Genre Statistics */}
+        <div className="">
           <StatisticsGenre userId={profileId} />
         </div>
-        {/* AI Recommendation */}
 
+        {/* AI Recommendation */}
         {isOwner && (
-          <div className="flex flex-col gap-3">
-            <h1 className="text-3xl font-bold">Your Personal Recommendation</h1>
-            <p>
-              Favorite List + Watched List with{" "}
-              <span className="text-blue-700">AI</span>
+          <div className="  p-6">
+            <h2 className="text-2xl font-bold text-neutral-100 mb-4">
+              Your Personal Recommendations
+            </h2>
+            <p className="text-neutral-300 mb-4">
+              Based on your{" "}
+              <span className="text-neutral-200 font-semibold">Favorites</span>{" "}
+              and{" "}
+              <span className="text-neutral-200 font-semibold">Watched</span>{" "}
+              list, powered by AI.
             </p>
             <ChataiReco />
           </div>
@@ -208,18 +210,18 @@ export default async function ProfilePage({ params }: PageProps) {
         {/* Conditional Content */}
         {user.visibility === "private" && !isOwner ? (
           <div className="text-center py-10">
-            <p className="text-lg text-gray-600">
-              This profile is private, Only user can see.
+            <p className="text-lg text-neutral-600">
+              This profile is private. Only the user can see it.
             </p>
           </div>
         ) : !canViewContent && !isOwner ? (
           <div className="text-center py-10">
-            <p className="text-lg text-gray-600">
+            <p className="text-lg text-neutral-600">
               This profile is private. Follow to see content and message.
             </p>
           </div>
         ) : (
-          <div>
+          <div className=" rounded-lg shadow-md p-6">
             <ProfileContent profileId={profileId} />
           </div>
         )}
@@ -232,26 +234,16 @@ export default async function ProfilePage({ params }: PageProps) {
 const StatBox = ({
   count,
   label,
-  hoverColor,
+  color,
 }: {
   count: number | null;
   label: string;
-  hoverColor: string;
+  color: string;
 }) => (
   <div
-    className={`group flex-1 flex justify-center items-center flex-col border border-gray-500 ${
-      hoverColor === "orange"
-        ? "rounded-l-md"
-        : hoverColor === "green"
-        ? "rounded-r-md"
-        : ""
-    }`}
+    className={`flex flex-col items-center justify-center p-6 rounded-lg shadow-md bg-neutral-700 hover:shadow-lg transition-shadow duration-300 border-l-4 border-${color}-200`}
   >
-    <span
-      className={`text-2xl group-hover:text-4xl group-hover:text-${hoverColor}-500 duration-300`}
-    >
-      {count}
-    </span>
-    <span className="text-sm">{label}</span>
+    <span className={`text-4xl font-bold text-neutral-100`}>{count}</span>
+    <span className="text-neutral-100 text-sm mt-2">{label}</span>
   </div>
 );
