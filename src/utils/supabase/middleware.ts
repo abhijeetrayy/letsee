@@ -9,12 +9,12 @@ export async function updateSession(request: NextRequest) {
 
   try {
     // Refresh session
-    const { data, error } = await supabase.auth.refreshSession();
+    // const { data, error } = await supabase.auth.refreshSession();
 
-    if (error) {
-      console.warn("⚠️ Error refreshing session:", error.message);
-      return response;
-    }
+    // if (error) {
+    //   console.warn("⚠️ Error refreshing session:", error.message);
+    //   return response;
+    // }
 
     // Fetch user session
     const { data: userData, error: userError } = await supabase.auth.getUser();
