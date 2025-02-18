@@ -6,12 +6,11 @@ function Video({ videos, movie }: any) {
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
 
+  console.log(videos);
+
   // Memoize filtered trailers
   const trailers = useMemo(
-    () =>
-      videos.filter(
-        (item: any) => item.site === "YouTube" && item.type === "Trailer"
-      ),
+    () => videos.filter((item: any) => item.type === "Trailer"),
     [videos]
   );
 
