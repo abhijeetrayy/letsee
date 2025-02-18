@@ -1,98 +1,96 @@
 "use client";
-import { createClient } from "@/utils/supabase/client";
-import React, { useState } from "react";
 
-function Page() {
-  const [update, setUpdate] = useState("Click to update");
-  const [isLoading, setIsLoading] = useState(false);
+import { useState } from "react";
+import { createClient } from "@/utils/supabase/client";
+
+const SyncFavoritesToWatched = () => {
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState<string | null>(null);
 
   const supabase = createClient();
 
-  const updateGenre = async () => {
-    setIsLoading(true);
-    setUpdate("Updating...");
+  const syncFavoritesToWatched = async () => {
+    setLoading(true);
+    setStatus("Syncing favorites to watched...");
 
     try {
-      // Fetch all users with a non-null username
+      // Fetch all users whose username is NOT NULL
       const { data: users, error: usersError } = await supabase
         .from("users")
-        .select("id")
+        .select("id, username")
         .not("username", "is", null);
-
-      console.log(users);
 
       if (usersError) throw usersError;
 
-      // Iterate through each user
       for (const user of users) {
         const userId = user.id;
-        console.log(`Updating for user: ${userId}`);
 
-        // Fetch watched item count
-        const { count: watchedCount, error: watchedError } = await supabase
-          .from("watched_items")
-          .select("*", { count: "exact", head: true })
-          .eq("user_id", userId);
-        console.log(watchedCount);
-        if (watchedError) console.log(watchedError);
-
-        // Fetch favorite item count
-        const { count: favoritesCount, error: favoritesError } = await supabase
+        // Fetch all favorite items of the user
+        const { data: favorites, error: favoritesError } = await supabase
           .from("favorite_items")
-          .select("*", { count: "exact", head: true })
+          .select(
+            "item_id, item_name, item_type, image_url, item_adult, genres"
+          )
           .eq("user_id", userId);
-        console.log(favoritesCount);
-        if (favoritesError) console.log(favoritesError);
 
-        // Fetch watchlist item count
-        const { count: watchlistCount, error: watchlistError } = await supabase
-          .from("user_watchlist")
-          .select("*", { count: "exact", head: true })
-          .eq("user_id", userId);
-        console.log(watchlistCount);
-        if (watchlistError) console.log(watchlistError);
+        if (favoritesError) throw favoritesError;
 
-        // Insert or update stats in user_movie_stats table
-        const { error: upsertError } = await supabase
-          .from("user_cout_stats")
-          .upsert(
-            {
-              user_id: userId,
-              watched_count: watchedCount || 0,
-              favorites_count: favoritesCount || 0,
-              watchlist_count: watchlistCount || 0,
-              updated_at: new Date().toISOString(),
-            },
-            { onConflict: "user_id" }
-          );
+        for (const item of favorites) {
+          const { data: watchedItem, error: watchedError } = await supabase
+            .from("watched_items")
+            .select("id")
+            .eq("user_id", userId)
+            .eq("item_id", item.item_id)
+            .single();
 
-        if (upsertError)
-          console.log(`upsert error updated for user: ${userId}`);
-        console.log(` updated for user: ${userId}`);
+          if (watchedError && watchedError.code !== "PGRST116") {
+            throw watchedError;
+          }
+
+          // If the item is not in watched_items, add it
+          if (!watchedItem) {
+            const { error: insertError } = await supabase
+              .from("watched_items")
+              .insert({
+                user_id: userId,
+                item_id: item.item_id,
+                item_name: item.item_name,
+                item_type: item.item_type,
+                image_url: item.image_url,
+                item_adult: item.item_adult,
+                genres: item.genres,
+              });
+
+            if (insertError) throw insertError;
+
+            // Increment watched_count in user_count_stats
+            const { error: incrementError } = await supabase.rpc(
+              "increment_watched_count",
+              { p_user_id: userId }
+            );
+
+            if (incrementError) throw incrementError;
+          }
+        }
       }
 
-      setUpdate("Genres updated successfully!");
+      setStatus("Favorites successfully synced to watched!");
     } catch (error) {
-      console.error("Error updating genres:", error);
-      console.log(error);
-      setUpdate("Failed to update genres");
+      console.error("Error syncing favorites to watched:", error);
+      setStatus("Error syncing favorites to watched.");
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
   return (
     <div className="p-4">
-      <button
-        onClick={updateGenre}
-        disabled={isLoading}
-        className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-blue-300"
-      >
-        {isLoading ? "Updating..." : "Update Genres"}
+      <button onClick={syncFavoritesToWatched} disabled={loading}>
+        {loading ? "Syncing..." : "Sync Favorites to Watched"}
       </button>
-      <p className="mt-2 text-neutral-600">{update}</p>
+      {status && <p className="mt-2 text-gray-600">{status}</p>}
     </div>
   );
-}
+};
 
-export default Page;
+export default SyncFavoritesToWatched;

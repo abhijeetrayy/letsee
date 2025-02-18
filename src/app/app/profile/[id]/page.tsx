@@ -98,7 +98,7 @@ export default async function ProfilePage({ params }: PageProps) {
     <div className="flex flex-col items-center w-full bg-neutral-900 min-h-screen">
       <div className="flex flex-col max-w-6xl w-full gap-8 p-2">
         {/* Profile Header */}
-        <div className="flex flex-col lg:flex-row gap-8">
+        <div className="flex flex-col lg:flex-row p-2 gap-8">
           {/* Profile Picture */}
           <div className="flex flex-col ">
             <img
@@ -167,7 +167,7 @@ export default async function ProfilePage({ params }: PageProps) {
         </div>
 
         {/* Statistics */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className=" p-2 grid grid-cols-1 md:grid-cols-3 gap-6">
           <StatBox
             count={userStats.watchedCount}
             label="Movies/TV Watched"

@@ -22,6 +22,14 @@ export async function POST(req: NextRequest) {
   // Check if the item exists before attempting to delete it
 
   // Proceed to delete the item
+  await removeFromWatchList(userId, itemId);
+
+  return NextResponse.json({ message: "Removed" }, { status: 200 });
+}
+
+async function removeFromWatchList(userId: string, itemId: string) {
+  const supabase = await createClient();
+  // Delete the item from the watchlist
   const { error: deleteError } = await supabase
     .from("user_watchlist")
     .delete()
@@ -33,5 +41,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Error deleting item" }, { status: 500 });
   }
 
-  return NextResponse.json({ message: "Removed" }, { status: 200 });
+  // Decrement the watchlist count
+  const { error: decrementError } = await supabase.rpc(
+    "decrement_watchlist_count",
+    {
+      p_user_id: userId,
+    }
+  );
+
+  if (decrementError) {
+    throw decrementError;
+  }
 }

@@ -33,6 +33,14 @@ export async function POST(req: NextRequest) {
   }
 
   // Proceed to delete the item
+  await removeFromFavorite(userId, itemId);
+
+  return NextResponse.json({ message: "Removed" }, { status: 200 });
+}
+
+async function removeFromFavorite(userId: string, itemId: string) {
+  const supabase = await createClient();
+  // Delete the item from the watchlist
   const { error: deleteError } = await supabase
     .from("favorite_items")
     .delete()
@@ -44,5 +52,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Error deleting item" }, { status: 500 });
   }
 
-  return NextResponse.json({ message: "Removed" }, { status: 200 });
+  // Decrement the watchlist count
+  const { error: decrementError } = await supabase.rpc(
+    "decrement_favorites_count",
+    {
+      p_user_id: userId,
+    }
+  );
+
+  if (decrementError) {
+    throw decrementError;
+  }
 }
