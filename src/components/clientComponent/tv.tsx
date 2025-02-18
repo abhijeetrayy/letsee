@@ -168,9 +168,9 @@ export default function Tv({
               </div>
 
               {/* Genres */}
-              <div className="my-4 flex flex-wrap gap-2">
+              <div className="my-4 flex flex-row gap-2">
                 <div className="text-neutral-300 mb-2">Genre:</div>
-                <div className="">
+                <div className="flex flex-wrap gap-1">
                   {show.genres.map((genre: any) => (
                     <Link
                       href={`/app/tvbygenre/list/${genre.id}-${genre.name}`}
