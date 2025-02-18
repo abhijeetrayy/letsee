@@ -37,8 +37,6 @@ function DiscoverUsers() {
         .order("updated_at", { ascending: false })
         .limit(10);
 
-      console.log(Users);
-
       if (!error && Users) {
         setUsers(
           Users.map((user) => {

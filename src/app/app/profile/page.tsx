@@ -28,7 +28,6 @@ const getUserData = async () => {
 
 const Page = async () => {
   const { Users } = await getUserData();
-  console.log(Users);
 
   return (
     <div className="max-w-6xl w-full mx-auto p-4">

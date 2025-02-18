@@ -100,7 +100,7 @@ export default async function ProfilePage({ params }: PageProps) {
         {/* Profile Header */}
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Profile Picture */}
-          <div className="flex flex-col items-center lg:items-start">
+          <div className="flex flex-col ">
             <img
               width={200}
               height={200}

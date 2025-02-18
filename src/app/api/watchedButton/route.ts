@@ -2,14 +2,11 @@ import { createClient } from "@/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
-  const requestClone = req.clone();
-  const body = await requestClone.json();
-  const { itemId, name, mediaType, imgUrl, adult, genres } = body;
-
   const supabase = await createClient();
 
-  const { data, error } = await supabase.auth.getUser();
-  if (error || !data?.user) {
+  // Authenticate the user
+  const { data: userData, error: authError } = await supabase.auth.getUser();
+  if (authError || !userData?.user) {
     console.log("User isn't logged in");
     return NextResponse.json(
       { error: "User isn't logged in" },
@@ -17,66 +14,120 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const userId = data.user.id;
+  const userId = userData.user.id;
 
-  // First, delete from watched_items if it exists
-  await supabase
-    .from("user_watchlist")
+  // Parse the request body
+  const { itemId, name, mediaType, imgUrl, adult, genres } = await req.json();
+
+  try {
+    // Start a transaction
+    const { data: existingItem, error: findError } = await supabase
+      .from("watched_items")
+      .select()
+      .eq("user_id", userId)
+      .eq("item_id", itemId)
+      .single();
+
+    if (findError && findError.code !== "PGRST116") {
+      // PGRST116 means "No rows found", which is expected if the item doesn't exist
+      throw findError;
+    }
+
+    if (existingItem) {
+      // If the item exists, remove it
+      await removeFromWatched(userId, itemId);
+      return NextResponse.json(
+        { message: "Removed from watched", action: "removed" },
+        { status: 200 }
+      );
+    } else {
+      // If the item doesn't exist, add it
+      await addToWatched(userId, {
+        itemId,
+        name,
+        mediaType,
+        imgUrl,
+        adult,
+        genres,
+      });
+      return NextResponse.json(
+        { message: "Added to watched", action: "added" },
+        { status: 200 }
+      );
+    }
+  } catch (error) {
+    console.error("Error processing request:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
+
+/**
+ * Adds an item to the watched list and increments the watched count.
+ */
+async function addToWatched(
+  userId: string,
+  item: {
+    itemId: string;
+    name: string;
+    mediaType: string;
+    imgUrl: string;
+    adult: boolean;
+    genres: string[];
+  }
+) {
+  const supabase = await createClient();
+  const { error: insertError } = await supabase.from("watched_items").insert({
+    user_id: userId,
+    item_name: item.name,
+    item_id: item.itemId,
+    item_type: item.mediaType,
+    image_url: item.imgUrl,
+    item_adult: item.adult,
+    genres: item.genres,
+  });
+
+  if (insertError) {
+    throw insertError;
+  }
+
+  const { error: incrementError } = await supabase.rpc(
+    "increment_watched_count",
+    {
+      p_user_id: userId,
+    }
+  );
+
+  if (incrementError) {
+    throw incrementError;
+  }
+}
+
+/**
+ * Removes an item from the watched list and decrements the watched count.
+ */
+async function removeFromWatched(userId: string, itemId: string) {
+  const supabase = await createClient();
+  const { error: deleteError } = await supabase
+    .from("watched_items")
     .delete()
     .eq("user_id", userId)
     .eq("item_id", itemId);
 
-  // Check if it's in user_watchlist
-  const { data: existingItem } = await supabase
-    .from("watched_items")
-    .select()
-    .eq("user_id", userId)
-    .eq("item_id", itemId)
-    .single();
+  if (deleteError) {
+    throw deleteError;
+  }
 
-  if (existingItem) {
-    // If it exists in watchlist, delete it
-    const { error: deleteError } = await supabase
-      .from("watched_items")
-      .delete()
-      .eq("user_id", userId)
-      .eq("item_id", itemId);
-
-    if (deleteError) {
-      console.log("Error deleting item from watched:", deleteError);
-      return NextResponse.json(
-        { error: "Error deleting item from watched" },
-        { status: 500 }
-      );
+  const { error: decrementError } = await supabase.rpc(
+    "decrement_watched_count",
+    {
+      p_user_id: userId,
     }
+  );
 
-    return NextResponse.json(
-      { message: "Removed from watched", action: "removed" },
-      { status: 200 }
-    );
-  } else {
-    // If it doesn't exist in watchlist, insert it
-    const { error: insertError } = await supabase.from("watched_items").insert({
-      user_id: userId,
-      item_name: name,
-      item_id: itemId,
-      item_type: mediaType,
-      image_url: imgUrl,
-      item_adult: adult,
-      genres: genres,
-    });
-
-    if (insertError) {
-      console.log("Error inserting item to watched:", insertError);
-      return NextResponse.json(
-        { error: "Error inserting item to watched" },
-        { status: 500 }
-      );
-    }
-
-    return NextResponse.json(
-      { message: "Added to watched", action: "added" },
-      { status: 200 }
-    );
+  if (decrementError) {
+    throw decrementError;
   }
 }
