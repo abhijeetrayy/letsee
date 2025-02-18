@@ -39,7 +39,13 @@ function getTopGenres(genreCounts: GenreCounts, topN: number = 5): GenreStat[] {
 }
 
 // Main component
-export default async function StatisticsGenre({ userId }: { userId?: any }) {
+export default async function StatisticsGenre({
+  userId,
+  username,
+}: {
+  userId?: any;
+  username?: any;
+}) {
   const genreCounts = await getUserGenreStatistics(userId);
   const topGenres = getTopGenres(genreCounts);
 
@@ -50,9 +56,11 @@ export default async function StatisticsGenre({ userId }: { userId?: any }) {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center  p-6 ">
+    <div className="flex flex-col items-center justify-center  p-1 ">
       <div className="w-full max-w-6xl">
-        <h2 className="text-xl font-semibold mb-6 text-gray-100">Top Genres</h2>
+        <h2 className="text-xl font-semibold mb-6 text-gray-100">
+          @{username} Top Genres
+        </h2>
       </div>
       {topGenres.length > 0 ? (
         <div className="w-full max-w-5xl  bg-neutral-800 p-6 rounded-lg shadow-md h-96">

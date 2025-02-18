@@ -96,7 +96,7 @@ export default async function ProfilePage({ params }: PageProps) {
 
   return (
     <div className="flex flex-col items-center w-full bg-neutral-900 min-h-screen">
-      <div className="flex flex-col max-w-6xl w-full gap-8 p-6">
+      <div className="flex flex-col max-w-6xl w-full gap-8 p-2">
         {/* Profile Header */}
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Profile Picture */}
@@ -187,12 +187,12 @@ export default async function ProfilePage({ params }: PageProps) {
 
         {/* Genre Statistics */}
         <div className="">
-          <StatisticsGenre userId={profileId} />
+          <StatisticsGenre username={user.username} userId={profileId} />
         </div>
 
         {/* AI Recommendation */}
         {isOwner && (
-          <div className="  p-6">
+          <div className="  p-1">
             <h2 className="text-2xl font-bold text-neutral-100 mb-4">
               Your Personal Recommendations
             </h2>
@@ -221,7 +221,7 @@ export default async function ProfilePage({ params }: PageProps) {
             </p>
           </div>
         ) : (
-          <div className=" rounded-lg shadow-md p-6">
+          <div className=" rounded-lg shadow-md p-1">
             <ProfileContent profileId={profileId} />
           </div>
         )}
