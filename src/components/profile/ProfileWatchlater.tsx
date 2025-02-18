@@ -2,6 +2,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link"; // Assuming you are using Next.js
 import ThreePrefrenceBtn from "../buttons/threePrefrencebtn";
+import { IoIosArrowForward } from "react-icons/io";
+import { IoIosArrowBack } from "react-icons/io";
 
 function WatchLaterList({ watchlist, watchlistCount }: any) {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -121,7 +123,7 @@ function WatchLaterList({ watchlist, watchlistCount }: any) {
               boxShadow: "0 4px 15px rgba(0, 0, 0, 0.9)", // Outer shadow
             }}
           >
-            &#9830;
+            <IoIosArrowBack />
           </button>
         )}
         {canScrollRight && (
@@ -132,7 +134,7 @@ function WatchLaterList({ watchlist, watchlistCount }: any) {
               boxShadow: "0 4px 15px rgba(0, 0, 0, .9)", // Outer shadow
             }}
           >
-            &#9830;
+            <IoIosArrowForward />
           </button>
         )}
       </div>

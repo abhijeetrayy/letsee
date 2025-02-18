@@ -2,6 +2,8 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import ThreePrefrenceBtn from "../buttons/threePrefrencebtn";
+import { IoIosArrowForward } from "react-icons/io";
+import { IoIosArrowBack } from "react-icons/io";
 
 interface TMDBGenre {
   name: string;
@@ -145,7 +147,7 @@ function FavoritesList({ favorites, favoriteCount }: any) {
               boxShadow: "0 4px 15px rgba(0, 0, 0, 0.9)", // Outer shadow
             }}
           >
-            &#9830;
+            <IoIosArrowBack />
           </button>
         )}
         {canScrollRight && (
@@ -156,7 +158,7 @@ function FavoritesList({ favorites, favoriteCount }: any) {
               boxShadow: "0 4px 15px rgba(0, 0, 0, .9)", // Outer shadow
             }}
           >
-            &#9830;
+            <IoIosArrowForward />
           </button>
         )}
       </div>
