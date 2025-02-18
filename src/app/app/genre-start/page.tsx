@@ -3,15 +3,15 @@
 import { useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 
-const SyncFavoritesToWatched = () => {
+const CleanWatchlist = () => {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
 
   const supabase = createClient();
 
-  const syncFavoritesToWatched = async () => {
+  const cleanWatchlist = async () => {
     setLoading(true);
-    setStatus("Syncing favorites to watched...");
+    setStatus("Cleaning watchlist...");
 
     try {
       // Fetch all users whose username is NOT NULL
@@ -24,18 +24,22 @@ const SyncFavoritesToWatched = () => {
 
       for (const user of users) {
         const userId = user.id;
+        console.log(
+          `Cleaning watchlist for user: ${user.username} (${userId})`
+        );
 
-        // Fetch all favorite items of the user
-        const { data: favorites, error: favoritesError } = await supabase
-          .from("favorite_items")
-          .select(
-            "item_id, item_name, item_type, image_url, item_adult, genres"
-          )
+        // Fetch all watchlist items of the user
+        const { data: watchlist, error: watchlistError } = await supabase
+          .from("user_watchlist")
+          .select("item_id")
           .eq("user_id", userId);
+        if (!watchlist || watchlist.length === 0) {
+          console.log(`No watchlist items found for user: ${user.username}`);
+          continue;
+        }
+        if (watchlistError) throw watchlistError;
 
-        if (favoritesError) throw favoritesError;
-
-        for (const item of favorites) {
+        for (const item of watchlist) {
           const { data: watchedItem, error: watchedError } = await supabase
             .from("watched_items")
             .select("id")
@@ -47,37 +51,31 @@ const SyncFavoritesToWatched = () => {
             throw watchedError;
           }
 
-          // If the item is not in watched_items, add it
-          if (!watchedItem) {
-            const { error: insertError } = await supabase
-              .from("watched_items")
-              .insert({
-                user_id: userId,
-                item_id: item.item_id,
-                item_name: item.item_name,
-                item_type: item.item_type,
-                image_url: item.image_url,
-                item_adult: item.item_adult,
-                genres: item.genres,
-              });
+          // If the item exists in watched_items, remove it from watchlist_items
+          if (watchedItem) {
+            const { error: deleteError } = await supabase
+              .from("user_watchlist")
+              .delete()
+              .eq("user_id", userId)
+              .eq("item_id", item.item_id);
 
-            if (insertError) throw insertError;
+            if (deleteError) throw deleteError;
 
-            // Increment watched_count in user_count_stats
-            const { error: incrementError } = await supabase.rpc(
-              "increment_watched_count",
+            // Decrement watchlist_count in user_count_stats
+            const { error: decrementError } = await supabase.rpc(
+              "decrement_watchlist_count",
               { p_user_id: userId }
             );
 
-            if (incrementError) throw incrementError;
+            if (decrementError) throw decrementError;
           }
         }
       }
 
-      setStatus("Favorites successfully synced to watched!");
+      setStatus("Watchlist cleaned successfully!");
     } catch (error) {
-      console.error("Error syncing favorites to watched:", error);
-      setStatus("Error syncing favorites to watched.");
+      console.error("Error cleaning watchlist:", error);
+      setStatus("Error cleaning watchlist.");
     } finally {
       setLoading(false);
     }
@@ -85,12 +83,12 @@ const SyncFavoritesToWatched = () => {
 
   return (
     <div className="p-4">
-      <button onClick={syncFavoritesToWatched} disabled={loading}>
-        {loading ? "Syncing..." : "Sync Favorites to Watched"}
+      <button onClick={cleanWatchlist} disabled={loading}>
+        {loading ? "Cleaning..." : "Clean Watchlist"}
       </button>
       {status && <p className="mt-2 text-gray-600">{status}</p>}
     </div>
   );
 };
 
-export default SyncFavoritesToWatched;
+export default CleanWatchlist;
