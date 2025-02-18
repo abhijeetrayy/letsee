@@ -1,14 +1,13 @@
 import Link from "next/link";
 
 import { createClient } from "@/utils/supabase/server";
-import DropdownMenu from "./dropDownMenu";
-import BurgerMenu from "./BurgerMenu";
-import SearchBar from "./searchBar";
-import { LuSend } from "react-icons/lu";
 import { IoNotifications } from "react-icons/io5";
+import BurgerMenu from "./BurgerMenu";
+import DropdownMenu from "./dropDownMenu";
 import MessageButton from "./MessageButton";
 import RealtimeNotification from "./RealtimeNotification";
-
+import SearchBar from "./searchBar";
+import { FaUser } from "react-icons/fa6";
 async function Navbar() {
   const supabase = await createClient();
   const { data, error } = await supabase.auth.getUser();
@@ -38,10 +37,12 @@ async function Navbar() {
           <IoNotifications />
           <RealtimeNotification userId={data.user?.id} />
         </Link>
+        <div className="px-4 py-2 rounded-md bg-neutral-600 hover:bg-neutral-500">
+          <Link href="/app/profile">
+            <FaUser />
+          </Link>
+        </div>
         <div className="hidden md:flex flex-row gap-3 items-center">
-          <div className="px-4 py-1 rounded-md bg-neutral-600 hover:bg-neutral-500">
-            <Link href="/app/profile">User&apos;s</Link>
-          </div>
           <SearchBar />
           <DropdownMenu user={userData} />
         </div>

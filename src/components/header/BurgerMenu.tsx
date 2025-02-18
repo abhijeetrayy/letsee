@@ -97,7 +97,7 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID, userId }) => {
               onClick={() => link(`/app/profile`)}
               className="text-2xl hover:text-gray-400"
             >
-              User&apos;s
+              People
             </button>
           </li>
 
