@@ -37,11 +37,14 @@ async function Navbar() {
           <IoNotifications />
           <RealtimeNotification userId={data.user?.id} />
         </Link>
-        <div className="px-4 py-2 rounded-md bg-neutral-600 hover:bg-neutral-500">
-          <Link href="/app/profile">
-            <FaUser />
-          </Link>
-        </div>
+
+        <Link
+          className="flex items-center justify-center px-4 py-2 rounded-md bg-neutral-600 hover:bg-neutral-500 relative"
+          href="/app/profile"
+        >
+          <FaUser />
+        </Link>
+
         <div className="hidden md:flex flex-row gap-3 items-center">
           <SearchBar />
           <DropdownMenu user={userData} />

@@ -201,7 +201,7 @@ export default function tv({
                 <span>Production Companies: </span>
                 {show.production_companies.map(
                   (company: any, index: number) => (
-                    <span className="break-words" key={company.id}>
+                    <span className="break-words" key={index}>
                       {company.name}
                       {index < show.production_companies.length - 1 && ", "}
                     </span>
@@ -219,8 +219,8 @@ export default function tv({
         <div className="flex flex-row gap-4 my-4 w-full max-w-5xl overflow-x-scroll vone-scrollbar">
           {show.seasons
             .filter((item: any) => item.name !== "Specials")
-            .map((season: any) => (
-              <div key={season.id} className="flex flex-col gap-4">
+            .map((season: any, index: number) => (
+              <div key={index} className="flex flex-col gap-4">
                 <img
                   src={`${
                     season.poster_path
@@ -258,9 +258,9 @@ export default function tv({
             <div className="max-w-7xl w-full m-auto my-3 overflow-x-auto no-scrollbar">
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 m-auto w-fit gap-3 pb-3 snap-x snap-mandatory">
                 {Bimages.length > 0
-                  ? Bimages?.slice(0, 13).map((item: any) => (
+                  ? Bimages?.slice(0, 13).map((item: any, index: number) => (
                       <img
-                        key={item.id} // Add a key to avoid React warnings
+                        key={index} // Add a key to avoid React warnings
                         className="max-h-96  h-full object-cover mb-3"
                         src={
                           show.adult
@@ -270,9 +270,9 @@ export default function tv({
                         alt={item.name}
                       />
                     ))
-                  : Pimages?.slice(0, 15).map((item: any) => (
+                  : Pimages?.slice(0, 15).map((item: any, index: number) => (
                       <img
-                        key={item.id} // Add a key to avoid React warnings
+                        key={index} // Add a key to avoid React warnings
                         className="max-h-96  h-full object-cover mb-3"
                         src={`show.adult ? "/pixeled.webp" : https://image.tmdb.org/t/p/w185${item.file_path}`} // Use item.key instead of item.id
                         alt={item.name}

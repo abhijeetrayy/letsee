@@ -1,54 +1,43 @@
-// pages/api/watched-movies.ts
-import { NextApiRequest, NextApiResponse } from "next";
-import { createClient } from "../../../utils/supabase/server";
-import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@/utils/supabase/server";
 
-export async function POST(req: NextRequest) {
-  const requestClone = req.clone();
-  const body = await requestClone.json();
-  const { userID, page = 1, limit = 30 } = body;
-  console.log(userID);
+export async function POST(request: Request) {
   const supabase = await createClient();
+  const { userID, page, genre } = await request.json();
 
-  if (!userID) {
-    return NextResponse.json({ error: "User ID is required" });
+  // Initialize the query
+  let query = supabase
+    .from("watched_items")
+    .select("*", { count: "exact" }) // Fetch total count
+    .eq("user_id", userID)
+    .order("watched_at", { ascending: false }); // Sort by newest first
+
+  // Apply genre filter if provided
+  if (genre) {
+    query = query.contains("genres", [genre]); // Filter by genre
   }
 
-  const pageNumber = Number(page);
-  const itemsPerPage = Number(limit);
-  const offset = (pageNumber - 1) * itemsPerPage;
+  // Apply pagination
+  const itemsPerPage = 10;
+  query = query.range((page - 1) * itemsPerPage, page * itemsPerPage - 1);
 
-  try {
-    // Fetch total count
-    const { count } = await supabase
-      .from("watched_items")
-      .select("*", { count: "exact", head: true })
-      .eq("user_id", userID);
+  // Execute the query
+  const { data, error, count } = await query;
 
-    // Fetch paginated results
-    const { data, error } = await supabase
-      .from("watched_items")
-      .select("*")
-      .eq("user_id", userID)
-      .range(offset, offset + itemsPerPage - 1)
-      .order("watched_at", { ascending: false });
-
-    if (error) throw error;
-
-    const totalPages = Math.ceil((count || 0) / itemsPerPage);
-    const perloadLength = data.length;
-
-    return NextResponse.json({
-      data,
-      page: pageNumber,
-      totalPages,
-      totalItems: count,
-      perloadLength,
+  if (error) {
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
     });
-  } catch (error) {
-    return NextResponse.json(
-      { error: "An error occurred", details: error },
-      { status: 500 }
-    );
   }
+
+  // Calculate total items and pages
+  const totalItems = count || 0; // Use the count returned by Supabase
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  return new Response(
+    JSON.stringify({
+      data,
+      totalItems,
+      totalPages,
+    })
+  );
 }

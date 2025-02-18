@@ -48,10 +48,10 @@ function MovieCast({ credits, id, type }: any) {
             ref={scrollRef}
             className="flex flex-row gap-3 m-3 overflow-x-scroll no-scrollbar"
           >
-            {credits?.slice(0, 6).map((item: any) => (
+            {credits?.slice(0, 6).map((item: any, index: number) => (
               <Link
                 title={item.name}
-                key={item.id}
+                key={index}
                 href={`/app/person/${item.id}-${item.name
                   .trim()
                   .replace(/[^a-zA-Z0-9]/g, "-")

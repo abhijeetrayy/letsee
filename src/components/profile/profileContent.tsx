@@ -56,7 +56,9 @@ async function profileContent({ profileId }: any) {
       {watchedCount > 0 && (
         <div className="z-40">
           <div className="my-3">
-            <div>Watched &quot;{watchedCount}&quot;</div>
+            <h1 className="text-2xl font-bold mb-4">
+              Watched &quot;{watchedCount}&quot;
+            </h1>
           </div>
           <ProfileWatched userId={profileId} />
         </div>

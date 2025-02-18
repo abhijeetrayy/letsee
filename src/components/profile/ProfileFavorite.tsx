@@ -59,7 +59,9 @@ function FavoritesList({ favorites, favoriteCount }: any) {
         onClose={() => setIsModalOpen(false)}
       /> */}
       <div className="my-3">
-        <div>Favorites &quot;{favoriteCount}&quot;</div>
+        <h1 className="text-2xl font-bold mb-4">
+          Favorites &quot;{favoriteCount}&quot;
+        </h1>
       </div>
       <div className="relative w-full">
         <div

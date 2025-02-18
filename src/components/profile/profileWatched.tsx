@@ -4,19 +4,42 @@ import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+const genreList = [
+  "Action",
+  "Adventure",
+  "Animation",
+  "Comedy",
+  "Crime",
+  "Documentary",
+  "Drama",
+  "Family",
+  "Fantasy",
+  "Romance",
+  "Science Fiction",
+  "TV Movie",
+  "Thriller",
+  "Action & Adventure",
+  "Reality",
+  "Sci-Fi & Fantasy",
+  "Soap",
+  "war",
+  "War & Politics",
+];
+
 const WatchedMoviesList = ({ userId }: { userId: string }) => {
   const [movies, setMovies] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [genreFilter, setGenreFilter] = useState<string | null>(null);
 
   console.log("Rendering WatchedMoviesList with userId:", userId);
 
   const fetchMovies = useCallback(
-    async (page: number) => {
+    async (page: number, genre: string | null = null) => {
       if (loading) return; // Prevent multiple simultaneous fetches
-      console.log("Fetching movies for page:", page);
+      console.log("Fetching movies for page:", page, "with genre:", genre);
       setLoading(true);
 
       try {
@@ -25,7 +48,7 @@ const WatchedMoviesList = ({ userId }: { userId: string }) => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ userID: userId, page }),
+          body: JSON.stringify({ userID: userId, page, genre }),
         });
 
         if (!response.ok) throw new Error("Failed to fetch");
@@ -45,12 +68,12 @@ const WatchedMoviesList = ({ userId }: { userId: string }) => {
       }
     },
     [userId]
-  ); // Removed `loading` dependency to prevent stale closures
+  );
 
   useEffect(() => {
     console.log("useEffect triggered for currentPage:", currentPage);
-    fetchMovies(currentPage);
-  }, [currentPage]); // Ensures fetch only triggers when `currentPage` changes
+    fetchMovies(currentPage, genreFilter);
+  }, [currentPage, genreFilter]); // Fetch movies when `currentPage` or `genreFilter` changes
 
   const memoizedMovies = useMemo(() => movies, [movies]);
 
@@ -61,8 +84,46 @@ const WatchedMoviesList = ({ userId }: { userId: string }) => {
     }
   }, [currentPage, totalPages, loading]);
 
+  const handleGenreFilter = useCallback((genre: string) => {
+    setGenreFilter(genre); // Set the genre filter
+    setCurrentPage(1); // Reset to the first page
+  }, []);
+
+  const handleClearFilter = useCallback(() => {
+    setGenreFilter(null); // Clear the genre filter
+    setCurrentPage(1); // Reset to the first page
+  }, []);
+
   return (
     <div>
+      {/* Genre Filter Buttons */}
+      <div className="flex flex-wrap gap-2 mb-4">
+        <button
+          onClick={handleClearFilter}
+          className={`px-4 py-2 rounded-md ${
+            !genreFilter
+              ? "bg-blue-500 text-white"
+              : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+          }`}
+        >
+          All
+        </button>
+        {genreList.map((genre, index) => (
+          <button
+            key={index}
+            onClick={() => handleGenreFilter(genre)}
+            className={`px-4 py-2 rounded-md ${
+              genreFilter === genre
+                ? "bg-blue-500 text-white"
+                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+            }`}
+          >
+            {genre}
+          </button>
+        ))}
+      </div>
+
+      {/* Movie Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-3 z-40">
         {memoizedMovies.map((item: any) => (
           <div
@@ -131,6 +192,7 @@ const WatchedMoviesList = ({ userId }: { userId: string }) => {
           </div>
         ))}
 
+        {/* Show "More..." button only if there are more items to load */}
         {memoizedMovies.length < totalItems && (
           <div>
             <button
