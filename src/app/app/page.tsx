@@ -69,7 +69,7 @@ export default async function Home() {
       </div>
       <div className="w-full max-w-7xl my-4 mb-4">
         <h1 className="text-lg font-semibold my-4">Movie Genres</h1>
-        <div className="flex flex-row  overflow-x-scroll vone-scrollbar gap-1">
+        <div className="flex flex-row  overflow-x-scroll thin-scroll pb-3 gap-1">
           {genre?.genres.map((genre: any) => (
             <Link
               href={`/app/moviebygenre/list/${genre.id}-${genre.name}`}
@@ -93,7 +93,7 @@ export default async function Home() {
       </div>
       <div className="w-full max-w-7xl ">
         <h1 className="text-lg font-semibold mb-2">Tv Show Genres</h1>
-        <div className="flex flex-row  overflow-x-scroll vone-scrollbar gap-1 ">
+        <div className="flex flex-row  overflow-x-scroll thin-scroll pb-3 gap-1 ">
           {tvGenres?.genres.map((genre: any) => (
             <Link
               href={`/app/tvbygenre/list/${genre.id}-${genre.name}`}
