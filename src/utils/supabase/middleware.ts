@@ -9,16 +9,21 @@ export async function updateSession(request: NextRequest) {
 
   try {
     // Refresh session
-    await supabase.auth.refreshSession();
+    const { data, error } = await supabase.auth.refreshSession();
+
+    if (error) {
+      console.warn("⚠️ Error refreshing session:", error.message);
+      return response;
+    }
 
     // Fetch user session
-    const { data, error } = await supabase.auth.getUser();
-    const user = data?.user;
+    const { data: userData, error: userError } = await supabase.auth.getUser();
+    const user = userData?.user;
 
-    if (error || !user) {
+    if (userError || !user) {
       console.warn(
         "⚠️ No active session:",
-        error?.message || "User not logged in"
+        userError?.message || "User not logged in"
       );
     } else {
       console.log("✅ Authenticated:", user.email);
