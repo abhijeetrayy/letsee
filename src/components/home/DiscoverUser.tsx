@@ -97,7 +97,7 @@ function DiscoverUsers() {
         <div className="relative">
           <div
             ref={scrollRef}
-            className="flex flex-row gap-4 px-4 py-3 overflow-x-auto no-scrollbar"
+            className="flex flex-row gap-4 px-4 py-3 overflow-x-auto thin-scroll pb-3"
           >
             {loading
               ? [...Array(5)].map((_, index) => (

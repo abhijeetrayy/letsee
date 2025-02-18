@@ -66,7 +66,7 @@ function FavoritesList({ favorites, favoriteCount }: any) {
       <div className="relative w-full">
         <div
           ref={scrollRef}
-          className="w-full flex flex-row overflow-x-scroll no-scrollbar gap-3 z-40"
+          className="w-full flex flex-row overflow-x-scroll thin-scroll gap-3 z-40 pb-3"
         >
           {favorites?.map((item: any) => (
             <div key={item.id}>
