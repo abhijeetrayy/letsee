@@ -33,19 +33,19 @@ export async function POST(req: NextRequest) {
       .single();
 
     if (findError && findError.code !== "PGRST116") {
-      // PGRST116 means "No rows found", which is expected if the item doesn't exist
       throw findError;
     }
 
     if (existingItem) {
-      // If the item exists, remove it and decrement the watchlist count
       await removeFromWatchlist(userId, itemId);
       return NextResponse.json(
         { message: "Removed from watchlist", action: "removed" },
         { status: 200 }
       );
     } else {
-      // If the item doesn't exist, add it and increment the watchlist count
+      // Remove from favorites and watched before adding to watchlist
+      await removeFromFavorites(userId, itemId);
+      await removeFromWatched(userId, itemId);
       await addToWatchlist(userId, {
         itemId,
         name,
@@ -54,6 +54,7 @@ export async function POST(req: NextRequest) {
         adult,
         genres,
       });
+
       return NextResponse.json(
         { message: "Added to watchlist", action: "added" },
         { status: 200 }
@@ -83,6 +84,7 @@ async function addToWatchlist(
   }
 ) {
   const supabase = await createClient();
+
   // Insert the item into the watchlist
   const { error: insertError } = await supabase.from("user_watchlist").insert({
     user_id: userId,
@@ -116,6 +118,7 @@ async function addToWatchlist(
  */
 async function removeFromWatchlist(userId: string, itemId: string) {
   const supabase = await createClient();
+
   // Delete the item from the watchlist
   const { error: deleteError } = await supabase
     .from("user_watchlist")
@@ -137,5 +140,93 @@ async function removeFromWatchlist(userId: string, itemId: string) {
 
   if (decrementError) {
     throw decrementError;
+  }
+}
+
+/**
+ * Removes an item from the favorites and decrements the favorite count if it exists.
+ */
+async function removeFromFavorites(userId: string, itemId: string) {
+  const supabase = await createClient();
+
+  // Check if the item exists in favorites
+  const { data: existingItem, error: findError } = await supabase
+    .from("favorite_items")
+    .select("item_id")
+    .eq("user_id", userId)
+    .eq("item_id", itemId)
+    .single();
+
+  if (findError && findError.code !== "PGRST116") {
+    throw findError;
+  }
+
+  if (existingItem) {
+    // Delete the item from favorites
+    const { error: deleteError } = await supabase
+      .from("favorite_items")
+      .delete()
+      .eq("user_id", userId)
+      .eq("item_id", itemId);
+
+    if (deleteError) {
+      throw deleteError;
+    }
+
+    // Decrement the favorite count
+    const { error: decrementError } = await supabase.rpc(
+      "decrement_favorites_count",
+      {
+        p_user_id: userId,
+      }
+    );
+
+    if (decrementError) {
+      throw decrementError;
+    }
+  }
+}
+
+/**
+ * Removes an item from the watched list and decrements the watched count if it exists.
+ */
+async function removeFromWatched(userId: string, itemId: string) {
+  const supabase = await createClient();
+
+  // Check if the item exists in watched
+  const { data: existingItem, error: findError } = await supabase
+    .from("watched_items")
+    .select("item_id")
+    .eq("user_id", userId)
+    .eq("item_id", itemId)
+    .single();
+
+  if (findError && findError.code !== "PGRST116") {
+    throw findError;
+  }
+
+  if (existingItem) {
+    // Delete the item from watched
+    const { error: deleteError } = await supabase
+      .from("watched_items")
+      .delete()
+      .eq("user_id", userId)
+      .eq("item_id", itemId);
+
+    if (deleteError) {
+      throw deleteError;
+    }
+
+    // Decrement the watched count
+    const { error: decrementError } = await supabase.rpc(
+      "decrement_watched_count",
+      {
+        p_user_id: userId,
+      }
+    );
+
+    if (decrementError) {
+      throw decrementError;
+    }
   }
 }

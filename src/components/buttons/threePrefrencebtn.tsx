@@ -45,9 +45,6 @@ export default function ThreePrefrencebtn({
             mediaType={cardType}
             name={cardName}
             state={isItemWatched(cardId)}
-            Wstate={isItemWatched(cardId)}
-            Favstate={isItemPreferred(cardId)}
-            WLstate={isItemInWatchLater(cardId)}
             funcType={"watched"}
             adult={cardAdult}
             imgUrl={cardImg}
@@ -65,9 +62,6 @@ export default function ThreePrefrencebtn({
             mediaType={cardType}
             name={cardName}
             state={isItemPreferred(cardId)}
-            Wstate={isItemWatched(cardId)}
-            Favstate={isItemPreferred(cardId)}
-            WLstate={isItemInWatchLater(cardId)}
             funcType={"favorite"}
             adult={cardAdult}
             imgUrl={cardImg}
@@ -79,9 +73,6 @@ export default function ThreePrefrencebtn({
             mediaType={cardType}
             name={cardName}
             state={isItemInWatchLater(cardId)}
-            Wstate={isItemWatched(cardId)}
-            Favstate={isItemPreferred(cardId)}
-            WLstate={isItemInWatchLater(cardId)}
             funcType={"watchlater"}
             adult={cardAdult}
             imgUrl={cardImg}

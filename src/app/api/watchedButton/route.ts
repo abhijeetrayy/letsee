@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
     } else {
       // Check if the item exists in watchlist_items before adding to watched
       const { data: watchlistItem, error: watchlistError } = await supabase
-        .from("watchlist_items")
+        .from("user_watchlist")
         .select()
         .eq("user_id", userId)
         .eq("item_id", itemId)
@@ -156,7 +156,7 @@ async function removeFromWatchlist(userId: string, itemId: string) {
   const supabase = await createClient();
 
   const { error: deleteError } = await supabase
-    .from("watchlist_items")
+    .from("user_watchlist")
     .delete()
     .eq("user_id", userId)
     .eq("item_id", itemId);
