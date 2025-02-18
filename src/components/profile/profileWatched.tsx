@@ -7,7 +7,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 const genreList = [
   "Action",
   "Adventure",
-  "Animation",
+
   "Comedy",
   "Crime",
   "Documentary",
@@ -108,6 +108,16 @@ const WatchedMoviesList = ({ userId }: { userId: string }) => {
         >
           All
         </button>
+        <button
+          onClick={() => handleGenreFilter("Animation")}
+          className={`px-4 py-2 rounded-md ${
+            genreFilter === "Animation"
+              ? "bg-blue-500 text-white"
+              : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+          }`}
+        >
+          Anime/Animation
+        </button>
         {genreList.map((genre, index) => (
           <button
             key={index}
@@ -124,87 +134,95 @@ const WatchedMoviesList = ({ userId }: { userId: string }) => {
       </div>
 
       {/* Movie Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-3 z-40">
-        {memoizedMovies.map((item: any) => (
-          <div
-            className="z-40 relative group flex flex-col justify-between bg-black text-gray-300 rounded-md overflow-hidden duration-300 lg:hover:scale-105"
-            key={item.id}
-          >
-            <Link
-              className="relative"
-              href={`/app/${item.item_type}/${item.item_id}-${item.item_name
-                .trim()
-                .replace(/[^a-zA-Z0-9]/g, "-")
-                .replace(/-+/g, "-")}}`}
+      {memoizedMovies.length === 0 ? (
+        <div className="w-full   p-10">
+          <h1 className="m-auto w-fit">no result found.</h1>
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-3 z-40">
+          {memoizedMovies.map((item: any) => (
+            <div
+              className="z-40 relative group flex flex-col justify-between bg-black text-gray-300 rounded-md overflow-hidden duration-300 lg:hover:scale-105"
+              key={item.id}
             >
-              <div className="absolute top-0 left-0 z-10 lg:opacity-0 lg:group-hover:opacity-100">
-                {item.item_adult ? (
-                  <p className="p-1 bg-red-600 text-white rounded-br-md text-sm">
-                    Adult
-                  </p>
-                ) : (
-                  <p className="p-1 bg-black text-white rounded-br-md text-sm">
-                    {item.item_type}
-                  </p>
-                )}
-              </div>
-              <img
-                className="relative object-cover h-full w-full"
-                src={
-                  item.item_adult
-                    ? "/pixeled.webp"
-                    : `https://image.tmdb.org/t/p/w185/${item.image_url}`
-                }
-                loading="lazy"
-                alt={item.item_name}
-                width={185}
-                height={278}
-              />
-            </Link>
-            <div className="w-full h-[100px] bg-indigo-700 z-10 flex flex-col justify-between">
-              <ThreePrefrenceBtn
-                genres={item.genres}
-                cardId={item.item_id}
-                cardType={item.item_type}
-                cardName={item.item_name}
-                cardAdult={item.item_adult}
-                cardImg={item.image_url}
-              />
-              <div
-                title={item.name || item.title}
-                className="w-full flex flex-col gap-2 px-4 text-gray-200 pb-2"
+              <Link
+                className="relative"
+                href={`/app/${item.item_type}/${item.item_id}-${item.item_name
+                  .trim()
+                  .replace(/[^a-zA-Z0-9]/g, "-")
+                  .replace(/-+/g, "-")}}`}
               >
-                <Link
-                  href={`/app/${item.item_type}/${item.item_id}-${item.item_name
-                    .trim()
-                    .replace(/[^a-zA-Z0-9]/g, "-")
-                    .replace(/-+/g, "-")}}`}
+                <div className="absolute top-0 left-0 z-10 lg:opacity-0 lg:group-hover:opacity-100">
+                  {item.item_adult ? (
+                    <p className="p-1 bg-red-600 text-white rounded-br-md text-sm">
+                      Adult
+                    </p>
+                  ) : (
+                    <p className="p-1 bg-black text-white rounded-br-md text-sm">
+                      {item.item_type}
+                    </p>
+                  )}
+                </div>
+                <img
+                  className="relative object-cover h-full w-full"
+                  src={
+                    item.item_adult
+                      ? "/pixeled.webp"
+                      : `https://image.tmdb.org/t/p/w185/${item.image_url}`
+                  }
+                  loading="lazy"
+                  alt={item.item_name}
+                  width={185}
+                  height={278}
+                />
+              </Link>
+              <div className="w-full h-[100px] bg-indigo-700 z-10 flex flex-col justify-between">
+                <ThreePrefrenceBtn
+                  genres={item.genres}
+                  cardId={item.item_id}
+                  cardType={item.item_type}
+                  cardName={item.item_name}
+                  cardAdult={item.item_adult}
+                  cardImg={item.image_url}
+                />
+                <div
+                  title={item.name || item.title}
+                  className="w-full flex flex-col gap-2 px-4 text-gray-200 pb-2"
                 >
-                  <span className="">
-                    {item?.item_name &&
-                      (item.item_name.length > 16
-                        ? item.item_name?.slice(0, 14) + ".."
-                        : item.item_name)}
-                  </span>
-                </Link>
+                  <Link
+                    href={`/app/${item.item_type}/${
+                      item.item_id
+                    }-${item.item_name
+                      .trim()
+                      .replace(/[^a-zA-Z0-9]/g, "-")
+                      .replace(/-+/g, "-")}}`}
+                  >
+                    <span className="">
+                      {item?.item_name &&
+                        (item.item_name.length > 16
+                          ? item.item_name?.slice(0, 14) + ".."
+                          : item.item_name)}
+                    </span>
+                  </Link>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
 
-        {/* Show "More..." button only if there are more items to load */}
-        {memoizedMovies.length < totalItems && (
-          <div>
-            <button
-              className="w-full h-full text-gray-300 border min-h-[330px] bg-neutral-700 rounded-md hover:bg-neutral-800"
-              onClick={handlePageChange}
-              disabled={loading}
-            >
-              {loading ? "Loading..." : "More..."}
-            </button>
-          </div>
-        )}
-      </div>
+          {/* Show "More..." button only if there are more items to load */}
+          {memoizedMovies.length < totalItems && (
+            <div>
+              <button
+                className="w-full h-full text-gray-300 border min-h-[330px] bg-neutral-700 rounded-md hover:bg-neutral-800"
+                onClick={handlePageChange}
+                disabled={loading}
+              >
+                {loading ? "Loading..." : "More..."}
+              </button>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
