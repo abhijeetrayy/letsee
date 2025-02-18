@@ -22,7 +22,7 @@ const genreList = [
   "Reality",
   "Sci-Fi & Fantasy",
   "Soap",
-  "war",
+  "War",
   "War & Politics",
 ];
 
