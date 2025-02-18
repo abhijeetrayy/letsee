@@ -134,7 +134,12 @@ const WatchedMoviesList = ({ userId }: { userId: string }) => {
       </div>
 
       {/* Movie Grid */}
-      {memoizedMovies.length === 0 ? (
+      {loading && (
+        <div className="w-full   p-10">
+          <h1 className="m-auto w-fit">Loading..</h1>
+        </div>
+      )}
+      {!loading && memoizedMovies.length === 0 ? (
         <div className="w-full   p-10">
           <h1 className="m-auto w-fit">no result found.</h1>
         </div>

@@ -17,7 +17,7 @@ export async function POST(request: Request) {
   }
 
   // Apply pagination
-  const itemsPerPage = 10;
+  const itemsPerPage = 50;
   query = query.range((page - 1) * itemsPerPage, page * itemsPerPage - 1);
 
   // Execute the query
