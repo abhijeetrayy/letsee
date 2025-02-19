@@ -64,7 +64,7 @@ const Visibility: React.FC = () => {
   };
 
   return (
-    <div className="w-fit py-4">
+    <div className="w-fit py-2">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label

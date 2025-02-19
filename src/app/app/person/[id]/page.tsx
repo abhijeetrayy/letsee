@@ -3,6 +3,7 @@ import Link from "next/link";
 import { FaInstagram, FaXTwitter } from "react-icons/fa6";
 import { notFound } from "next/navigation";
 import PersonCredits from "@/components/person/server/personCredits";
+import Biography from "@/components/person/client/Biography";
 
 async function fetchPersonData(id: string) {
   const response = await fetch(
@@ -113,9 +114,7 @@ const PersonList = async ({ params }: PageProps) => {
               <p className="mt-2 text-sm text-gray-400">
                 {person.known_for_department}
               </p>
-              <p className="mt-2 text-sm text-gray-400">
-                {person.biography.slice(0, 400)} ...
-              </p>
+              {person?.biography && <Biography biography={person.biography} />}
             </div>
           </div>
           <h3 className="text-lg font-semibold">Known For</h3>

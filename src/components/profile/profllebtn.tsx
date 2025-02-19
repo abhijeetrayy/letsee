@@ -175,9 +175,9 @@ export function ShowFollowing({ followingCount, userId }: any) {
               <p>Loading...</p>
             ) : following.length !== 0 ? (
               <ul className="text-neutral-700">
-                {following.map((user: any) => (
+                {following.map((user: any, index: number) => (
                   <Link
-                    key={user.follower_id}
+                    key={index}
                     href={`/app/profile/${user.users.username}`}
                     className="block mb-2 hover:text-indigo-700"
                   >
@@ -250,9 +250,9 @@ export function ShowFollower({ followerCount, userId }: any) {
               <p>Loading...</p>
             ) : following.length > 0 ? (
               <ul className="text-neutral-700">
-                {following.map((user: any) => (
+                {following.map((user: any, index: number) => (
                   <Link
-                    key={user.follower_id}
+                    key={index}
                     href={`/app/profile/${user.users.username}`}
                     className="block mb-2 hover:text-indigo-700"
                   >
