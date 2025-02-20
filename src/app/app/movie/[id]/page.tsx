@@ -1,6 +1,12 @@
 import { Countrydata } from "@/staticData/countryName";
 import Movie from "@components/clientComponent/movie";
-import Head from "next/head";
+
+import { Metadata } from "next";
+import { createClient } from "@/utils/supabase/server";
+
+type Props = {
+  params: { id: string };
+};
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -44,6 +50,37 @@ async function getImages(id: any) {
   return data;
 }
 
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const supabase = await createClient();
+  const { data: movie } = await supabase
+    .from("movies")
+    .select("title, description, poster_url")
+    .eq("id", params.id)
+    .single();
+
+  return {
+    title: movie?.title || "Movie Not Found",
+    description: movie?.description || "Discover amazing movies!",
+    openGraph: {
+      title: movie?.title || "Movie Not Found",
+      description: movie?.description || "Discover amazing movies!",
+      images: [
+        {
+          url: movie?.poster_url || "/default-image.jpg",
+          width: 1200,
+          height: 630,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: movie?.title || "Movie Not Found",
+      description: movie?.description || "Discover amazing movies!",
+      images: [movie?.poster_url || "/default-image.jpg"],
+    },
+  };
+}
+
 const MovieDetails = async ({ params }: PageProps) => {
   const { id } = await params;
   const movie = await getMovieDetails(id);
@@ -55,47 +92,18 @@ const MovieDetails = async ({ params }: PageProps) => {
     Countrydata.filter((item: any) => item.iso_3166_1 == name)
   );
 
-  const movieTitle = movie.name || "Movie Details";
-  const movieOverview = movie.overview || "Check out this movie!";
-  const movieImage = movie.poster_path
-    ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-    : "/default-movie.jpg";
-  const movieUrl = `https://letsee-dusky.vercel.app/app/movie/${id}`; // Change this to your actual domain
-
   return (
-    <>
-      {/* Open Graph & Twitter Meta Tags */}
-      <Head>
-        <title>{movieTitle} - Watch Details</title>
-        <meta name="description" content={movieOverview} />
-
-        {/* Open Graph Meta Tags (for WhatsApp, Facebook, LinkedIn) */}
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content={movieUrl} />
-        <meta property="og:title" content={movieTitle} />
-        <meta property="og:description" content={movieOverview} />
-        <meta property="og:image" content={movieImage} />
-        <meta property="og:image:alt" content={movieTitle} />
-
-        {/* Twitter Card Meta Tags (for Twitter, Telegram) */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:url" content={movieUrl} />
-        <meta name="twitter:title" content={movieTitle} />
-        <meta name="twitter:description" content={movieOverview} />
-        <meta name="twitter:image" content={movieImage} />
-      </Head>
-      <div>
-        <Movie
-          CountryName={CountryName}
-          videos={videos}
-          Pimages={Pimages}
-          Bimages={Bimages}
-          movie={movie}
-          credits={credits}
-          id={id}
-        />
-      </div>
-    </>
+    <div>
+      <Movie
+        CountryName={CountryName}
+        videos={videos}
+        Pimages={Pimages}
+        Bimages={Bimages}
+        movie={movie}
+        credits={credits}
+        id={id}
+      />
+    </div>
   );
 };
 

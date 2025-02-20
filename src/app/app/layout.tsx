@@ -9,7 +9,7 @@ import "../globals.css";
 // import AuthProvider from "../contextAPI/AuthProvider";
 
 export const metadata: Metadata = {
-  title: "let's see - Unisocial",
+  title: "let's see",
   description: "Cinema Social Media",
 };
 
@@ -25,7 +25,7 @@ async function getUsername() {
   return profileData;
 }
 
-export default async function RootLayout({
+export default async function AppLayout({
   children,
 }: {
   children: React.ReactNode;
