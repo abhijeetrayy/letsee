@@ -2,17 +2,10 @@ import { Countrydata } from "@/staticData/countryName";
 import Movie from "@components/clientComponent/movie";
 
 import { Metadata } from "next";
-import { createClient } from "@/utils/supabase/server";
-
-type Props = {
-  params: { id: string };
-};
 
 type PageProps = {
   params: Promise<{ id: string }>;
 };
-
-type params = Promise<{ id: string }>;
 
 // import { likedButton as LikedButton } from "@/components/buttons/intrectionButton";
 async function getMovieDetails(id: any) {
@@ -58,13 +51,13 @@ export async function generateMetadata({
 
   return {
     title: movie?.title || "Movie Not Found",
-    description: movie?.description || "Discover amazing movies!",
+    description: movie?.tagline || "Discover amazing movies!",
     openGraph: {
       title: movie?.title || "Movie Not Found",
-      description: movie?.description || "Discover amazing movies!",
+      description: movie?.tagline || "Discover amazing movies!",
       images: [
         {
-          url: movie?.poster_url || "/default-image.jpg",
+          url: movie?.poster_path || "/default-image.jpg",
           width: 1200,
           height: 630,
         },
@@ -73,8 +66,8 @@ export async function generateMetadata({
     twitter: {
       card: "summary_large_image",
       title: movie?.title || "Movie Not Found",
-      description: movie?.description || "Discover amazing movies!",
-      images: [movie?.poster_url || "/default-image.jpg"],
+      description: movie?.tagline || "Discover amazing movies!",
+      images: [movie?.poster_path || "/default-image.jpg"],
     },
   };
 }
