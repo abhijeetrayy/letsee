@@ -50,13 +50,11 @@ async function getImages(id: any) {
   return data;
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const supabase = await createClient();
-  const { data: movie } = await supabase
-    .from("movies")
-    .select("title, description, poster_url")
-    .eq("id", params.id)
-    .single();
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { id } = await params;
+  const movie = await getMovieDetails(id);
 
   return {
     title: movie?.title || "Movie Not Found",
