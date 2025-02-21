@@ -65,7 +65,7 @@ const SendMessageModal: React.FC<Props> = ({
     media_type ? media_type : data?.media_type
   }/${data?.id}`;
 
-  const shareText = `Check out this ${data?.name || data?.title} on Letsee`;
+  const shareText = `${data?.name || data?.title}`;
 
   const shareOnTwitter = (url: string, text: string) => {
     const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
@@ -81,41 +81,41 @@ const SendMessageModal: React.FC<Props> = ({
     window.open(whatsappUrl, "_blank");
   };
 
-  const shareOnInstagram = (url: string, text: string) => {
-    // Instagram does not support direct sharing via URL, so we open the web version
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    if (isMobile) {
-      // Try to open Instagram Direct Messenger (mobile only)
-      const instagramUrl = `instagram://direct`;
-      window.location.href = instagramUrl;
+  // const shareOnInstagram = (url: string, text: string) => {
+  //   // Instagram does not support direct sharing via URL, so we open the web version
+  //   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  //   if (isMobile) {
+  //     // Try to open Instagram Direct Messenger (mobile only)
+  //     const instagramUrl = `instagram://direct`;
+  //     window.location.href = instagramUrl;
 
-      // Fallback: Copy the link to the clipboard
-      navigator.clipboard
-        .writeText(url)
-        .then(() => {
-          alert(
-            "Link copied to clipboard! Open Instagram and paste it to share."
-          );
-        })
-        .catch((err) => {
-          console.error("Failed to copy link: ", err);
-        });
-    } else {
-      // Open Instagram's website on desktop
-      const instagramUrl = `https://www.instagram.com/`;
-      navigator.clipboard
-        .writeText(url)
-        .then(() => {
-          alert(
-            "Link copied to clipboard! Open Instagram and paste it to share."
-          );
-        })
-        .catch((err) => {
-          console.error("Failed to copy link: ", err);
-        });
-      window.open(instagramUrl, "_blank");
-    }
-  };
+  //     // Fallback: Copy the link to the clipboard
+  //     navigator.clipboard
+  //       .writeText(url)
+  //       .then(() => {
+  //         alert(
+  //           "Link copied to clipboard! Open Instagram and paste it to share."
+  //         );
+  //       })
+  //       .catch((err) => {
+  //         console.error("Failed to copy link: ", err);
+  //       });
+  //   } else {
+  //     // Open Instagram's website on desktop
+  //     const instagramUrl = `https://www.instagram.com/`;
+  //     navigator.clipboard
+  //       .writeText(url)
+  //       .then(() => {
+  //         alert(
+  //           "Link copied to clipboard! Open Instagram and paste it to share."
+  //         );
+  //       })
+  //       .catch((err) => {
+  //         console.error("Failed to copy link: ", err);
+  //       });
+  //     window.open(instagramUrl, "_blank");
+  //   }
+  // };
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard
@@ -307,7 +307,7 @@ const SendMessageModal: React.FC<Props> = ({
             <span className="text-white">{link.slice(0, 30)}...</span>
             <button
               onClick={() => copyToClipboard(link)}
-              className="text-white hover:text-gray-300"
+              className="text-white hover:text-gray-700"
             >
               {copyToggle ? <IoIosCopy /> : <MdContentCopy />}
             </button>
@@ -326,12 +326,12 @@ const SendMessageModal: React.FC<Props> = ({
             >
               <FaWhatsapp size={24} />
             </button>
-            <button
+            {/* <button
               onClick={() => shareOnInstagram(link, shareText)}
               className="text-white hover:text-pink-400"
             >
               <FaInstagram size={24} />
-            </button>
+            </button> */}
           </div>
           <label>Search username</label>
           <input
