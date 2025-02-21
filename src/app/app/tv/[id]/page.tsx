@@ -1,4 +1,5 @@
 import Tv from "@components/clientComponent/tv";
+import { Metadata } from "next";
 
 async function getShowDetails(id: string) {
   const response = await fetch(
@@ -43,6 +44,41 @@ async function getExternalIds(id: any) {
 }
 interface PageProps {
   params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { id } = await params;
+  const movie = await getShowDetails(id);
+  console.log(movie);
+
+  return {
+    title: movie?.name || "Movie Not Found",
+    description: movie?.tagline || "Discover amazing movie/tv!",
+    openGraph: {
+      title: movie?.name || "Movie Not Found",
+      description: movie?.tagline || "Discover amazing movie/tv!",
+      images: [
+        {
+          url:
+            `https://image.tmdb.org/t/p/w300${movie?.poster_path}` ||
+            "/default-image.jpg",
+          width: 1200,
+          height: 630,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: movie?.name || "Movie Not Found",
+      description: movie?.tagline || "Discover amazing movie/tv!",
+      images: [
+        `https://image.tmdb.org/t/p/w300${movie?.poster_path}` ||
+          "/default-image.jpg",
+      ],
+    },
+  };
 }
 
 const ShowDetails = async ({ params }: PageProps) => {
