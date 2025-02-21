@@ -2,6 +2,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { FaCheck } from "react-icons/fa";
+import { MdContentCopy } from "react-icons/md";
+import { FaInstagram, FaTwitter, FaWhatsapp } from "react-icons/fa6";
 
 interface User {
   id: string;
@@ -22,6 +24,7 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   data?: Media | null; // Movie or TV show data from props (optional)
+  media_type: string | null;
 }
 
 interface Message {
@@ -37,7 +40,12 @@ interface Message {
   } | null;
 }
 
-const SendMessageModal: React.FC<Props> = ({ isOpen, onClose, data }) => {
+const SendMessageModal: React.FC<Props> = ({
+  isOpen,
+  onClose,
+  data,
+  media_type,
+}) => {
   const [search, setSearch] = useState<string>("");
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
@@ -50,6 +58,64 @@ const SendMessageModal: React.FC<Props> = ({ isOpen, onClose, data }) => {
   const [logedin, setLogedin] = useState(false);
 
   const supabase = createClient();
+
+  const link = `https://letsee-dusky.vercel.app/app/${
+    media_type ? media_type : data?.media_type
+  }/${data?.id}`;
+
+  const shareText = `Check out this ${data?.name || data?.title} on Letsee`;
+
+  const shareOnTwitter = (url: string, text: string) => {
+    const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+      url
+    )}&text=${encodeURIComponent(text)}`;
+    window.open(twitterUrl, "_blank");
+  };
+
+  const shareOnWhatsApp = (url: string, text: string) => {
+    const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(
+      text + " " + url
+    )}`;
+    window.open(whatsappUrl, "_blank");
+  };
+
+  const shareOnInstagram = (url: string, text: string) => {
+    // Instagram does not support direct sharing via URL, so we open the web version
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (isMobile) {
+      // Try to open Instagram Direct Messenger (mobile only)
+      const instagramUrl = `instagram://direct`;
+      window.location.href = instagramUrl;
+
+      // Fallback: Copy the link to the clipboard
+      navigator.clipboard
+        .writeText(url)
+        .then(() => {
+          alert(
+            "Link copied to clipboard! Open Instagram and paste it to share."
+          );
+        })
+        .catch((err) => {
+          console.error("Failed to copy link: ", err);
+        });
+    } else {
+      // Open Instagram's website on desktop
+      const instagramUrl = `https://www.instagram.com/`;
+      alert("Link copied to clipboard! Open Instagram and paste it to share.");
+      window.open(instagramUrl, "_blank");
+    }
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        alert("Link copied to clipboard!");
+      })
+      .catch((err) => {
+        console.error("Failed to copy link: ", err);
+      });
+  };
 
   // Fetch sender info on mount
   useEffect(() => {
@@ -226,6 +292,36 @@ const SendMessageModal: React.FC<Props> = ({ isOpen, onClose, data }) => {
         </div>
 
         <div className="p-4">
+          <div className="flex items-center justify-between mb-4">
+            <span className="text-white">{link.slice(0, 25)}...</span>
+            <button
+              onClick={() => copyToClipboard(link)}
+              className="text-white hover:text-gray-300"
+            >
+              <MdContentCopy />
+            </button>
+          </div>
+
+          <div className="flex space-x-4 mb-4">
+            <button
+              onClick={() => shareOnTwitter(link, shareText)}
+              className="text-white hover:text-blue-400"
+            >
+              <FaTwitter size={24} />
+            </button>
+            <button
+              onClick={() => shareOnWhatsApp(link, shareText)}
+              className="text-white hover:text-green-400"
+            >
+              <FaWhatsapp size={24} />
+            </button>
+            <button
+              onClick={() => shareOnInstagram(link, shareText)}
+              className="text-white hover:text-pink-400"
+            >
+              <FaInstagram size={24} />
+            </button>
+          </div>
           <label>Search username</label>
           <input
             type="text"

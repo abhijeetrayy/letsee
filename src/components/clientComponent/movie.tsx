@@ -33,6 +33,7 @@ export default function Movie({
   return (
     <div>
       <SendMessageModal
+        media_type={"movie"}
         data={cardData}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -69,7 +70,7 @@ export default function Movie({
           </div>
 
           {/* Movie Content */}
-          <div className="max-w-6xl w-full relative z-10 flex flex-col md:flex-row gap-8 my-8 px-4">
+          <div className="max-w-6xl w-full relative z-10 flex flex-col md:flex-row gap-8 my-4 px-4">
             {/* Poster */}
             <div className="flex-1">
               <img

@@ -70,7 +70,7 @@ export async function generateMetadata({
       title: movie?.title || "Movie Not Found",
       description: movie?.tagline || "Discover amazing movies!",
       images: [
-        `https://image.tmdb.org/t/p/w300${movie?.poster_path}` ||
+        `https://image.tmdb.org/t/p/w500${movie?.poster_path}` ||
           "/default-image.jpg",
       ],
     },
