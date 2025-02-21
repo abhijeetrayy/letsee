@@ -60,8 +60,8 @@ export async function generateMetadata({
           url:
             `https://image.tmdb.org/t/p/w300${movie?.poster_path}` ||
             "/default-image.jpg",
-          width: 1200,
-          height: 630,
+          width: 630,
+          height: 1200,
         },
       ],
     },
