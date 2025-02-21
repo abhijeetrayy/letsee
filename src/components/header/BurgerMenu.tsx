@@ -102,9 +102,9 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID }) => {
               <div className="text-2xl hover:text-gray-400">
                 <button
                   onClick={() => link(`/login`)}
-                  className="text-2xl hover:text-gray-400"
+                  className="text-2xl text-gray-100 hover:bg-blue-500 px-3 py-1 rounded-md bg-blue-600 "
                 >
-                  My Profile
+                  Log in
                 </button>
               </div>
             </li>

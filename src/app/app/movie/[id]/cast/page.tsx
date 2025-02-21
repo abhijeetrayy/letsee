@@ -149,9 +149,9 @@ export default async function Page({ params }: PageProps) {
         <div className="max-w-5xl w-full m-auto my-3">
           <h2 className="text-2xl font-bold mb-4">Cast ~</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {cast.map((item) => (
+            {cast.map((item, index: number) => (
               <Link
-                key={item.id}
+                key={index}
                 className="border border-neutral-900 bg-neutral-800 py-2 px-2 rounded-md hover:border-indigo-600 transition-colors"
                 href={`/app/person/${item.id}-${item.name
                   .trim()
@@ -183,9 +183,9 @@ export default async function Page({ params }: PageProps) {
 
           <h2 className="text-2xl font-bold my-4">Prod. ~ Crew</h2>
           <div className="grid grid-cols-1 gap-4">
-            {crew.map((item) => (
+            {crew.map((item, index: number) => (
               <Link
-                key={item.id}
+                key={index}
                 href={`/app/person/${item.id}-${item.name
                   .trim()
                   .replace(/[^a-zA-Z0-9]/g, "-")

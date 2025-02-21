@@ -86,18 +86,18 @@ function DiscoverUsers() {
   }, []);
 
   return (
-    <div className="w-full max-w-6xl mx-auto mb-5">
+    <div className="w-full  mx-auto mb-5">
       <div className="mt-7">
         <Link
           href="/app/profile"
           className="text-lg font-semibold mb-2 underline"
         >
-          Discover Users
+          Discover people
         </Link>
         <div className="relative">
           <div
             ref={scrollRef}
-            className="flex flex-row gap-4 px-4 py-3 overflow-x-auto thin-scroll pb-3"
+            className="flex flex-row gap-4  py-3 overflow-x-auto thin-scroll pb-3"
           >
             {loading
               ? [...Array(5)].map((_, index) => (

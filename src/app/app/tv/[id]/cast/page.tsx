@@ -122,9 +122,9 @@ async function page({ params }: PageProps) {
       <div className="max-w-5xl w-full m-auto my-3">
         {cast.length > 0 && <h2>Cast ~</h2>}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {cast?.map((item: any) => (
+          {cast?.map((item: any, index: number) => (
             <Link
-              key={item.id}
+              key={index}
               className="border border-neutral-900 bg-neutral-800 py-2 px-2 rounded-md hover:border-indigo-600"
               href={`/app/person/${item.id}-${item.name
                 .trim()
@@ -151,9 +151,9 @@ async function page({ params }: PageProps) {
         </div>
         {crew.length > 0 && <h2 className="my-3">Prod. ~ Crew</h2>}
         <div className="grid grid-cols-1">
-          {crew?.map((item: any) => (
+          {crew?.map((item: any, index: number) => (
             <Link
-              key={item.id}
+              key={index}
               href={`/app/person/${item.id}-${item.name
                 .trim()
                 .replace(/[^a-zA-Z0-9]/g, "-")
