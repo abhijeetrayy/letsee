@@ -147,11 +147,11 @@ const WatchedMoviesList = ({ userId }: { userId: string }) => {
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-3 ">
           {memoizedMovies.map((item: any) => (
             <div
-              className=" relative group flex flex-col rounded-md bg-black w-full text-gray-300 overflow-hidden "
+              className=" relative  group flex flex-col rounded-md bg-black w-full text-gray-300 overflow-hidden "
               key={item.id}
             >
               <Link
-                className="relative"
+                className="relative h-full"
                 href={`/app/${item.item_type}/${item.item_id}-${item.item_name
                   .trim()
                   .replace(/[^a-zA-Z0-9]/g, "-")
@@ -175,13 +175,10 @@ const WatchedMoviesList = ({ userId }: { userId: string }) => {
                       ? "/pixeled.webp"
                       : `https://image.tmdb.org/t/p/w185/${item.image_url}`
                   }
-                  loading="lazy"
                   alt={item.item_name}
-                  width={185}
-                  height={278}
                 />
               </Link>
-              <div className="w-full h-[100px] bg-indigo-700  flex flex-col justify-between">
+              <div className="w-full h-[100px] bg-indigo-700 bottom-0  flex flex-col justify-between">
                 <ThreePrefrenceBtn
                   genres={item.genres}
                   cardId={item.item_id}

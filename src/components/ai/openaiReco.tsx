@@ -72,7 +72,7 @@ export default function Recommendations() {
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 ">
           {recommendations.map((data) => (
             <div className="" key={data.tmdb_id}>
-              <div className=" relative group flex flex-col justify-between rounded-md bg-black  w-full h-full  text-gray-300 overflow-hidden duration-300  lg:hover:scale-105 ">
+              <div className=" relative group flex flex-col justify-between rounded-md bg-black  w-full h-full  text-gray-300 overflow-hidden duration-300   ">
                 <Link
                   className="relative flex h-full  "
                   href={`/app/movie/${data.tmdb_id}-${data.name

@@ -42,7 +42,7 @@ function PersonCredits({ cast, crew, name }: any) {
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
           {sortedCast.map((data: any, index: number) => (
             <div key={`movie-${index}`} className="relative">
-              <div className="group flex flex-col justify-between rounded-md bg-black w-full h-full text-gray-300 overflow-hidden duration-300 lg:hover:scale-105">
+              <div className="group flex flex-col justify-between rounded-md bg-black w-full h-full text-gray-300 overflow-hidden duration-300 ">
                 <Link
                   className="relative flex h-full"
                   href={`/app/${data.media_type}/${data.id}-${(

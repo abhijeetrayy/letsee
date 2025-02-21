@@ -62,7 +62,7 @@ export async function generateMetadata({
       images: [
         {
           url:
-            `https://image.tmdb.org/t/p/w500${movie?.poster_path}` ||
+            `https://image.tmdb.org/t/p/w342${movie?.poster_path}` ||
             "/default-image.jpg",
           width: 630,
           height: 1200,
@@ -74,7 +74,7 @@ export async function generateMetadata({
       title: movie?.name || "Movie Not Found",
       description: movie?.tagline || "Discover amazing movie/tv!",
       images: [
-        `https://image.tmdb.org/t/p/w500${movie?.poster_path}` ||
+        `https://image.tmdb.org/t/p/w342${movie?.poster_path}` ||
           "/default-image.jpg",
       ],
     },

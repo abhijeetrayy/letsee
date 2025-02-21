@@ -4,6 +4,7 @@ import { createClient } from "@/utils/supabase/client";
 import { FaCheck } from "react-icons/fa";
 import { MdContentCopy } from "react-icons/md";
 import { FaInstagram, FaTwitter, FaWhatsapp } from "react-icons/fa6";
+import { IoIosCopy } from "react-icons/io";
 
 interface User {
   id: string;
@@ -56,6 +57,7 @@ const SendMessageModal: React.FC<Props> = ({
   const [warning, setWarning] = useState<string | null>(null);
   const [sender, setSender] = useState<User | null>(null);
   const [logedin, setLogedin] = useState(false);
+  const [copyToggle, setCopyToggle] = useState(false);
 
   const supabase = createClient();
 
@@ -119,7 +121,7 @@ const SendMessageModal: React.FC<Props> = ({
     navigator.clipboard
       .writeText(text)
       .then(() => {
-        alert("Link copied to clipboard!");
+        // setCopyToggle(true);
       })
       .catch((err) => {
         console.error("Failed to copy link: ", err);
@@ -302,12 +304,12 @@ const SendMessageModal: React.FC<Props> = ({
 
         <div className="p-4">
           <div className="flex items-center justify-between mb-4">
-            <span className="text-white">{link.slice(0, 25)}...</span>
+            <span className="text-white">{link.slice(0, 30)}...</span>
             <button
               onClick={() => copyToClipboard(link)}
               className="text-white hover:text-gray-300"
             >
-              <MdContentCopy />
+              {copyToggle ? <IoIosCopy /> : <MdContentCopy />}
             </button>
           </div>
 
@@ -340,24 +342,31 @@ const SendMessageModal: React.FC<Props> = ({
             onChange={(e) => setSearch(e.target.value)}
           />
 
-          <div className="max-h-40 overflow-y-auto mb-4">
+          <div className="max-h-96 overflow-y-auto mb-4">
             {loading ? (
               <p className="text-gray-100">Loading users...</p>
             ) : (
-              users.map((user) => (
-                <div
-                  key={user.id}
-                  className={`flex items-center justify-between p-2 cursor-pointer rounded-lg mb-2 ${
-                    selectedUsers.some((u) => u.id === user.id)
-                      ? "bg-blue-500 text-white"
-                      : "bg-neutral-600 hover:bg-neutral-500"
-                  }`}
-                  onClick={() => toggleUserSelection(user)}
-                >
-                  <span>{user.username}</span>
-                  {selectedUsers.some((u) => u.id === user.id) && <FaCheck />}
-                </div>
-              ))
+              <div className="grid grid-cols-2 sm:grid-cols-5  gap-3">
+                {users.map((user) => (
+                  <div
+                    key={user.id}
+                    className={`flex flex-col items-center justify-between p-2 cursor-pointer rounded-lg mb-2 ${
+                      selectedUsers.some((u) => u.id === user.id)
+                        ? "bg-blue-500 text-white"
+                        : "bg-neutral-600 hover:bg-neutral-500"
+                    }`}
+                    onClick={() => toggleUserSelection(user)}
+                  >
+                    <img
+                      className="rounded-full w-10 h-10"
+                      src="/avatar.svg"
+                      alt={user.username}
+                    />
+                    <span>{user.username}</span>
+                    {selectedUsers.some((u) => u.id === user.id) && <FaCheck />}
+                  </div>
+                ))}
+              </div>
             )}
           </div>
 
