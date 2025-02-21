@@ -64,6 +64,7 @@ function Page() {
   return (
     <div className="min-h-screen mx-auto w-full max-w-7xl">
       <SendMessageModal
+        media_type={"tv"}
         data={cardData}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

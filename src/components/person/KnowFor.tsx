@@ -69,6 +69,7 @@ const ScrollableCastList: React.FC<ScrollableCastListProps> = ({
   return (
     <div className="relative w-full mb-12">
       <SendMessageModal
+        media_type={cardData.media_type}
         data={cardData}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

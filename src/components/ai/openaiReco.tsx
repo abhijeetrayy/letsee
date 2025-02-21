@@ -51,6 +51,7 @@ export default function Recommendations() {
   return (
     <div className="space-y-4">
       <SendMessageModal
+        media_type={"movie"}
         data={cardData}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

@@ -39,6 +39,7 @@ function MovieByGenre({ Sresults }: MovieByGenreProps) {
   return (
     <div>
       <SendMessageModal
+        media_type={"movie"}
         data={cardData ? { ...cardData, id: cardData.id.toString() } : null}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

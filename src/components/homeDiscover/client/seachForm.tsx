@@ -78,6 +78,7 @@ const MovieSearch = () => {
   return (
     <div className="text-white max-w-7xl w-full min-h-44 mx-auto ">
       <SendMessageModal
+        media_type={cardData.media_type}
         data={cardData}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

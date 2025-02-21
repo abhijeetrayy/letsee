@@ -17,6 +17,7 @@ export default function tvTop({ TrendingTv }: any) {
   return (
     <div>
       <SendMessageModal
+        media_type={"tv"}
         data={cardData}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

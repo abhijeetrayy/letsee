@@ -30,6 +30,7 @@ function PersonCredits({ cast, crew, name }: any) {
   return (
     <div>
       <SendMessageModal
+        media_type={cardData.media_type}
         data={cardData}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

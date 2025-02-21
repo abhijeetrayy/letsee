@@ -17,6 +17,7 @@ export default function weeklyTop({ data }: any) {
   return (
     <div>
       <SendMessageModal
+        media_type={cardData.media_type}
         data={cardData}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

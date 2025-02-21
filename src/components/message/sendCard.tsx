@@ -101,7 +101,16 @@ const SendMessageModal: React.FC<Props> = ({
     } else {
       // Open Instagram's website on desktop
       const instagramUrl = `https://www.instagram.com/`;
-      alert("Link copied to clipboard! Open Instagram and paste it to share.");
+      navigator.clipboard
+        .writeText(url)
+        .then(() => {
+          alert(
+            "Link copied to clipboard! Open Instagram and paste it to share."
+          );
+        })
+        .catch((err) => {
+          console.error("Failed to copy link: ", err);
+        });
       window.open(instagramUrl, "_blank");
     }
   };
