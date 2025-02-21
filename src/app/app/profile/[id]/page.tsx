@@ -60,6 +60,7 @@ export default async function ProfilePage({ params }: PageProps) {
   const {
     data: { user: currentUser },
   } = await supabase.auth.getUser();
+
   const currentUserId = currentUser?.id || null;
   const profileId = user.id;
 
@@ -212,7 +213,11 @@ export default async function ProfilePage({ params }: PageProps) {
         )}
 
         {/* Conditional Content */}
-        {user.visibility === "private" && !isOwner ? (
+        {!currentUser ? (
+          <div className="w-full flex items-center justify-center h-52">
+            Log in to view @{user.username}&apos;s content.
+          </div>
+        ) : user.visibility === "private" && !isOwner ? (
           <div className="text-center py-10">
             <p className="text-lg text-neutral-600">
               This profile is private. Only the user can see it.

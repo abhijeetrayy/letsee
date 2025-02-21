@@ -69,11 +69,11 @@ function DiscoverUsers() {
   };
 
   const scrollLeft = () => {
-    scrollRef.current?.scrollBy({ left: -200, behavior: "smooth" });
+    scrollRef.current?.scrollBy({ left: -600, behavior: "smooth" });
   };
 
   const scrollRight = () => {
-    scrollRef.current?.scrollBy({ left: 200, behavior: "smooth" });
+    scrollRef.current?.scrollBy({ left: 600, behavior: "smooth" });
   };
 
   useEffect(() => {
