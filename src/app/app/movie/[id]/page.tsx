@@ -58,7 +58,7 @@ export async function generateMetadata({
       images: [
         {
           url:
-            `https://image.tmdb.org/t/p/w300${movie?.poster_path}` ||
+            `https://image.tmdb.org/t/p/w500${movie?.poster_path}` ||
             "/default-image.jpg",
           width: 630,
           height: 1200,
