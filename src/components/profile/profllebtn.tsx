@@ -7,7 +7,7 @@ import Link from "next/link";
 
 interface FollowerBtnClientProps {
   profileId: string;
-  currentUserId: string;
+  currentUserId: string | null;
   initialStatus: "following" | "pending" | "follow";
 }
 
@@ -18,11 +18,18 @@ export function FollowerBtnClient({
 }: FollowerBtnClientProps) {
   const [status, setStatus] = useState(initialStatus);
   const [isLoading, setIsLoading] = useState(false);
+  const [logedin, setLogedin] = useState(false);
+  const [modal, setModal] = useState(false);
   const supabase = createClient();
 
   useEffect(() => {
     const fetchStatus = async () => {
       setIsLoading(true);
+      if (!currentUserId) {
+        setLogedin(false);
+        setIsLoading(false);
+        return;
+      }
       try {
         const { data } = await supabase
           .from("user_connections")
@@ -70,6 +77,11 @@ export function FollowerBtnClient({
     if (isLoading) return;
     setIsLoading(true);
 
+    if (!logedin) {
+      setModal(true);
+      return;
+    }
+
     try {
       if (status === "following") {
         await supabase
@@ -86,6 +98,7 @@ export function FollowerBtnClient({
           .eq("receiver_id", profileId);
         setStatus("follow");
       } else {
+        if (!currentUserId) return;
         const { error } = await sendFollowRequest(currentUserId, profileId);
         if (!error) setStatus("pending");
         else console.log(error);
@@ -98,25 +111,50 @@ export function FollowerBtnClient({
   };
 
   return (
-    <button
-      className={`px-4 py-2 rounded ${
-        status === "following"
-          ? "bg-gray-500"
+    <>
+      {modal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[9999]">
+          <div className="bg-neutral-700 w-full h-fit max-w-3xl sm:rounded-lg p-5 shadow-xl">
+            <div className="flex justify-between items-center p-4 border-b">
+              <h2 className="text-white text-lg font-semibold">
+                Please Log In First
+              </h2>
+              <button
+                onClick={() => {
+                  setModal(false);
+                  setIsLoading(false);
+                }}
+                className="text-white hover:text-gray-300"
+              >
+                ✖
+              </button>
+            </div>
+            <div className="p-4">
+              <p className="text-white">You need to log in to follow.</p>
+            </div>
+          </div>
+        </div>
+      )}
+      <button
+        className={`px-4 py-2 rounded ${
+          status === "following"
+            ? "bg-gray-500"
+            : status === "pending"
+            ? "bg-yellow-500"
+            : "bg-blue-500"
+        } text-white`}
+        onClick={handleFollowClick}
+        disabled={isLoading}
+      >
+        {isLoading
+          ? "Loading..."
+          : status === "following"
+          ? "Unfollow"
           : status === "pending"
-          ? "bg-yellow-500"
-          : "bg-blue-500"
-      } text-white`}
-      onClick={handleFollowClick}
-      disabled={isLoading}
-    >
-      {isLoading
-        ? "Loading..."
-        : status === "following"
-        ? "Unfollow"
-        : status === "pending"
-        ? "Requested"
-        : "Follow"}
-    </button>
+          ? "Requested"
+          : "Follow"}
+      </button>
+    </>
   );
 }
 

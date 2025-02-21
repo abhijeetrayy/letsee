@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import UserPrefrenceContext from "@/app/contextAPI/userPrefrence";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
@@ -27,7 +27,13 @@ const CardMovieButton: React.FC<CardMovieButtonProps> = ({
   state,
   genres,
 }) => {
-  const { setUserPrefrence, loading }: any = useContext(UserPrefrenceContext);
+  const [modal, setModal] = useState(false);
+  const { setUserPrefrence, loading, user }: any =
+    useContext(UserPrefrenceContext);
+
+  const handlemodal = () => {
+    setModal(!modal);
+  };
 
   const handleAction = async (
     funcType: "watched" | "watchlater" | "favorite",
@@ -38,6 +44,9 @@ const CardMovieButton: React.FC<CardMovieButtonProps> = ({
     adult: boolean
   ) => {
     if (loading) return;
+    if (!user) {
+      return alert("Please login to perform this action");
+    }
 
     const apiEndpoints = {
       watched: "/api/watchedButton",
@@ -146,22 +155,47 @@ const CardMovieButton: React.FC<CardMovieButtonProps> = ({
   };
 
   return (
-    <button
-      onClick={() =>
-        handleAction(funcType, itemId, name, mediaType, imgUrl, adult)
-      }
-      title={funcType}
-      className="h-full w-full flex items-center justify-center text-2xl bg-neutral-800 text-neutral-200 hover:bg-neutral-700"
-      disabled={loading}
-    >
-      {loading ? (
-        <div className="w-fit m-auto animate-spin">
-          <AiOutlineLoading3Quarters />
+    <>
+      {modal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 ">
+          <div className="bg-neutral-700 w-full h-fit max-w-3xl sm:rounded-lg p-5 shadow-xl">
+            <div className="flex justify-between items-center p-4 border-b">
+              <h2 className="text-white text-lg font-semibold">
+                Please Log In First
+              </h2>
+              <button
+                onClick={handlemodal}
+                className="text-white hover:text-gray-300"
+              >
+                ✖
+              </button>
+            </div>
+            <div className="p-4">
+              <p className="text-white">You need to log in to save.</p>
+            </div>
+          </div>
         </div>
-      ) : (
-        icon
       )}
-    </button>
+      <button
+        onClick={
+          user
+            ? () =>
+                handleAction(funcType, itemId, name, mediaType, imgUrl, adult)
+            : handlemodal
+        }
+        title={funcType}
+        className="h-full w-full flex items-center justify-center text-2xl bg-neutral-800 text-neutral-200 hover:bg-neutral-700"
+        disabled={loading}
+      >
+        {loading ? (
+          <div className="w-fit m-auto animate-spin">
+            <AiOutlineLoading3Quarters />
+          </div>
+        ) : (
+          icon
+        )}
+      </button>
+    </>
   );
 };
 

@@ -53,12 +53,12 @@ function WatchLaterList({ watchlist, watchlistCount }: any) {
       <div className="relative w-full">
         <div
           ref={scrollRef}
-          className="w-full flex flex-row overflow-x-scroll thin-scroll gap-3 z-40 pb-3"
+          className="w-full flex flex-row overflow-x-scroll thin-scroll gap-3  pb-3"
         >
           {watchlist?.map((item: any) => (
             <div key={item.id}>
               <div className="relative group flex flex-col rounded-md bg-black w-full text-gray-300 overflow-hidden">
-                <div className="absolute top-0 left-0 z-10 lg:opacity-0 lg:group-hover:opacity-100">
+                <div className="absolute top-0 left-0  lg:opacity-0 lg:group-hover:opacity-100">
                   {item.item_adult ? (
                     <p className="p-1 bg-red-600 text-white rounded-br-md text-sm">
                       Adult
@@ -84,7 +84,7 @@ function WatchLaterList({ watchlist, watchlistCount }: any) {
                     alt={item.item_name}
                   />
                 </Link>
-                <div className="w-full bg-neutral-900 z-10">
+                <div className="w-full bg-neutral-900 ">
                   {/* Assuming ThreePrefrenceBtn is a valid component */}
                   <ThreePrefrenceBtn
                     genres={item.genres}
@@ -118,7 +118,7 @@ function WatchLaterList({ watchlist, watchlistCount }: any) {
         {canScrollLeft && (
           <button
             onClick={scrollLeft}
-            className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-neutral-600 p-2 py-5 rounded-sm z-10"
+            className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-neutral-600 p-2 py-5 rounded-sm "
             style={{
               boxShadow: "0 4px 15px rgba(0, 0, 0, 0.9)", // Outer shadow
             }}
@@ -129,7 +129,7 @@ function WatchLaterList({ watchlist, watchlistCount }: any) {
         {canScrollRight && (
           <button
             onClick={scrollRight}
-            className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-neutral-600 p-2 py-5 rounded-sm z-10"
+            className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-neutral-600 p-2 py-5 rounded-sm "
             style={{
               boxShadow: "0 4px 15px rgba(0, 0, 0, .9)", // Outer shadow
             }}

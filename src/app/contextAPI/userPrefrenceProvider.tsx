@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import UserPrefrenceContext from "./userPrefrence";
+import { createClient } from "@/utils/supabase/client";
 
 const UserPrefrenceProvider = ({ children }: { children: React.ReactNode }) => {
   const [userPrefrence, setUserPrefrence] = useState({
@@ -10,25 +11,41 @@ const UserPrefrenceProvider = ({ children }: { children: React.ReactNode }) => {
     watchlater: [],
   });
   const [loading, setloading] = useState(true);
+  const [user, setUser] = useState(false);
 
   useEffect(() => {
     async function handler() {
-      const prefrence = await fetch("/api/userPrefrence", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const res = await prefrence.json();
+      const supabase = createClient();
+      const { data: userData, error: userError } =
+        await supabase.auth.getUser();
+      const user = userData?.user;
+      if (!userError && user) {
+        const prefrence = await fetch("/api/userPrefrence", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const res = await prefrence.json();
 
-      setUserPrefrence(res);
-      setloading(false);
+        setUserPrefrence(res);
+        setUser(true);
+        setloading(false);
+      } else {
+        setUserPrefrence({
+          watched: [],
+          favorite: [],
+          watchlater: [],
+        });
+        setUser(false);
+        setloading(false);
+      }
     }
     handler();
   }, []);
   return (
     <UserPrefrenceContext.Provider
-      value={{ userPrefrence, setUserPrefrence, loading }}
+      value={{ userPrefrence, setUserPrefrence, loading, user }}
     >
       {children}
     </UserPrefrenceContext.Provider>

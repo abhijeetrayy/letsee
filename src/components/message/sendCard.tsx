@@ -47,6 +47,7 @@ const SendMessageModal: React.FC<Props> = ({ isOpen, onClose, data }) => {
   const [success, setSuccess] = useState<string | null>(null);
   const [warning, setWarning] = useState<string | null>(null);
   const [sender, setSender] = useState<User | null>(null);
+  const [logedin, setLogedin] = useState(false);
 
   const supabase = createClient();
 
@@ -57,7 +58,8 @@ const SendMessageModal: React.FC<Props> = ({ isOpen, onClose, data }) => {
         await supabase.auth.getUser();
 
       if (userError) {
-        console.error("Error fetching sender info:", userError.message);
+        console.log("Error fetching sender info:", userError.message);
+        setLogedin(false);
         return;
       }
 
@@ -72,6 +74,7 @@ const SendMessageModal: React.FC<Props> = ({ isOpen, onClose, data }) => {
           console.error("Error fetching sender info:", error.message);
         } else {
           setSender(data);
+          setLogedin(true);
         }
       }
     };
@@ -93,7 +96,8 @@ const SendMessageModal: React.FC<Props> = ({ isOpen, onClose, data }) => {
         .select("id, username")
         .ilike("username", `%${search}%`)
         .neq("id", sender.id) // Exclude sender from search results
-        .limit(10);
+        .limit(10)
+        .order("username", { ascending: true });
 
       if (error) {
         setError("Error fetching users. Please try again.");
@@ -185,6 +189,29 @@ const SendMessageModal: React.FC<Props> = ({ isOpen, onClose, data }) => {
   }, [data, message, selectedUsers, sender, supabase, onClose]);
 
   if (!isOpen) return null;
+
+  if (!logedin) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[9999]">
+        <div className="bg-neutral-700 w-full h-fit max-w-3xl sm:rounded-lg p-5 shadow-xl">
+          <div className="flex justify-between items-center p-4 border-b">
+            <h2 className="text-white text-lg font-semibold">
+              Please Log In First
+            </h2>
+            <button
+              onClick={onClose}
+              className="text-white hover:text-gray-300"
+            >
+              ✖
+            </button>
+          </div>
+          <div className="p-4">
+            <p className="text-white">You need to log in to send messages.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[9999]">

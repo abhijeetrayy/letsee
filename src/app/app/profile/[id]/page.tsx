@@ -11,6 +11,7 @@ import ChataiReco from "@/components/ai/openaiReco";
 import ProfileContent from "@components/profile/profileContent";
 import Visibility from "@components/profile/visibility";
 import StatisticsGenre from "@components/profile/statisticsGenre";
+import Logornot from "@components/guide/logornot";
 
 // Fetch user data and statistics
 const getUserData = async (id: string) => {
@@ -138,14 +139,17 @@ export default async function ProfilePage({ params }: PageProps) {
 
             {/* Follow Button & Message */}
             <div className="flex gap-4">
-              {currentUserId && !isOwner && (
+              {!isOwner && (
                 <FollowerBtnClient
                   profileId={profileId}
                   currentUserId={currentUserId}
                   initialStatus={isFollowing ? "following" : "follow"}
                 />
               )}
-              {!isOwner && (
+              {!currentUserId && (
+                <Logornot message={"You need to log in to send messages."} />
+              )}
+              {currentUserId && !isOwner && (
                 <Link
                   href={`/app/messages/${profileId}`}
                   className="px-4 py-2 bg-neutral-700 text-white rounded-md hover:bg-neutral-800 transition-colors"

@@ -144,10 +144,10 @@ const WatchedMoviesList = ({ userId }: { userId: string }) => {
           <h1 className="m-auto w-fit">no result found.</h1>
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-3 z-40">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-3 ">
           {memoizedMovies.map((item: any) => (
             <div
-              className="z-40 relative group flex flex-col justify-between bg-black text-gray-300 rounded-md overflow-hidden duration-300 lg:hover:scale-105"
+              className=" relative group flex flex-col rounded-md bg-black w-full text-gray-300 overflow-hidden "
               key={item.id}
             >
               <Link
@@ -157,7 +157,7 @@ const WatchedMoviesList = ({ userId }: { userId: string }) => {
                   .replace(/[^a-zA-Z0-9]/g, "-")
                   .replace(/-+/g, "-")}}`}
               >
-                <div className="absolute top-0 left-0 z-10 lg:opacity-0 lg:group-hover:opacity-100">
+                <div className="absolute top-0 left-0  lg:opacity-0 lg:group-hover:opacity-100">
                   {item.item_adult ? (
                     <p className="p-1 bg-red-600 text-white rounded-br-md text-sm">
                       Adult
@@ -181,7 +181,7 @@ const WatchedMoviesList = ({ userId }: { userId: string }) => {
                   height={278}
                 />
               </Link>
-              <div className="w-full h-[100px] bg-indigo-700 z-10 flex flex-col justify-between">
+              <div className="w-full h-[100px] bg-indigo-700  flex flex-col justify-between">
                 <ThreePrefrenceBtn
                   genres={item.genres}
                   cardId={item.item_id}

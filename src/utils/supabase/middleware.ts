@@ -18,16 +18,23 @@ export async function updateSession(request: NextRequest) {
 
     // Fetch user session
     const { data: userData, error: userError } = await supabase.auth.getUser();
-    const user = userData?.user;
 
+    const user = userData?.user;
     if (userError || !user) {
-      console.warn(
+      console.log(
         "⚠️ No active session:",
         userError?.message || "User not logged in"
       );
-    } else {
-      console.log("✅ Authenticated:", user.email);
     }
+
+    // if (userError || !user) {
+    //   console.warn(
+    //     "⚠️ No active session:",
+    //     userError?.message || "User not logged in"
+    //   );
+    // } else {
+    //   console.log("✅ Authenticated:", user.email);
+    // }
 
     const publicRoutes = [
       "/login",
@@ -38,16 +45,16 @@ export async function updateSession(request: NextRequest) {
     const isPublicRoute = publicRoutes.includes(request.nextUrl.pathname);
 
     // Redirect authenticated users from `/` to `/app`
-    if (user && request.nextUrl.pathname === "/") {
+    if (request.nextUrl.pathname === "/") {
       console.log("🔄 Redirecting authenticated user to /app");
       return NextResponse.redirect(new URL("/app", request.url));
     }
 
     // Redirect unauthenticated users away from protected pages
-    if (!user && !isPublicRoute) {
-      console.log("🔐 Redirecting unauthenticated user to /login");
-      return NextResponse.redirect(new URL("/login", request.url));
-    }
+    // if (!user && !isPublicRoute) {
+    //   console.log("🔐 Redirecting unauthenticated user to /login");
+    //   return NextResponse.redirect(new URL("/login", request.url));
+    // }
 
     // Redirect authenticated users away from auth pages
     if (user && isPublicRoute) {

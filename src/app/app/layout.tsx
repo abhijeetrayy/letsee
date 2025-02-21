@@ -33,7 +33,8 @@ export default async function AppLayout({
   const profileData = await getUsername();
 
   if (!profileData?.username) {
-    return <SetupComp />;
+    // return <SetupComp />;
+    console.log("no username");
   }
 
   return (
