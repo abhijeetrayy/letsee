@@ -121,7 +121,7 @@ const SendMessageModal: React.FC<Props> = ({
     navigator.clipboard
       .writeText(text)
       .then(() => {
-        // setCopyToggle(true);
+        setCopyToggle(true);
       })
       .catch((err) => {
         console.error("Failed to copy link: ", err);
@@ -256,6 +256,9 @@ const SendMessageModal: React.FC<Props> = ({
       setSuccess("Messages sent successfully!");
       setMessage("");
       setSelectedUsers([]);
+      setCopyToggle(false);
+      setSearch("");
+
       setTimeout(() => onClose(), 1500);
     } catch (err) {
       setError("An unexpected error occurred. Please try again.");
@@ -292,12 +295,22 @@ const SendMessageModal: React.FC<Props> = ({
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[9999]">
-      <div className="bg-neutral-700 w-full h-fit max-w-3xl sm:rounded-lg p-5 shadow-xl">
+      <div className="bg-neutral-700 w-full max-h-screen h-fit max-w-3xl sm:rounded-lg p-5 shadow-xl">
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-white text-lg font-semibold">
             Send Message: {(data?.name || data?.title)?.slice(0, 10)}..
           </h2>
-          <button onClick={onClose} className="text-white hover:text-gray-300">
+          <button
+            onClick={() => {
+              setCopyToggle(false);
+
+              setSelectedUsers([]);
+              setSearch("");
+              setMessage("");
+              onClose();
+            }}
+            className="text-white hover:text-gray-300"
+          >
             ✖
           </button>
         </div>
@@ -305,10 +318,7 @@ const SendMessageModal: React.FC<Props> = ({
         <div className="p-4">
           <div className="flex items-center justify-between mb-4">
             <span className="text-white">{link.slice(0, 30)}...</span>
-            <button
-              onClick={() => copyToClipboard(link)}
-              className="text-white hover:text-gray-700"
-            >
+            <button onClick={() => copyToClipboard(link)}>
               {copyToggle ? <IoIosCopy /> : <MdContentCopy />}
             </button>
           </div>
@@ -342,7 +352,7 @@ const SendMessageModal: React.FC<Props> = ({
             onChange={(e) => setSearch(e.target.value)}
           />
 
-          <div className="max-h-96 overflow-y-auto mb-4">
+          <div className=" max-h-40 overflow-y-auto mb-4">
             {loading ? (
               <p className="text-gray-100">Loading users...</p>
             ) : (
@@ -350,20 +360,20 @@ const SendMessageModal: React.FC<Props> = ({
                 {users.map((user) => (
                   <div
                     key={user.id}
-                    className={`flex flex-col items-center justify-between p-2 cursor-pointer rounded-lg mb-2 ${
-                      selectedUsers.some((u) => u.id === user.id)
-                        ? "bg-blue-500 text-white"
-                        : "bg-neutral-600 hover:bg-neutral-500"
-                    }`}
+                    className={`flex flex-col items-center justify-between p-2 cursor-pointer rounded-full mb-2`}
                     onClick={() => toggleUserSelection(user)}
                   >
                     <img
-                      className="rounded-full w-10 h-10"
+                      className={`rounded-full w-20 h-20  ${
+                        selectedUsers.some((u) => u.id === user.id)
+                          ? "border-2 border-blue-500 text-white"
+                          : "border-2 border-neutral-600 hover:border-neutral-500"
+                      }`}
                       src="/avatar.svg"
                       alt={user.username}
                     />
-                    <span>{user.username}</span>
-                    {selectedUsers.some((u) => u.id === user.id) && <FaCheck />}
+                    <span className={` `}>{user.username}</span>
+                    {/* {selectedUsers.some((u) => u.id === user.id) && <FaCheck />} */}
                   </div>
                 ))}
               </div>
