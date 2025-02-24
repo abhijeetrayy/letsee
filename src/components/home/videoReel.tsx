@@ -2,7 +2,12 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { FaVolumeMute, FaVolumeUp } from "react-icons/fa";
+import {
+  FaVolumeMute,
+  FaVolumeUp,
+  FaChevronLeft,
+  FaChevronRight,
+} from "react-icons/fa";
 
 interface Movie {
   id: number;
@@ -19,6 +24,7 @@ const HomeReelViewer: React.FC = () => {
   const [isMounted, setIsMounted] = useState(false);
   const playerRef = useRef<HTMLDivElement>(null);
   const playerInstance = useRef<YT.Player | null>(null);
+  const videoSectionRef = useRef<HTMLDivElement>(null);
 
   // Mark component as mounted on client
   useEffect(() => {
@@ -70,7 +76,7 @@ const HomeReelViewer: React.FC = () => {
           playerInstance.current.destroy();
         }
         playerInstance.current = new window.YT.Player(playerRef.current, {
-          width: "1280", // 720p resolution
+          width: "1280",
           height: "720",
           videoId,
           playerVars: {
@@ -136,10 +142,50 @@ const HomeReelViewer: React.FC = () => {
     }
   };
 
+  // Swipe-to-scroll logic
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchMove, setTouchMove] = useState<number | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent | React.MouseEvent) => {
+    const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
+    setTouchStart(clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent | React.MouseEvent) => {
+    const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
+    setTouchMove(clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (touchStart !== null && touchMove !== null) {
+      const deltaX = touchMove - touchStart;
+      if (Math.abs(deltaX) > 50) {
+        // Minimum swipe distance
+        if (deltaX > 0) {
+          prevMovie(); // Swipe right
+        } else {
+          nextMovie(); // Swipe left
+        }
+      }
+    }
+    setTouchStart(null);
+    setTouchMove(null);
+  };
+
   return (
     <div className="relative max-w-[1920px] mx-auto w-full h-[40rem] bg-black flex flex-col md:flex-row rounded-md overflow-hidden">
       {/* Video Section (3/4 width) */}
-      <div className="relative w-full md:w-3/4 h-full">
+      <div
+        ref={videoSectionRef}
+        className="relative w-full md:w-3/4 h-full"
+        onMouseDown={handleTouchStart}
+        onMouseMove={handleTouchMove}
+        onMouseUp={handleTouchEnd}
+        onMouseLeave={handleTouchEnd} // Reset if mouse leaves
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
         {loading ? (
           <p className="text-neutral-400 text-center absolute inset-0 flex items-center justify-center">
             Loading top movies...
@@ -191,6 +237,24 @@ const HomeReelViewer: React.FC = () => {
                 />
               ))}
             </div>
+
+            {/* Scroll Buttons (Hidden below md) */}
+            {movies.length > 1 && (
+              <>
+                <button
+                  onClick={prevMovie}
+                  className="md:block hidden absolute left-2 top-1/2 transform -translate-y-1/2 bg-neutral-800 text-neutral-100 p-2 sm:p-3 rounded-full hover:bg-neutral-700 transition-colors duration-200 z-10 shadow-md"
+                >
+                  <FaChevronLeft size={16} className="sm:size-20" />
+                </button>
+                <button
+                  onClick={nextMovie}
+                  className="md:block hidden absolute right-2 top-1/2 transform -translate-y-1/2 bg-neutral-800 text-neutral-100 p-2 sm:p-3 rounded-full hover:bg-neutral-700 transition-colors duration-200 z-10 shadow-md"
+                >
+                  <FaChevronRight size={16} className="sm:size-20" />
+                </button>
+              </>
+            )}
           </>
         ) : (
           <p className="text-neutral-400 text-center absolute inset-0 flex items-center justify-center">
