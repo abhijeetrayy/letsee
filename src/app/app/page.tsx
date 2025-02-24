@@ -5,6 +5,8 @@ import Link from "next/link";
 import WeeklyTop from "@components/clientComponent/weeklyTop";
 import Tvtop from "@components/clientComponent/topTv";
 import HomeVideo from "@components/home/videoReel";
+import MovieGenre from "@components/scroll/movieGenre";
+import TvGenre from "@components/scroll/tvGenre";
 
 async function getData() {
   const res = await fetch(
@@ -47,14 +49,16 @@ async function getTrendingTV() {
 }
 export default async function Home() {
   const genre = await getData();
+
   const { tvGenres } = await getTvGenre();
+
   const data = await getTrending();
   const TrendingTv = await getTrendingTV();
   return (
     <>
       <HomeVideo />
 
-      <div className="mt-10 flex flex-col gap-8 max-w-7xl w-full m-auto">
+      <div className="mt-10 flex flex-col gap-8 max-w-[1920px] w-full m-auto">
         <div className="flex flex-col text-center items-center gap-3 my-10">
           <h1 className="text-3xl font-bold">Your Personal Recommendation</h1>
           <p>
@@ -71,44 +75,18 @@ export default async function Home() {
         <div className="">
           <DiscoverUsers />
         </div>
-        <div className="w-full max-w-7xl my-4 mb-4">
+        <div className="w-full  my-4 mb-4">
           <h1 className="text-lg font-semibold my-4">Movie Genres</h1>
-          <div className="flex flex-row  overflow-x-scroll thin-scroll pb-3 gap-1">
-            {genre?.genres.map((genre: any) => (
-              <Link
-                href={`/app/moviebygenre/list/${genre.id}-${genre.name}`}
-                className=" h-24 min-w-32 text-sm border-2 rounded-md border-gray-700 text-white p-2 flex items-center justify-center"
-                key={genre.id}
-                // onClick={() => setSelectedGenre(genre.id)}
-              >
-                {genre.name}
-              </Link>
-            ))}
-          </div>
+          <MovieGenre genre={genre} />
         </div>
-        {/* <div className="grid gap-2 mt-5">
-        {genre?.genres.map((genre) => (
-          <MovieCard key={genre.id} genre={genre} />
-        ))}
-      </div> */}
+
         <div className="">
           <h2 className="text-2xl my-4 font-bold">Weekly Top 20</h2>
           <WeeklyTop data={data} />
         </div>
-        <div className="w-full max-w-7xl ">
+        <div className="w-full  ">
           <h1 className="text-lg font-semibold mb-2">Tv Show Genres</h1>
-          <div className="flex flex-row  overflow-x-scroll thin-scroll pb-3 gap-1 ">
-            {tvGenres?.genres.map((genre: any) => (
-              <Link
-                href={`/app/tvbygenre/list/${genre.id}-${genre.name}`}
-                className=" h-24 min-w-32 text-sm border-2 rounded-md border-gray-700 text-white p-2 flex items-center justify-center"
-                key={genre.id}
-                // onClick={() => setSelectedGenre(genre.id)}
-              >
-                {genre.name}
-              </Link>
-            ))}
-          </div>
+          <TvGenre tvGenres={tvGenres} />
         </div>
         <div className="w-full  ">
           <h2 className="text-2xl my-4 font-bold">Trending Tv Show&apos;s</h2>
