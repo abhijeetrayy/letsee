@@ -1,5 +1,6 @@
 import { Countrydata } from "@/staticData/countryName";
 import Movie from "@components/clientComponent/movie";
+import MovieRecoTile from "@components/movie/recoTiles";
 
 import { Metadata } from "next";
 
@@ -43,6 +44,16 @@ async function getImages(id: any) {
   return data;
 }
 
+async function Reco(id: any) {
+  const response = await fetch(
+    `https://api.themoviedb.org/3/movie/${id}/similar?api_key=${process.env.TMDB_API_KEY}`
+  );
+
+  const data = await response.json();
+
+  return data;
+}
+
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
@@ -83,10 +94,12 @@ const MovieDetails = async ({ params }: PageProps) => {
   const credits = await getCredit(id);
   const { results: videos } = await getVideos(id);
   const { posters: Pimages, backdrops: Bimages } = await getImages(id);
-  console.log(movie.origin_country);
+
   const CountryName: any = movie.origin_country.map((name: any) =>
     Countrydata.filter((item: any) => item.iso_3166_1 == name)
   );
+
+  const RecoData = await Reco(id);
 
   return (
     <div>
@@ -99,6 +112,9 @@ const MovieDetails = async ({ params }: PageProps) => {
         credits={credits}
         id={id}
       />
+      {RecoData.total_results > 0 && (
+        <MovieRecoTile title={movie.title} data={RecoData} />
+      )}
     </div>
   );
 };

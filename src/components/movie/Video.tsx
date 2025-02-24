@@ -1,90 +1,133 @@
+// components/Video.tsx
 "use client";
 import React, { useEffect, useRef, useState, useMemo } from "react";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 
-function Video({ videos, movie }: any) {
+interface VideoItem {
+  id: string;
+  key: string;
+  name: string;
+  type: string;
+}
+
+interface VideoProps {
+  videos: VideoItem[];
+  movie: {
+    title?: string;
+    name?: string;
+  };
+}
+
+function Video({ videos, movie }: VideoProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
-
-  console.log(videos);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedVideo, setSelectedVideo] = useState<VideoItem | null>(null);
 
   // Memoize filtered trailers
   const trailers = useMemo(
-    () => videos.filter((item: any) => item.type === "Trailer"),
+    () => videos.filter((item) => item.type === "Trailer"),
     [videos]
   );
 
+  const handleScroll = () => {
+    const element = scrollRef.current;
+    if (element) {
+      const { scrollLeft, scrollWidth, clientWidth } = element;
+      setCanScrollLeft(scrollLeft > 0);
+      setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 10);
+    }
+  };
+
+  const scrollLeft = () => {
+    const element = scrollRef.current;
+    if (element) {
+      const itemWidth =
+        element.querySelector(".image-item")?.clientWidth || 300;
+      element.scrollBy({ left: -itemWidth * 2, behavior: "smooth" });
+    }
+  };
+
+  const scrollRight = () => {
+    const element = scrollRef.current;
+    if (element) {
+      const itemWidth =
+        element.querySelector(".image-item")?.clientWidth || 300;
+      element.scrollBy({ left: itemWidth * 2, behavior: "smooth" });
+    }
+  };
+
   useEffect(() => {
     const element = scrollRef.current;
-    if (!element) return;
-
-    const handleScroll = () => {
-      setCanScrollLeft(element.scrollLeft > 0);
-      setCanScrollRight(
-        element.scrollWidth > element.clientWidth &&
-          element.scrollLeft < element.scrollWidth - element.clientWidth
-      );
-    };
-
-    element.addEventListener("scroll", handleScroll);
-    handleScroll(); // Initialize button states
-
-    return () => element.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const scroll = (direction: "left" | "right") => {
-    scrollRef.current?.scrollBy({
-      left: direction === "left" ? -300 : 300,
-      behavior: "smooth",
-    });
-  };
+    if (element) {
+      element.addEventListener("scroll", handleScroll);
+      setTimeout(handleScroll, 100); // Initial check
+      return () => element.removeEventListener("scroll", handleScroll);
+    }
+  }, [videos]);
 
   if (trailers.length === 0) return null;
 
   return (
-    <div className="max-w-6xl w-full mx-auto mt-7">
-      <h1 className="text-sm lg:text-lg my-2">
-        {movie.title || movie.name}: Media
-      </h1>
-      <div className="relative overflow-hidden">
-        <div
-          ref={scrollRef}
-          className="flex flex-row m-3 overflow-x-scroll no-scrollbar"
-        >
-          {trailers.slice(0, 4).map((item: any) => (
-            <iframe
-              key={item.id}
-              className="w-72 h-44 sm:w-80 sm:h-48 lg:w-96 lg:h-56 aspect-video"
-              src={`https://www.youtube.com/embed/${item.key}`}
-              title={item.name}
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          ))}
-        </div>
+    <>
+      <div className="max-w-7xl w-full mx-auto mt-7 px-4">
+        <h1 className="text-lg font-bold mb-4">
+          {movie.title || movie.name}: Media
+        </h1>
+        <div className="relative overflow-hidden">
+          <div
+            ref={scrollRef}
+            className="flex flex-row gap-4 py-2 overflow-x-auto no-scrollbar"
+          >
+            {trailers.slice(0, 4).map((item) => (
+              <iframe
+                key={item.id}
+                className="w-80 h-48 sm:w-96 sm:h-56 md:w-[28rem] md:h-64 lg:w-[32rem] lg:h-72 aspect-video rounded-lg flex-shrink-0 cursor-pointer"
+                src={`https://www.youtube.com/embed/${item.key}`}
+                title={item.name}
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            ))}
+          </div>
 
-        {/* Scroll Buttons */}
-        <div className="flex flex-row gap-4 w-fit mx-auto">
+          {/* Scroll Buttons */}
+          {/* Left Fade Overlay */}
+          <div
+            className={`hidden md:block absolute top-0 left-0 h-full w-12 sm:w-20 bg-gradient-to-r from-black to-transparent pointer-events-none transition-opacity duration-300 ${
+              canScrollLeft ? "opacity-80" : "opacity-0"
+            }`}
+          />
+
+          {/* Right Fade Overlay */}
+          <div
+            className={`hidden md:block absolute top-0 right-0 h-full w-12 sm:w-20 bg-gradient-to-l from-black to-transparent pointer-events-none transition-opacity duration-300 ${
+              canScrollRight ? "opacity-80" : "opacity-0"
+            }`}
+          />
+
+          {/* Scroll Buttons */}
           {canScrollLeft && (
             <button
-              onClick={() => scroll("left")}
-              className="bg-neutral-600 px-5 rounded-sm z-10"
+              onClick={scrollLeft}
+              className="hidden md:block absolute left-2 top-1/2 transform -translate-y-1/2 bg-neutral-800 text-neutral-100 p-2 sm:p-3 rounded-full hover:bg-neutral-700 transition-colors duration-200 z-10 shadow-md"
             >
-              {"<"}
+              <FaChevronLeft size={20} className="" />
             </button>
           )}
           {canScrollRight && (
             <button
-              onClick={() => scroll("right")}
-              className="bg-neutral-600 px-5 rounded-sm z-10"
+              onClick={scrollRight}
+              className="hidden md:block absolute right-2 top-1/2 transform -translate-y-1/2 bg-neutral-800 text-neutral-100 p-2 sm:p-3 rounded-full hover:bg-neutral-700 transition-colors duration-200 z-10 shadow-md"
             >
-              {">"}
+              <FaChevronRight size={20} className="" />
             </button>
           )}
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

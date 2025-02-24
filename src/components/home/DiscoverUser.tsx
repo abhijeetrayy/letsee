@@ -121,7 +121,7 @@ function DiscoverUsers() {
                   <Link
                     key={item.username}
                     href={`/app/profile/${item.username}`}
-                    className="user-card min-w-[12rem] sm:min-w-[14rem] md:min-w-[18rem] bg-neutral-800 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 border border-neutral-700 hover:border-neutral-500 overflow-hidden flex-shrink-0 flex flex-col h-full"
+                    className="user-card min-w-[12rem] sm:min-w-[14rem] md:min-w-[18rem] bg-neutral-800 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 border border-neutral-700 hover:border-neutral-500 overflow-hidden flex-shrink-0 flex flex-col h-full"
                   >
                     <div className="p-4 sm:p-6 flex flex-col h-full">
                       <div className="flex items-center gap-3 sm:gap-4">

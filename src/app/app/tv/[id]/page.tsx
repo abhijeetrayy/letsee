@@ -1,5 +1,10 @@
 import Tv from "@components/clientComponent/tv";
+import MovieRecoTile from "@components/movie/recoTiles";
 import { Metadata } from "next";
+
+interface PageProps {
+  params: Promise<{ id: string }>;
+}
 
 async function getShowDetails(id: string) {
   const response = await fetch(
@@ -42,8 +47,15 @@ async function getExternalIds(id: any) {
   const data = await response.json();
   return data;
 }
-interface PageProps {
-  params: Promise<{ id: string }>;
+
+async function Reco(id: any) {
+  const response = await fetch(
+    `https://api.themoviedb.org/3/tv/${id}/similar?api_key=${process.env.TMDB_API_KEY}`
+  );
+
+  const data = await response.json();
+
+  return data;
 }
 
 export async function generateMetadata({
@@ -88,6 +100,7 @@ const ShowDetails = async ({ params }: PageProps) => {
   const { cast, crew } = await getShowCredit(id);
   const { results: videos } = await getVideos(id);
   const { posters: Pimages, backdrops: Bimages } = await getImages(id);
+  const RecoData = await Reco(id);
 
   return (
     <div>
@@ -101,6 +114,9 @@ const ShowDetails = async ({ params }: PageProps) => {
         crew={crew}
         id={id}
       />
+      {RecoData.total_results > 0 && (
+        <MovieRecoTile title={show.name} data={RecoData} />
+      )}
     </div>
   );
 };

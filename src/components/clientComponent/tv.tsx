@@ -7,6 +7,7 @@ import MovieCast from "@components/movie/MovieCast";
 import Video from "@components/movie/Video";
 import SendMessageModal from "@components/message/sendCard";
 import { LuSend } from "react-icons/lu";
+import ImageViewer from "@components/clientComponent/ImaeViewer";
 
 export default function Tv({
   cast,
@@ -71,11 +72,11 @@ export default function Tv({
           </div>
 
           {/* Show Content */}
-          <div className="max-w-6xl w-full relative z-10 flex flex-col md:flex-row gap-8 my-4 px-4">
+          <div className="max-w-[1520px] w-full relative z-10 flex flex-col md:flex-row gap-8 my-4 px-4">
             {/* Poster */}
             <div className="flex-1">
               <img
-                className="rounded-md object-cover h-full max-h-[500px] shadow-lg"
+                className="rounded-md object-cover h-full max-h-[600px] shadow-lg float-right"
                 src={
                   show.adult
                     ? "/pixeled.webp"
@@ -265,28 +266,7 @@ export default function Tv({
         <Video videos={videos} movie={show} />
 
         {/* Images */}
-        {(Bimages.length > 0 || Pimages.length > 0) && (
-          <div className="max-w-6xl w-full mx-auto my-8 px-4">
-            <h1 className="text-lg font-bold mb-4">{show.name}: Images</h1>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {(Bimages.length > 0 ? Bimages : Pimages)
-                ?.slice(0, 12)
-                .map((item: any, index: number) => (
-                  <div key={index} className="rounded-lg overflow-hidden">
-                    <img
-                      className="w-full h-auto object-cover"
-                      src={
-                        show.adult
-                          ? "/pixeled.webp"
-                          : `https://image.tmdb.org/t/p/w300${item.file_path}`
-                      }
-                      alt={item.name}
-                    />
-                  </div>
-                ))}
-            </div>
-          </div>
-        )}
+        <ImageViewer movie={show} Bimages={Bimages} Pimages={Pimages} />
       </div>
     </div>
   );
