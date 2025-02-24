@@ -13,7 +13,7 @@ async function Navbar() {
   const { data, error } = await supabase.auth.getUser();
   if (error) {
     return (
-      <div className=" flex flex-row justify-between text-white  p-3 h-full ">
+      <div className="max-w-[1520px] w-full m-auto flex flex-row justify-between text-white  p-3 h-full ">
         <div>
           <Link href="/app">Let&apos;s see</Link>
         </div>
@@ -63,7 +63,7 @@ async function Navbar() {
   }
 
   return (
-    <div className=" flex flex-row justify-between text-white  p-3 h-full ">
+    <div className="max-w-[1520px] w-full m-auto flex flex-row justify-between text-white  p-3 h-full ">
       <div>
         <Link href="/app">Let&apos;s see</Link>
       </div>
