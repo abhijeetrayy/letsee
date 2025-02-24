@@ -54,7 +54,7 @@ export default async function Home() {
     <>
       <HomeVideo />
 
-      <div className="flex flex-col gap-8 max-w-7xl w-full m-auto">
+      <div className="mt-10 flex flex-col gap-8 max-w-7xl w-full m-auto">
         <div className="flex flex-col text-center items-center gap-3 my-10">
           <h1 className="text-3xl font-bold">Your Personal Recommendation</h1>
           <p>
