@@ -6,6 +6,8 @@ import { FaArrowDown, FaArrowUp } from "react-icons/fa6";
 import Link from "next/link";
 import ThreePrefrenceBtn from "../buttons/threePrefrencebtn"; // Adjust path as needed
 import { FaSearch } from "react-icons/fa";
+import SendMessageModal from "@components/message/sendCard";
+import { LuSend } from "react-icons/lu";
 
 interface Movie {
   id: number;
@@ -54,6 +56,8 @@ const ReelViewer: React.FC = () => {
   const [player, setPlayer] = useState<YT.Player | null>(null);
   const [nextLoading, setNextLoading] = useState(false);
   const [imdbRating, setImdbRating] = useState("loading..");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [cardData, setCardData] = useState<any>(null);
   const playerRef = useRef<HTMLDivElement>(null);
 
   // Fetch movies for the current page
@@ -209,9 +213,19 @@ const ReelViewer: React.FC = () => {
     setSearchedKeyword("");
     setCurrentPage(1);
   };
+  const handleCardTransfer = (data: any) => {
+    setCardData(data);
+    setIsModalOpen(true);
+  };
 
   return (
     <div className="min-h-screen bg-neutral-900 text-neutral-200 flex flex-col items-center p-4">
+      <SendMessageModal
+        media_type={"movie"}
+        data={cardData}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
       {/* Header */}
 
       {/* Main Layout */}
@@ -347,6 +361,14 @@ const ReelViewer: React.FC = () => {
                     cardImg={movies[currentIndex].poster_path || ""}
                     genres={movies[currentIndex].genres}
                   />
+                  <div className="py-2 border-t border-neutral-950 bg-neutral-800 hover:bg-neutral-700">
+                    <button
+                      className="w-full flex justify-center text-lg text-center text-neutral-100"
+                      onClick={() => handleCardTransfer(movies[currentIndex])}
+                    >
+                      <LuSend />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
