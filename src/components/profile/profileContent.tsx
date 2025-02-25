@@ -3,6 +3,7 @@ import React from "react";
 import ProfileFavorite from "./ProfileFavorite";
 import ProfileWatchlater from "./ProfileWatchlater";
 import ProfileWatched from "./profileWatched";
+import RecommendationTile from "./recomendation";
 
 const getUserData = async (id: any) => {
   const supabase = await createClient();

@@ -22,6 +22,32 @@ async function getData() {
 
   return res.json();
 }
+async function getRomance() {
+  const res = await fetch(
+    `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.TMDB_API_KEY}&with_genres=10749`,
+    { next: { revalidate: 86400 } }
+  );
+
+  if (!res.ok) {
+    console.log(res);
+    throw new Error("Failed to fetch data");
+  }
+
+  return res.json();
+}
+async function getAction() {
+  const res = await fetch(
+    `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.TMDB_API_KEY}&with_genres=28`,
+    { next: { revalidate: 86400 } }
+  );
+
+  if (!res.ok) {
+    console.log(res);
+    throw new Error("Failed to fetch data");
+  }
+
+  return res.json();
+}
 
 async function getTvGenre() {
   const tvGenresResponse = await fetch(
@@ -55,6 +81,8 @@ export default async function Home() {
 
   const data = await getTrending();
   const TrendingTv = await getTrendingTV();
+  const RomanceData = await getRomance();
+  const ActionData = await getAction();
   return (
     <>
       <HomeVideo />
@@ -78,7 +106,7 @@ export default async function Home() {
         </div>
         <div className="w-full  my-4 mb-4">
           <h1 className="text-lg font-semibold my-4">Movie Genres</h1>
-          <MovieGenre genre={genre} />
+          <MovieGenre genre={genre.genres} />
         </div>
 
         <div className="">
@@ -87,11 +115,19 @@ export default async function Home() {
         </div>
         <div className="w-full  ">
           <h1 className="text-lg font-semibold mb-2">Tv Show Genres</h1>
-          <TvGenre tvGenres={tvGenres} />
+          <TvGenre tvGenres={tvGenres.genres} />
         </div>
         <div className="w-full  ">
-          <h2 className="text-2xl my-4 font-bold">Trending Tv Show&apos;s</h2>
+          <h2 className="text-2xl my-4 font-bold">Trending Tv Show</h2>
           <HomeContentTile type={"tv"} data={TrendingTv} />
+        </div>
+        <div className="w-full  ">
+          <h2 className="text-2xl my-4 font-bold">Romance</h2>
+          <HomeContentTile type={"tv"} data={RomanceData} />
+        </div>
+        <div className="w-full  ">
+          <h2 className="text-2xl my-4 font-bold">Action</h2>
+          <HomeContentTile type={"tv"} data={ActionData} />
         </div>
       </div>
     </>

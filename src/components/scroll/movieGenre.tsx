@@ -53,10 +53,10 @@ function MovieGenre({ genre }: any) {
         ref={scrollRef}
         className="relative flex flex-row overflow-x-auto no-scrollbar gap-2 py-3 z-10"
       >
-        {genre.genres.map((genreItem: any) => (
+        {genre.map((genreItem: any) => (
           <Link
             href={`/app/moviebygenre/list/${genreItem.id}-${genreItem.name}`}
-            className="card-item h-24 min-w-32 sm:min-w-40 md:min-w-48 rounded-md overflow-hidden flex-shrink-0 flex items-center justify-center bg-neutral-800 bg-opacity-80"
+            className="card-item h-24 min-w-32 sm:min-w-40 md:min-w-48 rounded-md overflow-hidden flex-shrink-0 flex items-center justify-center bg-neutral-800 bg-opacity-80 hover:bg-opacity-100"
             key={genreItem.id}
           >
             <span className="text-white text-sm sm:text-base md:text-lg font-semibold drop-shadow-md">

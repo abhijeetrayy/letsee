@@ -12,6 +12,7 @@ import ProfileContent from "@components/profile/profileContent";
 import Visibility from "@components/profile/visibility";
 import StatisticsGenre from "@components/profile/statisticsGenre";
 import Logornot from "@components/guide/logornot";
+import RecommendationTile from "@components/profile/recomendation";
 
 // Fetch user data and statistics
 const getUserData = async (id: string) => {
@@ -231,6 +232,11 @@ export default async function ProfilePage({ params }: PageProps) {
           </div>
         ) : (
           <div className=" rounded-lg shadow-md p-1">
+            <RecommendationTile
+              isOwner={isOwner}
+              name={user.username}
+              id={user.id}
+            />
             <ProfileContent profileId={profileId} />
           </div>
         )}

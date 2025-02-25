@@ -1,3 +1,4 @@
+import MovieGenre from "@components/scroll/movieGenre";
 import Link from "next/link";
 
 async function page({ children }: { children: React.ReactNode }) {
@@ -19,18 +20,7 @@ async function page({ children }: { children: React.ReactNode }) {
     <div>
       <div className="w-full max-w-7xl my-3 m-auto">
         <h1 className="text-lg font-semibold mb-2">Movie&apos;s Genre</h1>
-        <div className="flex flex-row overflow-x-scroll vone-scrollbar gap-1 ">
-          {genrelist?.map((genre: any) => (
-            <Link
-              href={`/app/moviebygenre/list/${genre.id}-${genre.name}`}
-              className=" h-24 min-w-32 text-sm border-2 rounded-md border-gray-700 text-white p-2 flex items-center justify-center"
-              key={genre.id}
-              // onClick={() => setSelectedGenre(genre.id)}
-            >
-              {genre.name}
-            </Link>
-          ))}
-        </div>
+        <MovieGenre genre={genrelist} />
       </div>
       <div>{children}</div>
     </div>

@@ -8,6 +8,7 @@ import MessageButton from "./MessageButton";
 import RealtimeNotification from "./RealtimeNotification";
 import SearchBar from "./searchBar";
 import { FaUser } from "react-icons/fa6";
+import { FcFilmReel } from "react-icons/fc";
 async function Navbar() {
   const supabase = await createClient();
   const { data, error } = await supabase.auth.getUser();
@@ -33,6 +34,12 @@ async function Navbar() {
             href="/app/profile"
           >
             <FaUser />
+          </Link>
+          <Link
+            className="flex items-center justify-center px-4 py-2 rounded-md bg-neutral-600 hover:bg-neutral-500 relative"
+            href="/app/reel"
+          >
+            <FcFilmReel />
           </Link>
 
           <div className="hidden md:flex flex-row gap-3 items-center">
@@ -69,9 +76,15 @@ async function Navbar() {
       </div>
 
       <div className="flex flex-row gap-3 items-center">
-        <MessageButton userId={userData?.id} />
         <Link
           className="flex items-center justify-center px-4 py-2 rounded-md bg-neutral-600 hover:bg-neutral-500 relative"
+          href="/app/reel"
+        >
+          <FcFilmReel />
+        </Link>
+        <MessageButton userId={userData?.id} />
+        <Link
+          className="hidden md:flex items-center justify-center px-4 py-2 rounded-md bg-neutral-600 hover:bg-neutral-500 relative"
           href={"/app/notification"}
         >
           <IoNotifications />
