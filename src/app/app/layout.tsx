@@ -5,7 +5,9 @@ import Navbar from "@/components/header/navbar";
 import SetupComp from "@/components/setupComponents/SetupComp";
 import { createClient } from "@/utils/supabase/server";
 import { SearchProvider } from "../contextAPI/searchContext";
+import { Toaster } from "react-hot-toast";
 import "../globals.css";
+
 // import AuthProvider from "../contextAPI/AuthProvider";
 
 export const metadata: Metadata = {
@@ -40,6 +42,7 @@ export default async function AppLayout({
   return (
     // <AuthProvider>
     <div className="w-full font-inter flex flex-col justify-center bg-neutral-900 text-gray-300">
+      <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
       <UserPrefrenceProvider>
         <SearchProvider>
           <div className="w-full flex flex-col min-h-screen">
@@ -52,6 +55,5 @@ export default async function AppLayout({
         </SearchProvider>
       </UserPrefrenceProvider>
     </div>
-    // </AuthProvider>
   );
 }

@@ -1,6 +1,6 @@
 // components/HomeReelViewer.tsx
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import {
   FaChevronLeft,
@@ -8,12 +8,13 @@ import {
   FaVolumeMute,
   FaVolumeUp,
 } from "react-icons/fa";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 interface Movie {
   id: number;
   title: string;
-  trailer?: any;
-  poster_path?: string; // Optional, kept for compatibility
+  trailer?: string;
+  poster_path?: string;
 }
 
 const HomeReelViewer: React.FC = () => {
@@ -21,30 +22,24 @@ const HomeReelViewer: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isMounted, setIsMounted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
   const [isVideoReady, setIsVideoReady] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(true); // Track play/pause state
+  const [isPlaying, setIsPlaying] = useState(false);
   const playerRef = useRef<HTMLDivElement>(null);
   const playerInstance = useRef<YT.Player | null>(null);
   const videoSectionRef = useRef<HTMLDivElement>(null);
-  const [isMuted, setIsMuted] = useState(true);
-
-  // Mark component as mounted on client
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  const isMounted = useRef(false); // Replace useState with useRef for mount check
 
   // Fetch top 5 movies with trailers
   useEffect(() => {
     const fetchTopMovies = async () => {
       setLoading(true);
-      setError(null);
       try {
         const response = await fetch("/api/homeVideo", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           cache: "force-cache",
-          next: { revalidate: 86400 }, // Cache for 1 day
+          next: { revalidate: 86400 },
         });
         if (!response.ok) throw new Error("Failed to fetch top movies");
         const data = await response.json();
@@ -59,63 +54,77 @@ const HomeReelViewer: React.FC = () => {
     fetchTopMovies();
   }, []);
 
-  // Initialize YouTube Player only after mount
+  // Load YouTube script only once
   useEffect(() => {
-    if (!isMounted || !movies[currentIndex]?.trailer) return;
-
-    const loadPlayerScript = () => {
-      if (!window.YT) {
-        const tag = document.createElement("script");
-        tag.src = "https://www.youtube.com/iframe_api";
-        const firstScriptTag = document.getElementsByTagName("script")[0];
-        firstScriptTag?.parentNode?.insertBefore(tag, firstScriptTag);
-      }
+    if (!window.YT) {
+      const tag = document.createElement("script");
+      tag.src = "https://www.youtube.com/iframe_api";
+      const firstScriptTag = document.getElementsByTagName("script")[0];
+      firstScriptTag?.parentNode?.insertBefore(tag, firstScriptTag);
+    }
+    isMounted.current = true; // Set mounted flag
+    return () => {
+      isMounted.current = false; // Cleanup on unmount
     };
+  }, []);
+
+  // Initialize and update YouTube player
+  useEffect(() => {
+    if (!isMounted.current || !movies[currentIndex]?.trailer) return;
+
+    const videoId = movies[currentIndex].trailer.split("embed/")[1];
 
     const initializePlayer = () => {
-      if (playerRef.current && window.YT?.Player) {
-        const videoId = movies[currentIndex].trailer.split("embed/")[1];
-        if (playerInstance.current) {
-          playerInstance.current.destroy();
-        }
-        setIsVideoReady(false);
-        setIsPlaying(true); // Start playing by default
-        playerInstance.current = new window.YT.Player(playerRef.current, {
-          width: "1280",
-          height: "720",
-          videoId,
-          playerVars: {
-            autoplay: 1,
-            mute: 1, // Muted by default
-            controls: 0, // No controls
-            modestbranding: 0,
-            showinfo: 0,
-            rel: 0,
-          },
-          events: {
-            onReady: (event: YT.PlayerEvent) => {
-              event.target.playVideo();
-              setIsVideoReady(true);
-            },
-            onStateChange: (event: YT.OnStateChangeEvent) => {
-              if (event.data === window.YT.PlayerState.ENDED) {
-                nextMovie();
-              } else if (event.data === window.YT.PlayerState.PAUSED) {
-                setIsPlaying(false);
-              } else if (event.data === window.YT.PlayerState.PLAYING) {
-                setIsPlaying(true);
-              }
-            },
-            onError: (event: YT.OnErrorEvent) => {
-              console.error("YouTube Player Error:", event.data);
-              setError("Failed to load video");
-            },
-          },
-        });
+      if (!playerRef.current || !window.YT?.Player) return;
+
+      // Destroy existing player instance
+      if (playerInstance.current) {
+        playerInstance.current.destroy();
       }
+
+      setIsVideoReady(false);
+      setIsPlaying(false);
+      setIsMuted(true);
+      playerInstance.current = new window.YT.Player(playerRef.current, {
+        width: "1280",
+        height: "720",
+        videoId,
+        playerVars: {
+          autoplay: 1,
+          mute: 1,
+          controls: 0,
+          modestbranding: 0,
+          showinfo: 0,
+          rel: 0,
+        },
+        events: {
+          onReady: (event: YT.PlayerEvent) => {
+            event.target.playVideo();
+            if (isMounted.current) {
+              setIsVideoReady(true);
+              setIsPlaying(true);
+            }
+          },
+          onStateChange: (event: YT.OnStateChangeEvent) => {
+            if (!isMounted.current) return;
+            if (event.data === window.YT.PlayerState.ENDED) {
+              nextMovie();
+            } else if (event.data === window.YT.PlayerState.PAUSED) {
+              setIsPlaying(false);
+            } else if (event.data === window.YT.PlayerState.PLAYING) {
+              setIsPlaying(true);
+            }
+          },
+          onError: (event: YT.OnErrorEvent) => {
+            console.error("YouTube Player Error:", event.data);
+            if (isMounted.current) {
+              setError("Failed to load video");
+            }
+          },
+        },
+      });
     };
 
-    loadPlayerScript();
     if (window.YT && window.YT.Player) {
       initializePlayer();
     } else {
@@ -127,37 +136,59 @@ const HomeReelViewer: React.FC = () => {
         playerInstance.current.destroy();
         playerInstance.current = null;
       }
-      setIsVideoReady(false);
     };
-  }, [isMounted, movies, currentIndex]);
+  }, [currentIndex, movies]);
 
-  const nextMovie = () => {
-    const nextIndex = (currentIndex + 1) % movies.length;
-    setCurrentIndex(nextIndex);
+  // Navigation handlers
+  const nextMovie = useCallback(() => {
+    setCurrentIndex((prev) => (prev + 1) % movies.length);
     setIsVideoReady(false);
-  };
+  }, [movies.length]);
 
-  const prevMovie = () => {
-    const prevIndex = (currentIndex - 1 + movies.length) % movies.length;
-    setCurrentIndex(prevIndex);
+  const prevMovie = useCallback(() => {
+    setCurrentIndex((prev) => (prev - 1 + movies.length) % movies.length);
     setIsVideoReady(false);
-  };
+  }, [movies.length]);
+
+  const goToMovie = useCallback((index: number) => {
+    setCurrentIndex(index);
+    setIsVideoReady(false);
+  }, []);
+
+  const toggleMute = useCallback(() => {
+    if (playerInstance.current) {
+      setIsMuted((prev) => {
+        if (prev) {
+          playerInstance.current?.unMute();
+        } else {
+          playerInstance.current?.mute();
+        }
+        return !prev;
+      });
+    }
+  }, []);
 
   // Swipe-to-scroll logic
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchMove, setTouchMove] = useState<number | null>(null);
 
-  const handleTouchStart = (e: React.TouchEvent | React.MouseEvent) => {
-    const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
-    setTouchStart(clientX);
-  };
+  const handleTouchStart = useCallback(
+    (e: React.TouchEvent | React.MouseEvent) => {
+      const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
+      setTouchStart(clientX);
+    },
+    []
+  );
 
-  const handleTouchMove = (e: React.TouchEvent | React.MouseEvent) => {
-    const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
-    setTouchMove(clientX);
-  };
+  const handleTouchMove = useCallback(
+    (e: React.TouchEvent | React.MouseEvent) => {
+      const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
+      setTouchMove(clientX);
+    },
+    []
+  );
 
-  const handleTouchEnd = () => {
+  const handleTouchEnd = useCallback(() => {
     if (touchStart !== null && touchMove !== null) {
       const deltaX = touchMove - touchStart;
       if (Math.abs(deltaX) > 50) {
@@ -170,81 +201,41 @@ const HomeReelViewer: React.FC = () => {
     }
     setTouchStart(null);
     setTouchMove(null);
-  };
-
-  const goToMovie = (index: number) => {
-    setCurrentIndex(index);
-  };
-
-  const toggleMute = () => {
-    if (playerInstance.current) {
-      if (isMuted) {
-        playerInstance.current.unMute();
-      } else {
-        playerInstance.current.mute();
-      }
-      setIsMuted(!isMuted);
-    }
-  };
-
-  // Get YouTube thumbnail URL
-  const getYouTubeThumbnail = (trailer: string) => {
-    const videoId = trailer.split("embed/")[1];
-    return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
-  };
+  }, [touchStart, touchMove, prevMovie, nextMovie]);
 
   return (
     <div className="relative max-w-[1920px] mx-auto w-full h-[40rem] bg-black flex flex-col md:flex-row rounded-md overflow-hidden">
       {/* Video Section (3/4 width) */}
-      <div
-        ref={videoSectionRef}
-        className="relative w-full md:w-3/4 h-full"
-        onMouseDown={handleTouchStart}
-        onMouseMove={handleTouchMove}
-        onMouseUp={handleTouchEnd}
-        onMouseLeave={handleTouchEnd}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-      >
+      <div ref={videoSectionRef} className="relative w-full md:w-3/4 h-full">
         {loading ? (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <img src="backgroundjpeg.webp" alt="letsee" />
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 overflow-hidden">
+            <img
+              src="/backgroundjpeg.webp"
+              alt="Loading background"
+              className="w-full h-full object-cover animate-pulse"
+            />
           </div>
         ) : error ? (
           <div className="absolute inset-0 flex items-center justify-center">
-            <p className="text-red-400 text-center">Error: {error}</p>
+            <p className="text-red-400 text-center">{error}</p>
           </div>
         ) : movies.length > 0 ? (
           <>
-            {/* Thumbnail Display */}
-            {(!isVideoReady || !isPlaying) && (
-              <div className="absolute inset-0 aspect-[16/9] w-full h-full">
-                <img
-                  onClick={() => setIsPlaying(true)}
-                  src={
-                    movies[currentIndex].trailer
-                      ? getYouTubeThumbnail(movies[currentIndex].trailer)
-                      : "/no-photo.webp"
-                  }
-                  alt={movies[currentIndex].title}
-                  className="w-full h-full object-cover opacity-65"
-                />
-              </div>
-            )}
-
-            {/* YouTube Player */}
-            <div
-              className={`absolute inset-0 aspect-[16/9] w-full h-full ${
-                isVideoReady && isPlaying ? "block" : "hidden"
-              }`}
-            >
+            <div className="absolute inset-0 aspect-[16/9] w-full h-full">
               <div
                 ref={playerRef}
+                onMouseDown={handleTouchStart}
+                onMouseMove={handleTouchMove}
+                onMouseUp={handleTouchEnd}
+                onMouseLeave={handleTouchEnd}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
                 className="w-full h-full"
                 suppressHydrationWarning
               />
             </div>
+
             {/* Title Overlay */}
             <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 z-10">
               <Link

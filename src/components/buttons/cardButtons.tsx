@@ -1,8 +1,9 @@
+// components/CardMovieButton.tsx
 "use client";
-
-import React, { useContext, useState } from "react";
+import React, { useState, useContext } from "react";
 import UserPrefrenceContext from "@/app/contextAPI/userPrefrence";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import toast from "react-hot-toast";
 
 interface CardMovieButtonProps {
   icon: React.ReactNode;
@@ -12,8 +13,8 @@ interface CardMovieButtonProps {
   mediaType: string;
   imgUrl: string;
   adult: boolean;
-  state: boolean;
-  genres: [];
+  state: boolean; // true if already in the list, false if not
+  genres: string[]; // Updated to string[] for clarity
 }
 
 const CardMovieButton: React.FC<CardMovieButtonProps> = ({
@@ -31,7 +32,7 @@ const CardMovieButton: React.FC<CardMovieButtonProps> = ({
   const { setUserPrefrence, loading, user }: any =
     useContext(UserPrefrenceContext);
 
-  const handlemodal = () => {
+  const handleModal = () => {
     setModal(!modal);
   };
 
@@ -43,9 +44,13 @@ const CardMovieButton: React.FC<CardMovieButtonProps> = ({
     imgUrl: string,
     adult: boolean
   ) => {
-    if (loading) return;
+    if (loading) {
+      toast.loading("Processing...");
+      return;
+    }
     if (!user) {
-      return alert("Please login to perform this action");
+      toast.error("Please log in to perform this action");
+      return handleModal();
     }
 
     const apiEndpoints = {
@@ -61,9 +66,10 @@ const CardMovieButton: React.FC<CardMovieButtonProps> = ({
     };
 
     const url = state ? deleteEndpoints[funcType] : apiEndpoints[funcType];
+    const actionText = state ? "Removed from" : "Added to";
+    const toastId = toast.loading(`${actionText} ${funcType}...`);
 
     try {
-      // Perform the main action (add/remove)
       const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -85,11 +91,10 @@ const CardMovieButton: React.FC<CardMovieButtonProps> = ({
         throw new Error(data.error || "An error occurred");
       }
 
-      // Update user preference state based on the action
+      // Update user preference state
       setUserPrefrence((prev: any) => {
         const updatedPrefrence = { ...prev };
 
-        // Helper function to add/remove items from a list
         const updateList = (listKey: string, item: any, shouldAdd: boolean) => {
           if (!updatedPrefrence[listKey]) updatedPrefrence[listKey] = [];
           const index = updatedPrefrence[listKey].findIndex(
@@ -103,44 +108,36 @@ const CardMovieButton: React.FC<CardMovieButtonProps> = ({
           }
         };
 
-        // Handle coordination logic
+        const item = { item_id: itemId };
+
         switch (funcType) {
           case "watched":
             if (!state) {
-              // Addition to watched: delete from watchlist and add to watched
-              updateList("watchlater", { item_id: itemId }, false);
-              updateList("watched", { item_id: itemId }, true);
+              updateList("watchlater", item, false);
+              updateList("watched", item, true);
             } else {
-              // Deletion of watched: delete from watched and delete from favorites
-              updateList("watched", { item_id: itemId }, false);
-              updateList("favorite", { item_id: itemId }, false);
+              updateList("watched", item, false);
+              updateList("favorite", item, false);
             }
             break;
-
           case "favorite":
             if (!state) {
-              // Addition to favorites: delete from watchlist, add to watched, and add to favorites
-              updateList("watchlater", { item_id: itemId }, false);
-              updateList("watched", { item_id: itemId }, true);
-              updateList("favorite", { item_id: itemId }, true);
+              updateList("watchlater", item, false);
+              updateList("watched", item, true);
+              updateList("favorite", item, true);
             } else {
-              // Deletion of favorites: delete from favorites
-              updateList("favorite", { item_id: itemId }, false);
+              updateList("favorite", item, false);
             }
             break;
-
           case "watchlater":
             if (!state) {
-              // Addition to watchlist: delete from watched, delete from favorites, and add to watchlist
-              updateList("watched", { item_id: itemId }, false);
-              updateList("favorite", { item_id: itemId }, false);
-              updateList("watchlater", { item_id: itemId }, true);
+              updateList("watched", item, false);
+              updateList("favorite", item, false);
+              updateList("watchlater", item, true);
             } else {
-              // Deletion of watchlist: delete from watchlist
-              updateList("watchlater", { item_id: itemId }, false);
+              updateList("watchlater", item, false);
             }
             break;
-
           default:
             break;
         }
@@ -148,23 +145,28 @@ const CardMovieButton: React.FC<CardMovieButtonProps> = ({
         return updatedPrefrence;
       });
 
-      console.log(data.message || "Action completed successfully");
+      toast.success(`${actionText} ${funcType} successfully`, { id: toastId });
     } catch (error: any) {
-      console.error("Error:", error.message || "An error occurred");
+      toast.error(
+        `Failed to ${actionText.toLowerCase()} ${funcType}: ${error.message}`,
+        {
+          id: toastId,
+        }
+      );
     }
   };
 
   return (
     <>
       {modal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 ">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-neutral-700 w-full h-fit max-w-3xl sm:rounded-lg p-5 shadow-xl">
             <div className="flex justify-between items-center p-4 border-b">
               <h2 className="text-white text-lg font-semibold">
                 Please Log In First
               </h2>
               <button
-                onClick={handlemodal}
+                onClick={handleModal}
                 className="text-white hover:text-gray-300"
               >
                 ✖
@@ -181,10 +183,10 @@ const CardMovieButton: React.FC<CardMovieButtonProps> = ({
           user
             ? () =>
                 handleAction(funcType, itemId, name, mediaType, imgUrl, adult)
-            : handlemodal
+            : handleModal
         }
         title={funcType}
-        className="h-full w-full flex items-center justify-center text-2xl bg-neutral-800 text-neutral-200 hover:bg-neutral-700"
+        className="h-full w-full flex items-center justify-center text-2xl bg-neutral-800 text-neutral-200 hover:bg-neutral-700 disabled:bg-neutral-600 disabled:cursor-not-allowed"
         disabled={loading}
       >
         {loading ? (

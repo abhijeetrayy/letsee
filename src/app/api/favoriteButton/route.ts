@@ -22,6 +22,58 @@ export async function POST(req: NextRequest) {
   const userId = data.user.id;
 
   try {
+    // Check if the item exists in watchlist
+    const { data: existingWatchlistItem, error: watchlistFindError } =
+      await supabase
+        .from("user_watchlist")
+        .select()
+        .eq("user_id", userId)
+        .eq("item_id", itemId)
+        .single();
+
+    if (watchlistFindError && watchlistFindError.code !== "PGRST116") {
+      throw watchlistFindError;
+    }
+
+    // Delete the item from watchlist if it exists
+    if (existingWatchlistItem) {
+      const { error: deleteWatchlistError } = await supabase
+        .from("user_watchlist")
+        .delete()
+        .eq("user_id", userId)
+        .eq("item_id", itemId);
+
+      if (deleteWatchlistError) {
+        console.log(
+          "Error deleting item from watchlist:",
+          deleteWatchlistError
+        );
+        return NextResponse.json(
+          { error: "Error deleting item from watchlist" },
+          { status: 500 }
+        );
+      }
+
+      // Decrement watchlist_count in user_count_stats
+      const { error: decrementWatchlistError } = await supabase.rpc(
+        "decrement_watchlist_count",
+        {
+          p_user_id: userId,
+        }
+      );
+
+      if (decrementWatchlistError) {
+        console.log(
+          "Error decrementing watchlist_count:",
+          decrementWatchlistError
+        );
+        return NextResponse.json(
+          { error: "Error updating watchlist count" },
+          { status: 500 }
+        );
+      }
+    }
+
     // Insert the item into favorite_items
     const { error: insertError } = await supabase
       .from("favorite_items")
@@ -129,7 +181,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         message:
-          "Item added to favorites" + (watchedAdded ? " and watched" : ""),
+          "Item added to favorites" +
+          (watchedAdded ? " and watched" : "") +
+          (existingWatchlistItem ? " and removed from watchlist" : ""),
       },
       { status: 200 }
     );
