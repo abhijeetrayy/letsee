@@ -123,11 +123,11 @@ export default async function Home() {
         </div>
         <div className="w-full  ">
           <h2 className="text-2xl my-4 font-bold">Romance</h2>
-          <HomeContentTile type={"tv"} data={RomanceData} />
+          <HomeContentTile type={"movie"} data={RomanceData} />
         </div>
         <div className="w-full  ">
           <h2 className="text-2xl my-4 font-bold">Action</h2>
-          <HomeContentTile type={"tv"} data={ActionData} />
+          <HomeContentTile type={"movie"} data={ActionData} />
         </div>
       </div>
     </>
