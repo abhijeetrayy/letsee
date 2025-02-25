@@ -7,22 +7,7 @@ import { LuSend } from "react-icons/lu";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { GenreList } from "@/staticData/genreList";
 
-interface MovieRecoTileProps {
-  data: {
-    results?: Array<{
-      id: number;
-      media_type: string;
-      name?: string;
-      title?: string;
-      poster_path: string;
-      adult: boolean;
-      genre_ids: number[];
-    }>;
-  };
-  title: string;
-}
-
-export default function MovieRecoTile({ data, title }: MovieRecoTileProps) {
+export default function HomeContentTile({ data, type }: any) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [cardData, setCardData] = useState<any>(null);
@@ -117,7 +102,6 @@ export default function MovieRecoTile({ data, title }: MovieRecoTileProps) {
         onClose={() => setIsModalOpen(false)}
       />
       <div className="relative">
-        <h1 className="text-lg font-bold mb-4">Similar: {title}</h1>
         <div
           ref={scrollRef}
           className="flex flex-row gap-4 py-3 overflow-x-auto no-scrollbar"
@@ -131,7 +115,7 @@ export default function MovieRecoTile({ data, title }: MovieRecoTileProps) {
               >
                 <div className="absolute top-0 left-0">
                   <p className="px-1 py-1 bg-neutral-950 text-white rounded-br-md text-xs sm:text-sm">
-                    movie
+                    {type}
                   </p>
                 </div>
                 <Link

@@ -75,7 +75,7 @@ export default function Movie({
             {/* Poster */}
             <div className="flex-1 ">
               <img
-                className="rounded-md w-fit h-full max-h-[600px] shadow-lg float-right"
+                className="rounded-md w-fit h-full max-h-[600px] shadow-lg md:float-right"
                 src={`${
                   movie.poster_path && !movie.adult
                     ? `https://image.tmdb.org/t/p/w342${movie.poster_path}`

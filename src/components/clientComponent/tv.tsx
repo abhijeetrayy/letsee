@@ -76,7 +76,7 @@ export default function Tv({
             {/* Poster */}
             <div className="flex-1">
               <img
-                className="rounded-md object-cover h-full max-h-[600px] shadow-lg float-right"
+                className="rounded-md w-fit h-full max-h-[600px] shadow-lg md:float-right"
                 src={
                   show.adult
                     ? "/pixeled.webp"

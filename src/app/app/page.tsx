@@ -7,6 +7,7 @@ import Tvtop from "@components/clientComponent/topTv";
 import HomeVideo from "@components/home/videoReel";
 import MovieGenre from "@components/scroll/movieGenre";
 import TvGenre from "@components/scroll/tvGenre";
+import HomeContentTile from "@components/movie/homeContentTile";
 
 async function getData() {
   const res = await fetch(
@@ -82,7 +83,7 @@ export default async function Home() {
 
         <div className="">
           <h2 className="text-2xl my-4 font-bold">Weekly Top 20</h2>
-          <WeeklyTop data={data} />
+          <HomeContentTile type={"movie"} data={data} />
         </div>
         <div className="w-full  ">
           <h1 className="text-lg font-semibold mb-2">Tv Show Genres</h1>
@@ -90,7 +91,7 @@ export default async function Home() {
         </div>
         <div className="w-full  ">
           <h2 className="text-2xl my-4 font-bold">Trending Tv Show&apos;s</h2>
-          <Tvtop TrendingTv={TrendingTv} />
+          <HomeContentTile type={"tv"} data={TrendingTv} />
         </div>
       </div>
     </>

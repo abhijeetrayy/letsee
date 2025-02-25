@@ -161,7 +161,7 @@ const ImagesSection: React.FC<ImagesSectionProps> = ({
               />
               <button
                 onClick={closeModal}
-                className="absolute top-2 left-2 bg-neutral-800 text-white p-2 rounded-full hover:bg-neutral-700 transition-colors duration-200"
+                className="absolute top-2 left-2 bg-neutral-800 text-white p-2 w-10 h-10 rounded-full hover:bg-neutral-700 transition-colors duration-200"
               >
                 X
               </button>
