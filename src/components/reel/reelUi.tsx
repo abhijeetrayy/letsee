@@ -100,7 +100,7 @@ const ReelViewer: React.FC = () => {
             `http://www.omdbapi.com/?i=${movies[currentIndex].imdb_id}&apikey=${process.env.NEXT_PUBLIC_OMDB_API_KEY}`
           );
           const res = await response.json();
-
+          console.log(res);
           setImdbRating(res.imdbRating);
         } catch (error) {
           console.log(error);

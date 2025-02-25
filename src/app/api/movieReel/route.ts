@@ -74,7 +74,6 @@ export async function POST(req: NextRequest) {
           `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}&append_to_response=videos,external_ids`
         );
         const movieData = await movieResponse.json();
-        console.log(movieData);
 
         const trailer = movieData.videos.results.find(
           (v: any) => v.type === "Trailer" && v.site === "YouTube"
