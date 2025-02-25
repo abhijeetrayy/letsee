@@ -120,7 +120,7 @@ export default function HomeContentTile({ data, type }: any) {
                 </div>
                 <Link
                   className="w-full h-full"
-                  href={`/app/movie/${item.id}-${(item?.name || item?.title)
+                  href={`/app/${type}/${item.id}-${(item?.name || item?.title)
                     .trim()
                     .replace(/[^a-zA-Z0-9]/g, "-")
                     .replace(/-+/g, "-")}`}

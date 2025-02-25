@@ -113,7 +113,7 @@ const MovieDetails = async ({ params }: PageProps) => {
         id={id}
       />
       {RecoData.total_results > 0 && (
-        <MovieRecoTile title={movie.title} data={RecoData} />
+        <MovieRecoTile type={"movie"} title={movie.title} data={RecoData} />
       )}
     </div>
   );

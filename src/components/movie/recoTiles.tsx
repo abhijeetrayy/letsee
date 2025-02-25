@@ -20,9 +20,14 @@ interface MovieRecoTileProps {
     }>;
   };
   title: string;
+  type: string;
 }
 
-export default function MovieRecoTile({ data, title }: MovieRecoTileProps) {
+export default function MovieRecoTile({
+  data,
+  title,
+  type,
+}: MovieRecoTileProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [cardData, setCardData] = useState<any>(null);
@@ -131,12 +136,12 @@ export default function MovieRecoTile({ data, title }: MovieRecoTileProps) {
               >
                 <div className="absolute top-0 left-0">
                   <p className="px-1 py-1 bg-neutral-950 text-white rounded-br-md text-xs sm:text-sm">
-                    movie
+                    {type}
                   </p>
                 </div>
                 <Link
                   className="w-full h-full"
-                  href={`/app/movie/${item.id}-${(item?.name || item?.title)
+                  href={`/app/${type}/${item.id}-${(item?.name || item?.title)
                     .trim()
                     .replace(/[^a-zA-Z0-9]/g, "-")
                     .replace(/-+/g, "-")}`}

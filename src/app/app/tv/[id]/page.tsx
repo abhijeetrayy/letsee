@@ -63,7 +63,6 @@ export async function generateMetadata({
 }: PageProps): Promise<Metadata> {
   const { id } = await params;
   const movie = await getShowDetails(id);
-  console.log(movie);
 
   return {
     title: movie?.name || "Movie Not Found",
@@ -115,7 +114,7 @@ const ShowDetails = async ({ params }: PageProps) => {
         id={id}
       />
       {RecoData.total_results > 0 && (
-        <MovieRecoTile title={show.name} data={RecoData} />
+        <MovieRecoTile type={"tv"} title={show.name} data={RecoData} />
       )}
     </div>
   );
