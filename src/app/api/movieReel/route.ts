@@ -37,11 +37,19 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing keyword" }, { status: 400 });
     }
 
+    const apiKey = process.env.TMDB_API_KEY;
+    if (!apiKey) {
+      return NextResponse.json(
+        { error: "API key not configured" },
+        { status: 500 }
+      );
+    }
+
     // Step 1: Search for the keyword ID
     const keywordResponse = await fetchWithRetry(
-      `https://api.themoviedb.org/3/search/keyword?api_key=${
-        process.env.TMDB_API_KEY
-      }&query=${encodeURIComponent(keyword)}&page=1`
+      `https://api.themoviedb.org/3/search/keyword?api_key=${apiKey}&query=${encodeURIComponent(
+        keyword
+      )}&page=1`
     );
     const keywordData = await keywordResponse.json();
     const keywordId = keywordData.results[0]?.id;
@@ -50,41 +58,49 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Keyword not found" }, { status: 404 });
     }
 
-    // Step 2: Fetch movies for the specified page
-    const response = await fetchWithRetry(
-      `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.TMDB_API_KEY}&with_keywords=${keywordId}&page=${page}&include_video=true`
+    // Step 2: Fetch movies for the specified page with discover
+    const discoverResponse = await fetchWithRetry(
+      `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_keywords=${keywordId}&page=${page}&include_video=true`
     );
-    const data = await response.json();
-    const movies = data.results;
+    const discoverData = await discoverResponse.json();
+    const movieIds = discoverData.results.map((movie: any) => movie.id);
 
-    // Step 3: Fetch trailers for movies on this page
-    const moviesWithTrailers = await Promise.all(
-      movies.map(async (movie: any, index: number) => {
-        await delay(index * 100); // Staggered delay
-        const videoResponse = await fetchWithRetry(
-          `https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=${process.env.TMDB_API_KEY}`
+    // Step 3: Fetch detailed movie info including trailers and IMDB ratings
+    const moviesWithDetails = await Promise.all(
+      movieIds.map(async (id: number, index: number) => {
+        await delay(index * 100); // Stagger requests to avoid rate limits (10ms delay per request)
+
+        const movieResponse = await fetchWithRetry(
+          `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}&append_to_response=videos,external_ids`
         );
-        const videoData = await videoResponse.json();
-        const trailer = videoData.results.find(
+        const movieData = await movieResponse.json();
+        console.log(movieData);
+
+        const trailer = movieData.videos.results.find(
           (v: any) => v.type === "Trailer" && v.site === "YouTube"
         );
 
         return {
-          id: movie.id,
-          title: movie.title,
+          id: movieData.id,
+          title: movieData.title,
           trailer: trailer
             ? `https://www.youtube.com/embed/${trailer.key}`
             : undefined,
-          //   poster: movie.poster_path,
-          // genre: movie.genre.maps(genre => genre.name)
+          poster_path: movieData.poster_path,
+          genres: movieData.genres.map((g: any) => g.name), // Extract genre names
+          imdb_id: movieData.external_ids.imdb_id, // IMDB ID for rating
+          adult: movieData.adult,
         };
       })
     );
 
+    // Filter movies with trailers
+    const filteredMovies = moviesWithDetails.filter((movie) => movie.trailer);
+
     return NextResponse.json(
       {
-        movies: moviesWithTrailers.filter((movie) => movie.trailer),
-        totalPages: data.total_pages,
+        movies: filteredMovies,
+        totalPages: discoverData.total_pages,
       },
       { status: 200 }
     );

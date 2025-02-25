@@ -9,7 +9,7 @@ import { LuSend } from "react-icons/lu";
 interface MovieRecommendation {
   name: string;
   poster_url: string | null;
-  tmdb_id: number;
+  id: string;
   genres: any;
 }
 
@@ -39,6 +39,7 @@ export default function Recommendations() {
       }
 
       const data: MovieRecommendation[] = await response.json();
+      console.log(data);
       setRecommendations(data);
     } catch (err: any) {
       console.error(err);
@@ -71,11 +72,11 @@ export default function Recommendations() {
       {recommendations.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 ">
           {recommendations.map((data) => (
-            <div className="" key={data.tmdb_id}>
+            <div className="" key={data.id}>
               <div className=" relative group flex flex-col justify-between rounded-md bg-black  w-full h-full  text-gray-300 overflow-hidden duration-300   ">
                 <Link
                   className="relative flex h-full  "
-                  href={`/app/movie/${data.tmdb_id}-${data.name
+                  href={`/app/movie/${data.id}-${data.name
                     .trim()
                     .replace(/[^a-zA-Z0-9]/g, "-")
                     .replace(/-+/g, "-")}`}
@@ -91,7 +92,7 @@ export default function Recommendations() {
                   <ThreePrefrenceBtn
                     genres={data.genres}
                     data={data}
-                    cardId={data.tmdb_id}
+                    cardId={data.id}
                     cardType={"movie"}
                     cardName={data.name}
                     cardAdult={false}
@@ -111,7 +112,7 @@ export default function Recommendations() {
                     className="w-full h-12 lg:h-fit flex flex-col gap-2  px-4  bg-indigo-700  text-gray-200 "
                   >
                     <Link
-                      href={`/app/movie/${data.tmdb_id}-${data.name
+                      href={`/app/movie/${data.id}-${data.name
                         .trim()
                         .replace(/[^a-zA-Z0-9]/g, "-")
                         .replace(/-+/g, "-")}`}

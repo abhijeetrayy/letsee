@@ -3,13 +3,18 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FaArrowDown, FaArrowUp } from "react-icons/fa6";
-import ThreePrefrencebtn from "../buttons/threePrefrencebtn"; // Adjust path as needed
 import Link from "next/link";
+import ThreePrefrenceBtn from "../buttons/threePrefrencebtn"; // Adjust path as needed
+import { FaSearch } from "react-icons/fa";
 
 interface Movie {
   id: number;
   title: string;
   trailer?: string;
+  poster_path?: string;
+  genres: string[];
+  imdb_id?: string;
+  adult: boolean;
 }
 
 const topKeywords = [
@@ -38,6 +43,7 @@ const ReelViewer: React.FC = () => {
   const [selectedKeyword, setSelectedKeyword] = useState<string>(
     genreFromUrl || "action"
   );
+  const [searchedKeyword, setSearchedKeyword] = useState<string>("");
   const [searchInput, setSearchInput] = useState<string>("");
   const [movies, setMovies] = useState<Movie[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -47,11 +53,12 @@ const ReelViewer: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [player, setPlayer] = useState<YT.Player | null>(null);
   const [nextLoading, setNextLoading] = useState(false);
+  const [imdbRating, setImdbRating] = useState("loading..");
   const playerRef = useRef<HTMLDivElement>(null);
 
   // Fetch movies for the current page
   const fetchMovies = async (page: number) => {
-    setLoading(page === 1); // Only show initial loading on page 1
+    setLoading(page === 1);
     setError(null);
     try {
       const response = await fetch("/api/movieReel", {
@@ -63,7 +70,7 @@ const ReelViewer: React.FC = () => {
       const { movies: newMovies, totalPages: pages } = await response.json();
       setMovies(newMovies);
       setTotalPages(pages);
-      setCurrentIndex(0); // Reset to first movie of the page
+      setCurrentIndex(0);
     } catch (err) {
       setError((err as Error).message);
     } finally {
@@ -77,8 +84,30 @@ const ReelViewer: React.FC = () => {
     router.push(`/app/reel?keyword=${selectedKeyword}&page=${currentPage}`, {
       scroll: false,
     });
-  }, [selectedKeyword, currentPage]);
+  }, [selectedKeyword, currentPage, router]);
 
+  useEffect(() => {
+    const fetchImdb = async () => {
+      setImdbRating("loading..");
+
+      if (movies[currentIndex]?.imdb_id) {
+        try {
+          const response = await fetch(
+            `http://www.omdbapi.com/?i=${movies[currentIndex].imdb_id}&apikey=${process.env.NEXT_PUBLIC_OMDB_API_KEY}`
+          );
+          const res = await response.json();
+
+          setImdbRating(res.imdbRating);
+        } catch (error) {
+          console.log(error);
+          setImdbRating("null");
+        }
+      } else {
+        setImdbRating("no rating");
+      }
+    };
+    fetchImdb();
+  }, [movies, currentIndex]);
   // Initialize YouTube Player
   useEffect(() => {
     if (!window.YT) {
@@ -103,6 +132,9 @@ const ReelViewer: React.FC = () => {
             autoplay: 1,
             mute: 1,
             controls: 1,
+            modestbranding: 0,
+            showinfo: 0,
+            rel: 0,
           },
           events: {
             onReady: (event: YT.PlayerEvent) => {
@@ -166,48 +198,35 @@ const ReelViewer: React.FC = () => {
     e.preventDefault();
     if (searchInput.trim()) {
       setSelectedKeyword(searchInput.trim());
+      setSearchedKeyword(searchInput.trim());
       setSearchInput("");
       setCurrentPage(1);
     }
   };
 
-  const handlePageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newPage = parseInt(e.target.value, 10);
-    setCurrentPage(newPage);
-  };
-
-  const handleItemChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newIndex = parseInt(e.target.value, 10);
-    setCurrentIndex(newIndex);
-    if (player && movies[newIndex]?.trailer) {
-      const videoId = movies[newIndex].trailer.split("embed/")[1];
-      player.loadVideoById(videoId);
-    }
+  const handleKeywordClick = (keyword: string) => {
+    setSelectedKeyword(keyword);
+    setSearchedKeyword("");
+    setCurrentPage(1);
   };
 
   return (
-    <div className=" justify-center  items-center text-neutral-200 flex">
-      {/* Header with Search Bar */}
+    <div className="min-h-screen bg-neutral-900 text-neutral-200 flex flex-col items-center p-4">
+      {/* Header */}
 
       {/* Main Layout */}
-      <div className="max-w-6xl w-full flex flex-col md:flex-row flex-1 overflow-hidden">
+      <div className="w-full max-w-6xl flex flex-col md:flex-row gap-4">
         {/* Sidebar with Top Keywords */}
-        <aside className="w-full md:w-64 p-4   overflow-y-auto">
-          <h2 className="text-xl font-bold my-4 text-neutral-100 hidden md:block">
+        <aside className="w-full md:w-64 flex-shrink-0 order-2 md:order-1">
+          <h2 className="text-lg sm:text-xl font-bold text-neutral-100 mb-4 md:block hidden">
             Top Keywords
           </h2>
-          <div
-            className="
-          flex flex-row gap-2 md:flex-col  "
-          >
+          <div className="flex flex-wrap md:flex-col gap-2">
             {topKeywords.map((keyword) => (
               <button
                 key={keyword}
-                onClick={() => {
-                  setCurrentPage(1);
-                  setSelectedKeyword(keyword);
-                }}
-                className={`w-full text-left py-2 px-3 rounded-lg capitalize transition-all duration-200 text-sm sm:text-base ${
+                onClick={() => handleKeywordClick(keyword)}
+                className={`flex-1 md:w-full text-left py-2 px-3 rounded-lg capitalize transition-all duration-200 text-sm sm:text-base ${
                   selectedKeyword === keyword
                     ? "bg-neutral-700 text-neutral-100 shadow-md"
                     : "bg-neutral-800 hover:bg-neutral-700 text-neutral-300"
@@ -220,24 +239,45 @@ const ReelViewer: React.FC = () => {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 flex flex-col   items-center justify-center gap-2 p-4 overflow-y-auto">
-          <form onSubmit={handleSearch} className="w-full max-w-md mx-auto">
-            <div className="relative">
+        <main className="flex-1 order-1 md:order-2 flex flex-col items-center justify-center gap-4">
+          <div className="w-full max-w-6xl mb-4">
+            <form
+              onSubmit={handleSearch}
+              className="relative w-full max-w-md mx-auto"
+            >
               <input
                 type="text"
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 placeholder="Search for a keyword..."
-                className="w-full py-2 px-4 bg-neutral-700 text-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-500 placeholder-neutral-400 text-sm sm:text-base"
+                className="w-full py-3 px-4 bg-neutral-800 text-neutral-200 rounded-full focus:outline-none focus:ring-2 focus:ring-neutral-500 placeholder-neutral-400 text-sm sm:text-base"
               />
               <button
                 type="submit"
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-neutral-600 text-neutral-100 p-1.5 rounded-md hover:bg-neutral-500"
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-neutral-700 text-neutral-100 p-2 rounded-full hover:bg-neutral-600"
               >
-                Search
+                <FaSearch size={16} />
               </button>
+            </form>
+            {/* Keyword Feedback */}
+            <div className="mt-2 text-center text-sm sm:text-base text-neutral-400">
+              {searchedKeyword ? (
+                <p>
+                  Searched:{" "}
+                  <span className="text-neutral-100 capitalize">
+                    {searchedKeyword}
+                  </span>
+                </p>
+              ) : (
+                <p>
+                  Selected:{" "}
+                  <span className="text-neutral-100 capitalize">
+                    {selectedKeyword}
+                  </span>
+                </p>
+              )}
             </div>
-          </form>
+          </div>
           {loading ? (
             <p className="text-neutral-400 text-sm sm:text-base">
               Loading reels...
@@ -245,9 +285,9 @@ const ReelViewer: React.FC = () => {
           ) : error ? (
             <p className="text-red-400 text-sm sm:text-base">Error: {error}</p>
           ) : movies.length > 0 ? (
-            <div className="w-full max-w-3xl space-y-4">
+            <div className="w-full space-y-4">
               {/* Video Player */}
-              <div className="relative aspect-[16/9] bg-black rounded-xl overflow-hidden shadow-lg">
+              <div className="relative aspect-[16/9] w-full max-w-3xl mx-auto bg-black rounded-xl overflow-hidden shadow-lg">
                 <div ref={playerRef} className="w-full h-full" />
               </div>
 
@@ -267,19 +307,26 @@ const ReelViewer: React.FC = () => {
                   {currentIndex + 1} of {movies.length} (Page {currentPage} of{" "}
                   {totalPages})
                 </p>
-
+                {/* IMDB Rating */}
+                {movies[currentIndex].imdb_id && (
+                  <p className="text-neutral-400 text-xs sm:text-sm">
+                    {imdbRating !== "loading.."
+                      ? `IMDB Rating: ${imdbRating}`
+                      : "IMDB Rating: Loading.."}
+                  </p>
+                )}
                 {/* Navigation Buttons */}
-                <div className="flex justify-center gap-3">
+                <div className="flex justify-center gap-4">
                   <button
                     onClick={prevReel}
                     disabled={currentIndex === 0 && currentPage === 1}
-                    className="p-2 bg-neutral-700 text-neutral-200 -rotate-90 rounded-full hover:bg-neutral-600 transition-colors duration-200 disabled:opacity-50"
+                    className="p-3 bg-neutral-700 -rotate-90 text-neutral-200 rounded-full hover:bg-neutral-600 transition-colors duration-200 disabled:opacity-50"
                   >
                     <FaArrowUp size={20} />
                   </button>
                   <button
                     onClick={nextReel}
-                    className={`p-2 bg-neutral-700 -rotate-90 text-neutral-200 rounded-full hover:bg-neutral-600 transition-colors duration-200 flex items-center gap-2 ${
+                    className={`p-3 bg-neutral-700 -rotate-90 text-neutral-200 rounded-full hover:bg-neutral-600 transition-colors duration-200 flex items-center gap-2 ${
                       nextLoading ? "opacity-50 cursor-not-allowed" : ""
                     }`}
                   >
@@ -290,46 +337,17 @@ const ReelViewer: React.FC = () => {
                     )}
                   </button>
                 </div>
-
-                {/* Page and Item Selectors */}
-                <div className="flex flex-col sm:flex-row justify-center gap-3">
-                  <select
-                    value={currentIndex}
-                    onChange={handleItemChange}
-                    className="w-full sm:w-48 bg-neutral-700 text-neutral-200 py-2 px-3 rounded-lg text-sm"
-                  >
-                    {movies.map((movie, index) => (
-                      <option key={movie.id} value={index}>
-                        {movie.title}
-                      </option>
-                    ))}
-                  </select>
-                  <select
-                    value={currentPage}
-                    onChange={handlePageChange}
-                    className="w-full sm:w-32 bg-neutral-700 text-neutral-200 py-2 px-3 rounded-lg text-sm"
-                  >
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                      (page) => (
-                        <option key={page} value={page}>
-                          Page {page}
-                        </option>
-                      )
-                    )}
-                  </select>
-                </div>
-
-                {/* Three Preference Buttons */}
-                {/* <div className="mt-2">
-                  <ThreePrefrencebtn
+                {/* Preference Buttons */}
+                <div className="mt-2">
+                  <ThreePrefrenceBtn
                     cardId={movies[currentIndex].id}
                     cardType="movie"
                     cardName={movies[currentIndex].title}
-                    cardAdult={false}
-                    cardImg=""
-                    genres={[]}
+                    cardAdult={movies[currentIndex].adult}
+                    cardImg={movies[currentIndex].poster_path || ""}
+                    genres={movies[currentIndex].genres}
                   />
-                </div> */}
+                </div>
               </div>
             </div>
           ) : (
