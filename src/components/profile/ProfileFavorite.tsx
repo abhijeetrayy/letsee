@@ -71,8 +71,8 @@ function FavoritesList({ favorites, favoriteCount }: any) {
           className="w-full flex flex-row overflow-x-scroll thin-scroll gap-3 z-40 pb-3"
         >
           {favorites?.map((item: any) => (
-            <div key={item.id}>
-              <div className="relative group flex flex-col rounded-md bg-black w-full text-gray-300 overflow-hidden">
+            <div className="w-full" key={item.id}>
+              <div className="relative group h-full flex flex-col rounded-md bg-black w-full text-gray-300 overflow-hidden">
                 <div className="absolute top-0 left-0  lg:opacity-0 lg:group-hover:opacity-100">
                   {item.item_adult ? (
                     <p className="p-1 bg-red-600 text-white rounded-br-md text-sm">
@@ -89,7 +89,7 @@ function FavoritesList({ favorites, favoriteCount }: any) {
                   href={`/app/${item.item_type}/${item.item_id}`}
                 >
                   <img
-                    className="object-cover"
+                    className="w-full object-cover"
                     src={
                       item.item_adult
                         ? "/pixeled.webp"

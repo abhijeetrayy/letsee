@@ -423,22 +423,22 @@ const RecommendationTile = ({ isOwner, name, id }: any) => {
       )}
 
       {/* Recommendations Section */}
+      <div className="flex justify-between flex-col sm:flex-row sm:items-center gap-3 mb-4">
+        <h1 className="text-2xl font-bold text-neutral-100">
+          {isOwner
+            ? "ShowCase Your Recommendations"
+            : `Recommendation from ${name}`}
+        </h1>
+        {isOwner && (
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="bg-blue-600 text-white py-1 px-3 rounded-md hover:bg-blue-700 transition-colors duration-200"
+          >
+            Add Recommendation
+          </button>
+        )}
+      </div>
       <div className="min-h-64 h-full relative">
-        <div className="flex justify-between items-center mb-4">
-          <h1 className="text-2xl font-bold text-neutral-100">
-            {isOwner
-              ? "ShowCase Your Recommendations"
-              : `Recommendation from ${name}`}
-          </h1>
-          {isOwner && (
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="bg-blue-600 text-white py-1 px-3 rounded-md hover:bg-blue-700 transition-colors duration-200"
-            >
-              Add Recommendation
-            </button>
-          )}
-        </div>
         {loading ? (
           <p className="text-neutral-400 text-center">Loading...</p>
         ) : (

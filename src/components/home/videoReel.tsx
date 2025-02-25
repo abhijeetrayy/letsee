@@ -3,16 +3,17 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
-  FaVolumeMute,
-  FaVolumeUp,
   FaChevronLeft,
   FaChevronRight,
+  FaVolumeMute,
+  FaVolumeUp,
 } from "react-icons/fa";
 
 interface Movie {
   id: number;
   title: string;
   trailer?: any;
+  poster_path?: string; // Optional, kept for compatibility
 }
 
 const HomeReelViewer: React.FC = () => {
@@ -20,11 +21,13 @@ const HomeReelViewer: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isMuted, setIsMuted] = useState(true);
   const [isMounted, setIsMounted] = useState(false);
+  const [isVideoReady, setIsVideoReady] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true); // Track play/pause state
   const playerRef = useRef<HTMLDivElement>(null);
   const playerInstance = useRef<YT.Player | null>(null);
   const videoSectionRef = useRef<HTMLDivElement>(null);
+  const [isMuted, setIsMuted] = useState(true);
 
   // Mark component as mounted on client
   useEffect(() => {
@@ -75,27 +78,37 @@ const HomeReelViewer: React.FC = () => {
         if (playerInstance.current) {
           playerInstance.current.destroy();
         }
+        setIsVideoReady(false);
+        setIsPlaying(true); // Start playing by default
         playerInstance.current = new window.YT.Player(playerRef.current, {
           width: "1280",
           height: "720",
           videoId,
           playerVars: {
             autoplay: 1,
-            mute: 1,
-            controls: 0,
-            modestbranding: 1,
+            mute: 1, // Muted by default
+            controls: 0, // No controls
+            modestbranding: 0,
             showinfo: 0,
             rel: 0,
           },
           events: {
             onReady: (event: YT.PlayerEvent) => {
               event.target.playVideo();
-              setIsMuted(true);
+              setIsVideoReady(true);
             },
             onStateChange: (event: YT.OnStateChangeEvent) => {
               if (event.data === window.YT.PlayerState.ENDED) {
                 nextMovie();
+              } else if (event.data === window.YT.PlayerState.PAUSED) {
+                setIsPlaying(false);
+              } else if (event.data === window.YT.PlayerState.PLAYING) {
+                setIsPlaying(true);
               }
+            },
+            onError: (event: YT.OnErrorEvent) => {
+              console.error("YouTube Player Error:", event.data);
+              setError("Failed to load video");
             },
           },
         });
@@ -114,32 +127,20 @@ const HomeReelViewer: React.FC = () => {
         playerInstance.current.destroy();
         playerInstance.current = null;
       }
+      setIsVideoReady(false);
     };
   }, [isMounted, movies, currentIndex]);
 
   const nextMovie = () => {
     const nextIndex = (currentIndex + 1) % movies.length;
     setCurrentIndex(nextIndex);
+    setIsVideoReady(false);
   };
 
   const prevMovie = () => {
     const prevIndex = (currentIndex - 1 + movies.length) % movies.length;
     setCurrentIndex(prevIndex);
-  };
-
-  const goToMovie = (index: number) => {
-    setCurrentIndex(index);
-  };
-
-  const toggleMute = () => {
-    if (playerInstance.current) {
-      if (isMuted) {
-        playerInstance.current.unMute();
-      } else {
-        playerInstance.current.mute();
-      }
-      setIsMuted(!isMuted);
-    }
+    setIsVideoReady(false);
   };
 
   // Swipe-to-scroll logic
@@ -160,16 +161,36 @@ const HomeReelViewer: React.FC = () => {
     if (touchStart !== null && touchMove !== null) {
       const deltaX = touchMove - touchStart;
       if (Math.abs(deltaX) > 50) {
-        // Minimum swipe distance
         if (deltaX > 0) {
-          prevMovie(); // Swipe right
+          prevMovie();
         } else {
-          nextMovie(); // Swipe left
+          nextMovie();
         }
       }
     }
     setTouchStart(null);
     setTouchMove(null);
+  };
+
+  const goToMovie = (index: number) => {
+    setCurrentIndex(index);
+  };
+
+  const toggleMute = () => {
+    if (playerInstance.current) {
+      if (isMuted) {
+        playerInstance.current.unMute();
+      } else {
+        playerInstance.current.mute();
+      }
+      setIsMuted(!isMuted);
+    }
+  };
+
+  // Get YouTube thumbnail URL
+  const getYouTubeThumbnail = (trailer: string) => {
+    const videoId = trailer.split("embed/")[1];
+    return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
   };
 
   return (
@@ -181,29 +202,51 @@ const HomeReelViewer: React.FC = () => {
         onMouseDown={handleTouchStart}
         onMouseMove={handleTouchMove}
         onMouseUp={handleTouchEnd}
-        onMouseLeave={handleTouchEnd} // Reset if mouse leaves
+        onMouseLeave={handleTouchEnd}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
         {loading ? (
-          <p className="text-neutral-400 text-center absolute inset-0 flex items-center justify-center">
-            Loading top movies...
-          </p>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <p className="text-neutral-400 text-center">
+              Loading top movies...
+            </p>
+          </div>
         ) : error ? (
-          <p className="text-red-400 text-center absolute inset-0 flex items-center justify-center">
-            Error: {error}
-          </p>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <p className="text-red-400 text-center">Error: {error}</p>
+          </div>
         ) : movies.length > 0 ? (
           <>
-            <div className="absolute inset-0 aspect-[16/9] w-full h-full">
+            {/* Thumbnail Display */}
+            {(!isVideoReady || !isPlaying) && (
+              <div className="absolute inset-0 aspect-[16/9] w-full h-full">
+                <img
+                  onClick={() => setIsPlaying(true)}
+                  src={
+                    movies[currentIndex].trailer
+                      ? getYouTubeThumbnail(movies[currentIndex].trailer)
+                      : "/no-photo.webp"
+                  }
+                  alt={movies[currentIndex].title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )}
+
+            {/* YouTube Player */}
+            <div
+              className={`absolute inset-0 aspect-[16/9] w-full h-full ${
+                isVideoReady && isPlaying ? "block" : "hidden"
+              }`}
+            >
               <div
                 ref={playerRef}
                 className="w-full h-full"
                 suppressHydrationWarning
               />
             </div>
-
             {/* Title Overlay */}
             <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 z-10">
               <Link
@@ -257,9 +300,9 @@ const HomeReelViewer: React.FC = () => {
             )}
           </>
         ) : (
-          <p className="text-neutral-400 text-center absolute inset-0 flex items-center justify-center">
-            No top movies found
-          </p>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <p className="text-neutral-400 text-center">No top movies found</p>
+          </div>
         )}
       </div>
 
