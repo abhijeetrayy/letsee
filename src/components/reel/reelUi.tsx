@@ -97,7 +97,7 @@ const ReelViewer: React.FC = () => {
       if (movies[currentIndex]?.imdb_id) {
         try {
           const response = await fetch(
-            `http://www.omdbapi.com/?i=${movies[currentIndex].imdb_id}&apikey=${process.env.NEXT_PUBLIC_OMDB_API_KEY}`
+            `https://www.omdbapi.com/?i=${movies[currentIndex].imdb_id}&apikey=${process.env.NEXT_PUBLIC_OMDB_API_KEY}`
           );
           const res = await response.json();
           console.log(res);
