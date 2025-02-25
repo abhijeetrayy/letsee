@@ -27,6 +27,8 @@ const ImagesSection: React.FC<ImagesSectionProps> = ({
   const [canScrollRight, setCanScrollRight] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<Image | null>(null);
+  const [itemWidth, setItemWidth] = useState(200); // Default item width
+  const [visibleItems, setVisibleItems] = useState(4); // Default number of visible items
 
   const images = Bimages.length > 0 ? Bimages : Pimages;
   const displayImages = images.slice(0, 12); // Limit to 12 images
@@ -57,6 +59,37 @@ const ImagesSection: React.FC<ImagesSectionProps> = ({
       element.scrollBy({ left: itemWidth * 2, behavior: "smooth" });
     }
   };
+  useEffect(() => {
+    const calculateItemWidth = () => {
+      const element = scrollRef.current;
+      if (element) {
+        const containerWidth = element.clientWidth;
+        const baseItemWidth = 200; // Base width for each item
+        const gap = 16; // Gap between items (adjust as needed)
+        const peekWidth = containerWidth * 0.15; // 15% of container width for peek
+
+        // Calculate the number of items that can fit in the container
+        let itemsPerView = Math.floor(
+          (containerWidth - peekWidth) / (baseItemWidth + gap)
+        );
+
+        // Ensure itemsPerView is always greater than 2
+        if (itemsPerView < 1) {
+          itemsPerView = 1; // Set a minimum of 2 items
+        }
+
+        // Adjust the item width to fit the calculated number of items
+        const adjustedItemWidth =
+          (containerWidth - peekWidth - gap * itemsPerView) / itemsPerView;
+
+        setItemWidth(adjustedItemWidth);
+        setVisibleItems(itemsPerView);
+      }
+    };
+    calculateItemWidth();
+    window.addEventListener("resize", calculateItemWidth);
+    return () => window.removeEventListener("resize", calculateItemWidth);
+  }, []);
 
   useEffect(() => {
     const element = scrollRef.current;
@@ -93,8 +126,9 @@ const ImagesSection: React.FC<ImagesSectionProps> = ({
               {displayImages.map((item: Image, index: number) => (
                 <div
                   key={index}
-                  className="image-item min-w-[20rem] sm:min-w-[20rem] md:min-w-[24rem] h-48 sm:h-60 md:h-72 rounded-lg overflow-hidden flex-shrink-0 group cursor-pointer"
+                  className="card-item image-item   rounded-lg overflow-hidden flex-shrink-0 group cursor-pointer"
                   onClick={() => openModal(item)}
+                  style={{ width: `${itemWidth}px`, height: `${itemWidth}px` }}
                 >
                   <img
                     className="w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-60"

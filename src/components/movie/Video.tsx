@@ -24,6 +24,8 @@ function Video({ videos, movie }: VideoProps) {
   const [canScrollRight, setCanScrollRight] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState<VideoItem | null>(null);
+  const [itemWidth, setItemWidth] = useState(200); // Default item width
+  const [visibleItems, setVisibleItems] = useState(4); // Default number of visible items
 
   // Memoize filtered trailers
   const trailers = useMemo(
@@ -59,6 +61,38 @@ function Video({ videos, movie }: VideoProps) {
   };
 
   useEffect(() => {
+    const calculateItemWidth = () => {
+      const element = scrollRef.current;
+      if (element) {
+        const containerWidth = element.clientWidth;
+        const baseItemWidth = 200; // Base width for each item
+        const gap = 16; // Gap between items (adjust as needed)
+        const peekWidth = containerWidth * 0.15; // 15% of container width for peek
+
+        // Calculate the number of items that can fit in the container
+        let itemsPerView = Math.floor(
+          (containerWidth - peekWidth) / (baseItemWidth + gap)
+        );
+
+        // Ensure itemsPerView is always greater than 2
+        if (itemsPerView < 1) {
+          itemsPerView = 1; // Set a minimum of 2 items
+        }
+
+        // Adjust the item width to fit the calculated number of items
+        const adjustedItemWidth =
+          (containerWidth - peekWidth - gap * itemsPerView) / itemsPerView;
+
+        setItemWidth(adjustedItemWidth);
+        setVisibleItems(itemsPerView);
+      }
+    };
+    calculateItemWidth();
+    window.addEventListener("resize", calculateItemWidth);
+    return () => window.removeEventListener("resize", calculateItemWidth);
+  }, []);
+
+  useEffect(() => {
     const element = scrollRef.current;
     if (element) {
       element.addEventListener("scroll", handleScroll);
@@ -82,8 +116,12 @@ function Video({ videos, movie }: VideoProps) {
           >
             {trailers.slice(0, 4).map((item) => (
               <iframe
+                style={{
+                  width: `${itemWidth + 60} px`,
+                  height: `${itemWidth}px`,
+                }}
                 key={item.id}
-                className="w-80 h-48 sm:w-96 sm:h-56 md:w-[28rem] md:h-64 lg:w-[32rem] lg:h-72 aspect-video rounded-lg flex-shrink-0 cursor-pointer"
+                className=" aspect-video rounded-lg flex-shrink-0 cursor-pointer"
                 src={`https://www.youtube.com/embed/${item.key}`}
                 title={item.name}
                 frameBorder="0"
