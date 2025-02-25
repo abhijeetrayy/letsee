@@ -273,13 +273,13 @@ const ReelViewer: React.FC = () => {
                   <button
                     onClick={prevReel}
                     disabled={currentIndex === 0 && currentPage === 1}
-                    className="p-2 bg-neutral-700 text-neutral-200 rounded-full hover:bg-neutral-600 transition-colors duration-200 disabled:opacity-50"
+                    className="p-2 bg-neutral-700 text-neutral-200 -rotate-90 rounded-full hover:bg-neutral-600 transition-colors duration-200 disabled:opacity-50"
                   >
                     <FaArrowUp size={20} />
                   </button>
                   <button
                     onClick={nextReel}
-                    className={`p-2 bg-neutral-700 text-neutral-200 rounded-full hover:bg-neutral-600 transition-colors duration-200 flex items-center gap-2 ${
+                    className={`p-2 bg-neutral-700 -rotate-90 text-neutral-200 rounded-full hover:bg-neutral-600 transition-colors duration-200 flex items-center gap-2 ${
                       nextLoading ? "opacity-50 cursor-not-allowed" : ""
                     }`}
                   >

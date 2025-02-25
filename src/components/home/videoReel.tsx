@@ -209,9 +209,7 @@ const HomeReelViewer: React.FC = () => {
       >
         {loading ? (
           <div className="absolute inset-0 flex items-center justify-center">
-            <p className="text-neutral-400 text-center">
-              Loading top movies...
-            </p>
+            <img src="backgroundjpeg.webp" alt="letsee" />
           </div>
         ) : error ? (
           <div className="absolute inset-0 flex items-center justify-center">
@@ -230,7 +228,7 @@ const HomeReelViewer: React.FC = () => {
                       : "/no-photo.webp"
                   }
                   alt={movies[currentIndex].title}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover opacity-65"
                 />
               </div>
             )}
