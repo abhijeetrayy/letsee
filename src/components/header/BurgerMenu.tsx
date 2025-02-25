@@ -3,8 +3,10 @@
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { CiSearch } from "react-icons/ci";
-import { FaBars, FaTimes } from "react-icons/fa";
+import { FaBars, FaTimes, FaUser } from "react-icons/fa";
 import SignOut from "../buttons/signOut";
+import Link from "next/link";
+import { IoNotifications } from "react-icons/io5";
 
 interface BurgerMenuProps {
   userID: string | undefined;
@@ -174,16 +176,22 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID }) => {
           <li>
             <button
               onClick={() => link(`/app/profile`)}
-              className="text-2xl hover:text-gray-400"
+              className=" flex flex-row gap-2 items-center justify-center px-4 py-2 rounded-md bg-neutral-600 hover:bg-neutral-500 relative"
             >
-              People
+              <FaUser /> <span>User</span>
             </button>
           </li>
+          <Link
+            className="flex flex-row gap-2 items-center justify-center px-4 py-2 rounded-md bg-neutral-600 hover:bg-neutral-500 relative"
+            href={"/app/notification"}
+          >
+            <IoNotifications /> <span>Notifi</span>
+          </Link>
 
           <li>
             <button
               onClick={() => link(`/app/profile/${userID}`)}
-              className="text-2xl hover:text-gray-400"
+              className="flex flex-row gap-2 items-center justify-center px-4 py-2 rounded-md bg-neutral-600 hover:bg-neutral-500 relative"
             >
               My Profile
             </button>

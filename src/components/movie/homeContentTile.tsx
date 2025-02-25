@@ -96,7 +96,7 @@ export default function HomeContentTile({ data, type }: any) {
   return (
     <div className="w-full md:px-4 mb-5">
       <SendMessageModal
-        media_type={cardData?.media_type}
+        media_type={type !== "mix" ? type : cardData?.media_type}
         data={cardData}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -115,12 +115,14 @@ export default function HomeContentTile({ data, type }: any) {
               >
                 <div className="absolute top-0 left-0">
                   <p className="px-1 py-1 bg-neutral-950 text-white rounded-br-md text-xs sm:text-sm">
-                    {type}
+                    {type == "mix" ? item.media_type : type}
                   </p>
                 </div>
                 <Link
                   className="w-full h-full"
-                  href={`/app/${type}/${item.id}-${(item?.name || item?.title)
+                  href={`/app/${type == "mix" ? item.media_type : type}/${
+                    item.id
+                  }-${(item?.name || item?.title)
                     .trim()
                     .replace(/[^a-zA-Z0-9]/g, "-")
                     .replace(/-+/g, "-")}`}
@@ -146,7 +148,7 @@ export default function HomeContentTile({ data, type }: any) {
                       })
                       .filter(Boolean)}
                     cardId={item.id}
-                    cardType={item.media_type}
+                    cardType={type == "mix" ? item.media_type : type}
                     cardName={item.name || item.title}
                     cardAdult={item.adult}
                     cardImg={item.poster_path}

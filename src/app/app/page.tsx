@@ -111,7 +111,7 @@ export default async function Home() {
 
         <div className="">
           <h2 className="text-2xl my-4 font-bold">Weekly Top 20</h2>
-          <HomeContentTile type={"movie"} data={data} />
+          <HomeContentTile type={"mix"} data={data} />
         </div>
         <div className="w-full  ">
           <h1 className="text-lg font-semibold mb-2">Tv Show Genres</h1>
