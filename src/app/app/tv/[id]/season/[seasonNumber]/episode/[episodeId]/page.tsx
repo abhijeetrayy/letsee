@@ -33,9 +33,9 @@ interface EpisodeDetails {
 
 interface PageProps {
   params: {
-    id: Promise<string>;
-    seasonNumber: Promise<string>;
-    episodeId: Promise<string>;
+    id: Promise<{ id: string }>;
+    seasonNumber: Promise<{ seasonNumber: string }>;
+    episodeId: Promise<{ episodeId: string }>;
   };
 }
 
