@@ -4,6 +4,7 @@ import React, { useState, useContext } from "react";
 import UserPrefrenceContext from "@/app/contextAPI/userPrefrence";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 interface CardMovieButtonProps {
   icon: React.ReactNode;
@@ -162,9 +163,12 @@ const CardMovieButton: React.FC<CardMovieButtonProps> = ({
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-neutral-700 w-full h-fit max-w-3xl sm:rounded-lg p-5 shadow-xl">
             <div className="flex justify-between items-center p-4 border-b">
-              <h2 className="text-white text-lg font-semibold">
-                Please Log In First
-              </h2>
+              <Link
+                className="bg-blue-600 hover:bg-blue-700 rounded-md px-3 py-2 text-white text-lg font-semibold"
+                href={"/login"}
+              >
+                Log in
+              </Link>
               <button
                 onClick={handleModal}
                 className="text-white hover:text-gray-300"

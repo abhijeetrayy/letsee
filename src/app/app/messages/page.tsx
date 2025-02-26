@@ -82,7 +82,18 @@ async function ConversationsList() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return <div>Please log in to view conversations.</div>;
+    return (
+      <div>
+        {" "}
+        <Link
+          className="bg-blue-600 hover:bg-blue-700 rounded-md px-3 py-2 text-white text-lg font-semibold"
+          href={"/login"}
+        >
+          Log in
+        </Link>
+        in to view conversations.
+      </div>
+    );
   }
 
   const conversations = await fetchConversations(user.id);

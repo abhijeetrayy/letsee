@@ -160,12 +160,12 @@ function ProfilePage() {
   if (!user)
     return (
       <div className="w-screen h-screen flex flex-col items-center justify-center">
-        Please log in{" "}
+        Please{" "}
         <Link
           className="px-3 py-2 rounded-md text-neutral-200 bg-blue-800 hover:bg-neutral-600"
           href={"/login"}
         >
-          Login
+          Log in
         </Link>
       </div>
     );
