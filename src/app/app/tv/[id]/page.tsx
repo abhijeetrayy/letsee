@@ -102,8 +102,6 @@ const ShowDetails = async ({ params }: PageProps) => {
   const { posters: Pimages, backdrops: Bimages } = await getImages(id);
   const RecoData = await Reco(id);
 
-  console.log(cast);
-
   return (
     <div>
       <Tv
