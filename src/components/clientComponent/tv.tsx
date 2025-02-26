@@ -8,6 +8,7 @@ import Video from "@components/movie/Video";
 import SendMessageModal from "@components/message/sendCard";
 import { LuSend } from "react-icons/lu";
 import ImageViewer from "@components/clientComponent/ImaeViewer";
+import ImdbRating from "@components/movie/imdbRating";
 
 export default function Tv({
   cast,
@@ -137,7 +138,7 @@ export default function Tv({
                     href={`https://imdb.com/title/${ExternalIDs.imdb_id}`}
                     className="hover:underline"
                   >
-                    {show.name}
+                    <ImdbRating id={ExternalIDs.imdb_id} />
                   </Link>
                 </div>
               )}
