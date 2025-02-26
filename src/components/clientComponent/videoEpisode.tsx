@@ -12,13 +12,9 @@ interface VideoItem {
 
 interface VideoProps {
   videos: VideoItem[];
-  movie: {
-    title?: string;
-    name?: string;
-  };
 }
 
-function Video({ videos, movie }: VideoProps) {
+function Video({ videos }: VideoProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
@@ -28,10 +24,6 @@ function Video({ videos, movie }: VideoProps) {
   const [visibleItems, setVisibleItems] = useState(4); // Default number of visible items
 
   // Memoize filtered trailers
-  const trailers = useMemo(
-    () => videos.filter((item) => item.type === "Trailer"),
-    [videos]
-  );
 
   const handleScroll = () => {
     const element = scrollRef.current;
@@ -75,8 +67,8 @@ function Video({ videos, movie }: VideoProps) {
         );
 
         // Ensure itemsPerView is always greater than 2
-        if (itemsPerView < 1) {
-          itemsPerView = 1; // Set a minimum of 2 items
+        if (itemsPerView < 2) {
+          itemsPerView = 2; // Set a minimum of 2 items
         }
 
         // Adjust the item width to fit the calculated number of items
@@ -101,33 +93,31 @@ function Video({ videos, movie }: VideoProps) {
     }
   }, [videos]);
 
-  if (trailers.length === 0) return null;
-
   return (
     <>
-      <div className="max-w-7xl w-full mx-auto mt-7 md:px-4 mt-20">
-        <h1 className="text-lg font-bold mb-4">
-          {movie.title || movie.name}: Trailer
-        </h1>
+      <div className=" w-full mx-auto mt-7 md:px-4">
         <div className="relative overflow-hidden">
           <div
             ref={scrollRef}
             className="flex flex-row gap-4 py-2 overflow-x-auto no-scrollbar"
           >
-            {trailers.slice(0, 4).map((item) => (
-              <iframe
-                style={{
-                  width: `${itemWidth + 60} px`,
-                  height: `${itemWidth}px`,
-                }}
-                key={item.id}
-                className=" aspect-video rounded-lg flex-shrink-0 cursor-pointer"
-                src={`https://www.youtube.com/embed/${item.key}`}
-                title={item.name}
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
+            {videos.map((item, index: number) => (
+              <div key={index}>
+                <iframe
+                  style={{
+                    width: `${itemWidth + 60} px`,
+                    height: `${itemWidth}px`,
+                  }}
+                  key={item.id}
+                  className=" aspect-video rounded-lg flex-shrink-0 cursor-pointer"
+                  src={`https://www.youtube.com/embed/${item.key}`}
+                  title={item.name}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+                <p className="text-sm text-neutral-400 mt-2">{item.type}</p>
+              </div>
             ))}
           </div>
 

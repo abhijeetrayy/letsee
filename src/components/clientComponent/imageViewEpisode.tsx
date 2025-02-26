@@ -8,20 +8,10 @@ interface Image {
 }
 
 interface ImagesSectionProps {
-  movie: {
-    title: string;
-    adult: boolean;
-    name: string;
-  };
   Bimages: Image[];
-  Pimages: Image[];
 }
 
-const ImagesSection: React.FC<ImagesSectionProps> = ({
-  movie,
-  Bimages,
-  Pimages,
-}) => {
+const ImagesSection: React.FC<ImagesSectionProps> = ({ Bimages }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
@@ -30,8 +20,7 @@ const ImagesSection: React.FC<ImagesSectionProps> = ({
   const [itemWidth, setItemWidth] = useState(200); // Default item width
   const [visibleItems, setVisibleItems] = useState(4); // Default number of visible items
 
-  const images = Bimages.length > 0 ? Bimages : Pimages;
-  const displayImages = images.slice(0, 12); // Limit to 12 images
+  const displayImages = Bimages;
 
   const handleScroll = () => {
     const element = scrollRef.current;
@@ -74,8 +63,8 @@ const ImagesSection: React.FC<ImagesSectionProps> = ({
         );
 
         // Ensure itemsPerView is always greater than 2
-        if (itemsPerView < 1) {
-          itemsPerView = 1; // Set a minimum of 2 items
+        if (itemsPerView < 2) {
+          itemsPerView = 2; // Set a minimum of 2 items
         }
 
         // Adjust the item width to fit the calculated number of items
@@ -113,11 +102,8 @@ const ImagesSection: React.FC<ImagesSectionProps> = ({
   return (
     <div>
       {/* Images Section */}
-      {(Bimages.length > 0 || Pimages.length > 0) && (
-        <div className="max-w-7xl w-full mx-auto my-8 md:px-4 mt-20">
-          <h1 className="text-lg font-bold mb-4">
-            {movie.name || movie.title}: Images
-          </h1>
+      {Bimages.length > 0 && (
+        <div className="max-w-[1520px] w-full mx-auto my-8 md:px-4">
           <div className="relative">
             <div
               ref={scrollRef}
@@ -126,18 +112,16 @@ const ImagesSection: React.FC<ImagesSectionProps> = ({
               {displayImages.map((item: Image, index: number) => (
                 <div
                   key={index}
-                  className="card-item image-item   rounded-lg overflow-hidden flex-shrink-0 group cursor-pointer"
+                  className=" image-item   rounded-lg overflow-hidden flex-shrink-0 group cursor-pointer"
                   onClick={() => openModal(item)}
-                  style={{ width: `${itemWidth}px`, height: `${itemWidth}px` }}
+                  style={{
+                    width: `${itemWidth}px`,
+                  }}
                 >
                   <img
                     className="w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-60"
-                    src={
-                      movie.adult
-                        ? "/pixeled.webp"
-                        : `https://image.tmdb.org/t/p/w500${item.file_path}`
-                    }
-                    alt={item.name || `Image ${index + 1}`}
+                    src={`https://image.tmdb.org/t/p/w500${item.file_path}`}
+                    alt={`Still ${index + 1} `}
                   />
                 </div>
               ))}
@@ -185,11 +169,7 @@ const ImagesSection: React.FC<ImagesSectionProps> = ({
             {/* Main Image */}
             <div className="w-full md:w-3/4 h-3/4 md:h-full flex items-center justify-center">
               <img
-                src={
-                  movie.adult
-                    ? "/pixeled.webp"
-                    : `https://image.tmdb.org/t/p/w1280${selectedImage.file_path}`
-                }
+                src={`https://image.tmdb.org/t/p/w1280${selectedImage.file_path}`}
                 alt={selectedImage.name || "Selected Image"}
                 className="w-full h-full object-contain"
               />
@@ -207,11 +187,7 @@ const ImagesSection: React.FC<ImagesSectionProps> = ({
                 {displayImages.map((item: Image, index: number) => (
                   <img
                     key={index}
-                    src={
-                      movie.adult
-                        ? "/pixeled.webp"
-                        : `https://image.tmdb.org/t/p/w200${item.file_path}`
-                    }
+                    src={`https://image.tmdb.org/t/p/w200${item.file_path}`}
                     alt={item.name || `Thumbnail ${index + 1}`}
                     className={`w-[15rem] h-auto object-cover rounded-md cursor-pointer transition-opacity duration-300 hover:opacity-80 ${
                       selectedImage.file_path === item.file_path

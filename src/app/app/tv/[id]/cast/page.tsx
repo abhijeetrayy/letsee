@@ -149,19 +149,20 @@ async function page({ params }: PageProps) {
             </Link>
           ))}
         </div>
-        {crew.length > 0 && <h2 className="my-3">Prod. ~ Crew</h2>}
-        <div className="grid grid-cols-1">
+        {crew.length > 0 && <h2 className="my-3 mt-10">Prod. ~ Crew</h2>}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
           {crew?.map((item: any, index: number) => (
             <Link
+              className="flex flex-col items-center justify-center hover:opacity-75"
               key={index}
               href={`/app/person/${item.id}-${item.name
                 .trim()
                 .replace(/[^a-zA-Z0-9]/g, "-")
                 .replace(/-+/g, "-")}}`}
             >
-              <div className="flex flex-col md:flex-row gap-4 mb-4">
+              <div>
                 <img
-                  className="w-20 md:max-w-[120px] md:min-h-44 h-full object-cover rounded-md"
+                  className="w-32  md:min-h-44 h-full object-cover rounded-md"
                   src={
                     item.profile_path
                       ? `https://image.tmdb.org/t/p/w92${item.profile_path}`
@@ -169,10 +170,10 @@ async function page({ params }: PageProps) {
                   }
                   alt=""
                 />
-
-                <div className="flex flex-row gap-2">
-                  <h1>{item.name}</h1> <span> - </span> <p>{item.department}</p>
-                </div>
+              </div>
+              <div className="flex flex-col gap-2">
+                <h1 className="text-center">{item.name}</h1>{" "}
+                <p className="text-center text-xs">{item.department}</p>
               </div>
             </Link>
           ))}
