@@ -15,7 +15,9 @@ function imdbRating({ id }: any) {
         );
         const res = await response.json();
         console.log(res);
-        setImdbRating(res.imdbRating);
+        if (res.Response == "False") {
+          setImdbRating("N/A");
+        } else setImdbRating(res.imdbRating);
       } catch (error) {
         console.log(error);
         setImdbRating("null");

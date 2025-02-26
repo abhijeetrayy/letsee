@@ -9,6 +9,7 @@ import { LuSend } from "react-icons/lu";
 import SendMessageModal from "@components/message/sendCard";
 import ImdbRating from "@components/movie/imdbRating";
 import ImageViewer from "@components/clientComponent/ImaeViewer";
+// import WatchOptionsViewer from "./watchOptionView";
 
 export default function Movie({
   CountryName,
@@ -244,7 +245,7 @@ export default function Movie({
             </div>
           </div>
         </div>
-
+        {/* <WatchOptionsViewer mediaId={id} mediaType="movie" country="US" /> */}
         {/* Movie Cast */}
         <MovieCast credits={credits?.cast} id={id} type={"movie"} />
 
