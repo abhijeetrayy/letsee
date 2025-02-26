@@ -32,11 +32,7 @@ interface EpisodeDetails {
 }
 
 interface PageProps {
-  params: {
-    id: Promise<{ id: string }>;
-    seasonNumber: Promise<{ seasonNumber: string }>;
-    episodeId: Promise<{ episodeId: string }>;
-  };
+  params: Promise<{ id: string; seasonNumber: string; episodeId: string }>;
 }
 
 // Fetch episode data from TMDb
@@ -94,9 +90,9 @@ const fetchEpisodeData = async (
 };
 
 const EpisodePage = async ({ params }: PageProps) => {
-  const id: any = (await params).id;
-  const seasonNumber: any = (await params).seasonNumber;
-  const episodeId: any = (await params).episodeId;
+  const id = (await params).id;
+  const seasonNumber = (await params).seasonNumber;
+  const episodeId = (await params).episodeId;
 
   console.log("Resolved Params:", { id, seasonNumber, episodeId });
 

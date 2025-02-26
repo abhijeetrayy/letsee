@@ -22,12 +22,9 @@ interface Season {
   air_date: string | null;
 }
 
-interface SeasonPageProps {
-  params: {
-    id: Promise<{ id: string }>;
-    seasonNumber: Promise<{ seasonNumber: string }>;
-  };
-}
+type SeasonPageProps = {
+  params: Promise<{ id: string; seasonNumber: string }>;
+};
 
 // Fetch series and season data
 const fetchSeriesAndSeasonData = async (
