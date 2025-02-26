@@ -188,7 +188,7 @@ const EpisodePage = async ({ params }: PageProps) => {
                   <Link
                     key={index}
                     href={`/app/person/${star.id}`}
-                    className="flex flex-col items-center hover:opacity-80 transition-opacity duration-200"
+                    className="flex flex-col  items-center hover:opacity-80 transition-opacity duration-200"
                   >
                     {star.profile_path ? (
                       <img
@@ -199,7 +199,7 @@ const EpisodePage = async ({ params }: PageProps) => {
                         className="rounded-md object-cover"
                       />
                     ) : (
-                      <div className="w-[185px] h-[278px] bg-neutral-600 rounded-md flex items-center justify-center">
+                      <div className="w-full h-full bg-neutral-600 rounded-md flex items-center justify-center">
                         <span className="text-xs text-neutral-400">
                           No Image
                         </span>
@@ -226,7 +226,7 @@ const EpisodePage = async ({ params }: PageProps) => {
                   <Link
                     key={index}
                     href={`/app/person/${member.id}`}
-                    className="flex flex-col items-center hover:opacity-80 transition-opacity duration-200"
+                    className="flex flex-col items-center  hover:opacity-80 transition-opacity duration-200"
                   >
                     {member.profile_path ? (
                       <img
@@ -237,7 +237,7 @@ const EpisodePage = async ({ params }: PageProps) => {
                         className="rounded-md object-cover"
                       />
                     ) : (
-                      <div className="w-[185px] h-[278px] bg-neutral-600 rounded-md flex items-center justify-center">
+                      <div className="w-full h-full bg-neutral-600 rounded-md flex items-center justify-center">
                         <span className="text-xs text-neutral-400">
                           No Image
                         </span>
