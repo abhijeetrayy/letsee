@@ -316,7 +316,7 @@ function Page() {
           value={query}
           onKeyDown={(e) => e.key == "enter" && handleSearch}
           onChange={(e) => setQuery(e.target.value)}
-          className="px-4 py-2 w-full sm:flex-1 bg-neutral-800 text-white rounded-md border border-gray-300 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+          className="px-4 py-2 w-full sm:flex-1 bg-neutral-800 text-white rounded-md border-1 border-neutral-600 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-0"
           placeholder="Search for movies, TV shows, or people..."
         />
         <select

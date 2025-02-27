@@ -105,7 +105,7 @@ function Video({ videos, movie }: VideoProps) {
 
   return (
     <>
-      <div className="max-w-7xl w-full mx-auto mt-7 md:px-4 mt-20">
+      <div className="max-w-7xl w-full mx-auto md:px-4 mt-24">
         <h1 className="text-lg font-bold mb-4">
           {movie.title || movie.name}: Trailer
         </h1>
