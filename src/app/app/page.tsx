@@ -160,10 +160,6 @@ export default async function Home() {
           <h2 className="text-2xl my-4 font-bold">Action</h2>
           <HomeContentTile type={"movie"} data={ActionData} />
         </div>
-        <div className="w-full">
-          <h2 className="text-2xl my-4 font-bold">Bollywood</h2>
-          <HomeContentTile type={"movie"} data={BollywoodData} />
-        </div>
       </div>
     </>
   );
