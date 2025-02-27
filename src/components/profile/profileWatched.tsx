@@ -54,7 +54,6 @@ const WatchedMoviesList = ({ userId }: { userId: string }) => {
         if (!response.ok) throw new Error("Failed to fetch");
 
         const data = await response.json();
-        console.log("Fetched data:", data);
 
         setMovies((prevMovies) =>
           page === 1 ? data.data : [...prevMovies, ...data.data]
@@ -122,7 +121,7 @@ const WatchedMoviesList = ({ userId }: { userId: string }) => {
           <button
             key={index}
             onClick={() => handleGenreFilter(genre)}
-            className={`px-4 py-2 rounded-md ${
+            className={`px-4 py-2 rounded-md text-sm md:text-base ${
               genreFilter === genre
                 ? "bg-blue-500 text-white"
                 : "bg-gray-200 text-gray-700 hover:bg-gray-300"
@@ -178,7 +177,7 @@ const WatchedMoviesList = ({ userId }: { userId: string }) => {
                   alt={item.item_name}
                 />
               </Link>
-              <div className="w-full h-[100px] bg-indigo-700 bottom-0  flex flex-col justify-between">
+              <div className="w-full h-[100px] bg-indigo-700 bottom-0  flex flex-col justify-between text-xs md:text-base">
                 <ThreePrefrenceBtn
                   genres={item.genres}
                   cardId={item.item_id}

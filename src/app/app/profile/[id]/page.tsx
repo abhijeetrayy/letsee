@@ -99,9 +99,9 @@ export default async function ProfilePage({ params }: PageProps) {
 
   return (
     <div className="flex flex-col items-center w-full bg-neutral-900 min-h-screen">
-      <div className="flex flex-col max-w-6xl w-full gap-4 p-2">
+      <div className="flex flex-col max-w-6xl w-full gap-2 p-2">
         {/* Profile Header */}
-        <div className="flex flex-col lg:flex-row p-2 gap-8">
+        <div className="flex flex-col lg:flex-row p-2 gap-2">
           {/* Profile Picture */}
           <div className="flex flex-col ">
             <img
@@ -114,7 +114,7 @@ export default async function ProfilePage({ params }: PageProps) {
           </div>
 
           {/* Profile Info */}
-          <div className="flex-1 flex flex-col gap-4">
+          <div className="flex-1 flex flex-col gap-2">
             <div className="flex items-center gap-4">
               <h1 className="text-3xl font-bold text-neutral-100">
                 @{user.username}
@@ -173,7 +173,7 @@ export default async function ProfilePage({ params }: PageProps) {
         </div>
 
         {/* Statistics */}
-        <div className=" p-2 grid grid-cols-3 gap-6">
+        <div className=" px-2 grid grid-cols-3 gap-2">
           <StatBox
             count={userStats.watchedCount}
             label="Movies/TV Watched"
@@ -256,7 +256,7 @@ const StatBox = ({
   color: string;
 }) => (
   <div
-    className={`flex flex-col items-center justify-center p-6 rounded-lg shadow-md bg-neutral-700 hover:shadow-lg transition-shadow duration-300 border-l-4 border-${color}-200`}
+    className={`flex flex-col items-center justify-center p-4  rounded-lg shadow-md bg-neutral-700 hover:shadow-lg transition-shadow duration-300 border-l-4 border-${color}-200`}
   >
     <span className={`text-2xl md:text-4xl font-bold text-neutral-100`}>
       {count}
