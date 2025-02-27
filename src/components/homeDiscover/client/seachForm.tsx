@@ -372,7 +372,7 @@ function Page() {
           )}
 
           {!query && (
-            <p className="text-center">
+            <p className="text-center text-sm">
               Please enter a search query to see results.
             </p>
           )}

@@ -57,6 +57,20 @@ const DropdownMenu = ({ user }: any) => {
             >
               My Profile
             </Link>
+            <Link
+              onClick={() => setIsOpen(!isOpen)}
+              className="w-full text-left px-2 py-1 rounded-sm bg-neutral-200 hover:bg-neutral-100"
+              href={`/app/moviebygenre/list/16-Animation`}
+            >
+              Movie Genre
+            </Link>
+            <Link
+              onClick={() => setIsOpen(!isOpen)}
+              className="w-full text-left px-2 py-1 rounded-sm bg-neutral-200 hover:bg-neutral-100"
+              href={`/app/tvbygenre/list/35-Comedy`}
+            >
+              Tv Genre
+            </Link>
 
             <div className="w-full text-left px-2 py-1 rounded-sm bg-neutral-200 hover:bg-neutral-100">
               <SignOut />
