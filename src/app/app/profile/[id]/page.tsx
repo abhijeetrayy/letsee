@@ -99,7 +99,7 @@ export default async function ProfilePage({ params }: PageProps) {
 
   return (
     <div className="flex flex-col items-center w-full bg-neutral-900 min-h-screen">
-      <div className="flex flex-col max-w-6xl w-full gap-8 p-2">
+      <div className="flex flex-col max-w-6xl w-full gap-4 p-2">
         {/* Profile Header */}
         <div className="flex flex-col lg:flex-row p-2 gap-8">
           {/* Profile Picture */}
@@ -107,7 +107,7 @@ export default async function ProfilePage({ params }: PageProps) {
             <img
               width={200}
               height={200}
-              className="h-48 w-48 rounded-full object-cover border-4 border-neutral-600 shadow-lg"
+              className="h-32 w-32 md:h-48 md:w-48 rounded-full object-cover border-4 border-neutral-600 shadow-lg"
               src={"/avatar.svg"}
               alt="Profile"
             />
@@ -173,7 +173,7 @@ export default async function ProfilePage({ params }: PageProps) {
         </div>
 
         {/* Statistics */}
-        <div className=" p-2 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className=" p-2 grid grid-cols-3 gap-6">
           <StatBox
             count={userStats.watchedCount}
             label="Movies/TV Watched"
@@ -197,7 +197,7 @@ export default async function ProfilePage({ params }: PageProps) {
         </div>
 
         {/* AI Recommendation */}
-        {isOwner && (
+        {/* {isOwner && (
           <div className="  p-1">
             <h2 className="text-2xl font-bold text-neutral-100 mb-4">
               Your Personal Recommendations
@@ -211,7 +211,7 @@ export default async function ProfilePage({ params }: PageProps) {
             </p>
             <ChataiReco />
           </div>
-        )}
+        )} */}
 
         {/* Conditional Content */}
         {!currentUser ? (
@@ -258,7 +258,9 @@ const StatBox = ({
   <div
     className={`flex flex-col items-center justify-center p-6 rounded-lg shadow-md bg-neutral-700 hover:shadow-lg transition-shadow duration-300 border-l-4 border-${color}-200`}
   >
-    <span className={`text-4xl font-bold text-neutral-100`}>{count}</span>
+    <span className={`text-2xl md:text-4xl font-bold text-neutral-100`}>
+      {count}
+    </span>
     <span className="text-neutral-100 text-sm mt-2">{label}</span>
   </div>
 );

@@ -1,13 +1,11 @@
 // components/RecommendationTile.tsx
 "use client";
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import Link from "next/link";
 import { createClient } from "@/utils/supabase/client";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { LuSend } from "react-icons/lu";
-import SendMessageModal from "@components/message/sendCard";
-import { MdDeleteOutline } from "react-icons/md";
+import Link from "next/link";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { MdDeleteOutline } from "react-icons/md";
 
 const RecommendationTile = ({ isOwner, name, id }: any) => {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -450,7 +448,7 @@ const RecommendationTile = ({ isOwner, name, id }: any) => {
               recommendations.map((item) => (
                 <div
                   key={item.id}
-                  className="card-item min-w-[10rem]  bg-neutral-700 rounded-md overflow-hidden flex-shrink-0 flex flex-col justify-between h-auto group relative"
+                  className="card-item w-full max-w-[10rem]  bg-neutral-700 rounded-md overflow-hidden flex-shrink-0 flex flex-col justify-between h-auto group relative"
                 >
                   <div className="absolute top-0 left-0">
                     <p className="px-1 py-1 bg-neutral-950 text-white rounded-br-md text-xs sm:text-sm">

@@ -67,6 +67,7 @@ Do not include any additional text, explanations, or formatting. Just return the
     );
 
     const geminiData = await geminiResponse.json();
+    console.log(geminiData);
     const suggestedTitlesText =
       geminiData.candidates?.[0]?.content?.parts?.[0]?.text;
 

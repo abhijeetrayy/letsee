@@ -72,7 +72,7 @@ function FavoritesList({ favorites, favoriteCount }: any) {
         >
           {favorites?.map((item: any) => (
             <div className="w-full" key={item.id}>
-              <div className="relative group h-full flex flex-col rounded-md bg-black w-full text-gray-300 overflow-hidden">
+              <div className="relative group flex flex-col rounded-md bg-black w-full h-auto text-gray-300 overflow-hidden">
                 <div className="absolute top-0 left-0  lg:opacity-0 lg:group-hover:opacity-100">
                   {item.item_adult ? (
                     <p className="p-1 bg-red-600 text-white rounded-br-md text-sm">
@@ -85,11 +85,11 @@ function FavoritesList({ favorites, favoriteCount }: any) {
                   )}
                 </div>
                 <Link
-                  className="h-[270px] w-[200px]"
+                  className="h-32 md:h-[270px] w-28 md:w-[200px]"
                   href={`/app/${item.item_type}/${item.item_id}`}
                 >
                   <img
-                    className="w-full object-cover"
+                    className="w-full h-full object-cover"
                     src={
                       item.item_adult
                         ? "/pixeled.webp"
@@ -99,7 +99,7 @@ function FavoritesList({ favorites, favoriteCount }: any) {
                     alt={item.item_name}
                   />
                 </Link>
-                <div className="w-full bg-neutral-800 ">
+                <div className="w-full  bg-neutral-800 text-xs md:text-base">
                   {/* Assuming ThreePrefrenceBtn is a valid component */}
                   <ThreePrefrenceBtn
                     genres={item.genres}
@@ -120,7 +120,7 @@ function FavoritesList({ favorites, favoriteCount }: any) {
 
                   <div
                     title={item.name || item.title}
-                    className="w-full flex flex-col gap-2 px-4 bg-indigo-700 text-gray-200"
+                    className="w-full h-full flex flex-col gap-2 px-4 bg-indigo-700 text-gray-200"
                   >
                     <Link
                       href={`/app/${item.item_type}/${item.item_id}`}

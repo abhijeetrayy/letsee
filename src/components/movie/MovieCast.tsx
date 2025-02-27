@@ -21,7 +21,7 @@ function MovieCast({
     if (element) {
       const { scrollLeft, scrollWidth, clientWidth } = element;
       setCanScrollLeft(scrollLeft > 0);
-      setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 1); // Small buffer for precision
+      setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 10); // Small buffer for precision
     }
   };
 
@@ -53,7 +53,7 @@ function MovieCast({
         <div className="relative">
           <div
             ref={scrollRef}
-            className="flex w-full flex-row gap-4 px-3 overflow-x-scroll no-scrollbar snap-x snap-mandatory"
+            className="flex w-full flex-row gap-4  overflow-x-scroll no-scrollbar snap-x snap-mandatory"
           >
             {credits?.slice(0, 6).map((item: any, index: number) => (
               <Link
@@ -63,13 +63,13 @@ function MovieCast({
                   .trim()
                   .replace(/[^a-zA-Z0-9]/g, "-")
                   .replace(/-+/g, "-")}`}
-                className="flex-shrink-0 w-36 snap-start flex flex-col items-center hover:opacity-80 transition-opacity duration-200"
+                className="flex-shrink-0 w-24 md:w-36 snap-start flex flex-col items-center hover:opacity-80 transition-opacity duration-200"
               >
                 {item.profile_path ? (
                   <img
                     src={`https://image.tmdb.org/t/p/w185${item.profile_path}`}
                     alt={item.name}
-                    className="rounded-md object-cover w-36 h-54"
+                    className="rounded-md object-cover w-24 h-32 md:w-36 md:h-54"
                   />
                 ) : (
                   <div className="w-full h-full bg-neutral-600 rounded-md flex items-center justify-center">
@@ -84,10 +84,10 @@ function MovieCast({
                 </p>
               </Link>
             ))}
-            <div className="flex-shrink-0 w-36 snap-start flex flex-col items-center">
+            <div className="flex-shrink-0 w-24 md:w-36 snap-start flex flex-col items-center">
               <Link
                 href={`/app/${type === "movie" ? "movie" : "tv"}/${id}/cast`}
-                className="flex justify-center items-center w-full h-56 border-2 border-neutral-500 hover:border-indigo-600 hover:bg-neutral-800 rounded-md text-neutral-200 text-sm transition-colors duration-200"
+                className="flex justify-center items-center w-full h-32 md:h-56 border-2 border-neutral-500 hover:border-indigo-600 hover:bg-neutral-800 rounded-md text-neutral-200 text-sm transition-colors duration-200"
               >
                 More...
               </Link>

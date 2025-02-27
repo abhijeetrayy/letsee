@@ -164,14 +164,14 @@ function PersonCredits({
   };
 
   return (
-    <div className="max-w-6xl mx-auto py-6 px-4 text-white">
+    <div className="max-w-6xl mx-auto py-6  text-white">
       <SendMessageModal
         media_type={cardData?.media_type}
         data={cardData}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />
-      <h1 className="text-lg font-bold my-5">Known for</h1>
+      <h1 className="text-lg font-bold my-3">Known for</h1>
       <KnownFor castData={cast} />
 
       {/* Filters */}

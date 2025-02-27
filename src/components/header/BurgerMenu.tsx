@@ -55,7 +55,7 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID }) => {
           </button>
 
           <div className="absolute top-5 w-full ">
-            <h1 className="text-3xl font-bold w-fit m-auto">Let&apos;s see</h1>
+            <h1 className="text-3xl font-bold w-fit ">Let&apos;s see</h1>
           </div>
 
           <ul className="flex flex-col items-center justify-center h-full space-y-8 text-white">
@@ -87,7 +87,7 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID }) => {
                 onClick={() => link("/app")}
                 className="text-2xl hover:text-gray-400"
               >
-                Let&apos;s see
+                Home
               </button>
             </li>
 
@@ -136,8 +136,8 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID }) => {
           {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
         </button>
 
-        <div className="absolute top-5 w-full ">
-          <h1 className="text-3xl font-bold w-fit m-auto">Let&apos;s see</h1>
+        <div className="absolute p-5 w-full ">
+          <h1 className="text-3xl font-bold w-fit">Let&apos;s see</h1>
         </div>
 
         <ul className="flex flex-col items-center justify-center h-full space-y-8 text-white">
@@ -164,43 +164,39 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID }) => {
               </form>
             </div>
           </li>
-          <li>
+          <div className="w-full flex  flex-col items-center mr-5 gap-3">
             <button
               onClick={() => link("/app")}
-              className="text-2xl hover:text-gray-400"
+              className=" flex flex-row gap-2 items-center justify-center px-4 py-2 rounded-md bg-neutral-600 hover:bg-neutral-500 relative"
             >
-              Let&apos;s see
+              Home
             </button>
-          </li>
 
-          <li>
             <button
               onClick={() => link(`/app/profile`)}
               className=" flex flex-row gap-2 items-center justify-center px-4 py-2 rounded-md bg-neutral-600 hover:bg-neutral-500 relative"
             >
               <FaUser /> <span>User</span>
             </button>
-          </li>
-          <Link
-            className="flex flex-row gap-2 items-center justify-center px-4 py-2 rounded-md bg-neutral-600 hover:bg-neutral-500 relative"
-            href={"/app/notification"}
-          >
-            <IoNotifications /> <span>Notifi</span>
-          </Link>
 
-          <li>
+            <button
+              className=" flex flex-row gap-2 items-center justify-center px-4 py-2 rounded-md bg-neutral-600 hover:bg-neutral-500 relative"
+              onClick={() => link(`/app/notification`)}
+            >
+              <IoNotifications /> <span>Notifi</span>
+            </button>
+
             <button
               onClick={() => link(`/app/profile/${userID}`)}
-              className="flex flex-row gap-2 items-center justify-center px-4 py-2 rounded-md bg-neutral-600 hover:bg-neutral-500 relative"
+              className=" flex flex-row gap-2 items-center justify-center px-4 py-2 rounded-md bg-neutral-600 hover:bg-neutral-500 relative"
             >
               My Profile
             </button>
-          </li>
-          <li>
-            <div className="text-2xl hover:text-gray-400">
+
+            <div className="text-xl hover:text-gray-400">
               <SignOut />
             </div>
-          </li>
+          </div>
         </ul>
       </div>
     </div>

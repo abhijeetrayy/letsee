@@ -120,89 +120,85 @@ const ScrollableCastList: React.FC<ScrollableCastListProps> = ({
               return (
                 <div
                   key={id}
-                  className="relative min-w-[200px] sm:min-w-[250px] bg-black rounded-md overflow-hidden snap-start"
+                  className="relative group w-full h-auto flex flex-col bg-black text-gray-300"
                 >
-                  <div className="relative group flex flex-col bg-black text-gray-300">
-                    <div className="absolute top-0 left-0 z-10 lg:opacity-0 lg:group-hover:opacity-100">
-                      <p
-                        className={`p-1 text-white rounded-br-md text-sm ${
-                          adult ? "bg-red-600" : "bg-black"
-                        }`}
-                      >
-                        {adult ? "Adult" : media_type}
-                      </p>
-                    </div>
-                    <div className="absolute top-0 right-0 z-10">
-                      {year > 0 && (
-                        <p className="p-1 bg-indigo-600 text-white rounded-tr-sm rounded-bl-md text-sm">
-                          {year}
-                        </p>
-                      )}
-                    </div>
-                    <Link
-                      href={`/app/${media_type}/${id}-${displayTitle
-                        .trim()
-                        .replace(/[^a-zA-Z0-9]/g, "-")
-                        .replace(/-+/g, "-")}`}
-                      className="h-[250px] md:h-[330px] w-full"
+                  <div className="absolute top-0 left-0 z-10 lg:opacity-0 lg:group-hover:opacity-100">
+                    <p
+                      className={`p-1 text-white rounded-br-md text-sm ${
+                        adult ? "bg-red-600" : "bg-black"
+                      }`}
                     >
-                      <Image
-                        className="w-full h-full object-cover"
-                        src={
-                          displayImage
-                            ? `https://image.tmdb.org/t/p/w342${displayImage}`
-                            : adult
-                            ? "/pixeled.webp"
-                            : "/no-photo.webp"
-                        }
-                        alt={displayTitle}
-                        width={342}
-                        height={513}
-                        loading="lazy"
-                      />
-                    </Link>
-                    <div className="lg:absolute bottom-0 w-full bg-neutral-800 lg:opacity-0 lg:group-hover:opacity-100 z-10">
-                      <ThreePrefrenceBtn
-                        genres={genre_ids
-                          .map((id: number) => {
-                            const genre = GenreList.genres.find(
-                              (g: any) => g.id === id
-                            );
-                            return genre ? genre.name : null;
-                          })
-                          .filter(Boolean)}
-                        cardId={id}
-                        cardType={media_type}
-                        cardName={displayTitle}
-                        cardAdult={adult}
-                        cardImg={displayImage}
-                      />
-                      <div className="py-2 border-t border-neutral-950 hover:bg-neutral-700">
-                        <button
-                          className="w-full flex justify-center text-lg text-center text-gray-300 hover:text-white"
-                          onClick={() => handleCardTransfer(data)}
-                        >
-                          <LuSend />
-                        </button>
-                      </div>
-                      <div
-                        title={displayTitle}
-                        className="w-full flex flex-col gap-2 px-4 bg-indigo-700 text-gray-200"
+                      {adult ? "Adult" : media_type}
+                    </p>
+                  </div>
+                  <div className="absolute top-0 right-0 z-10">
+                    {year > 0 && (
+                      <p className="p-1 bg-indigo-600 text-white rounded-tr-sm rounded-bl-md text-sm">
+                        {year}
+                      </p>
+                    )}
+                  </div>
+                  <Link
+                    href={`/app/${media_type}/${id}-${displayTitle
+                      .trim()
+                      .replace(/[^a-zA-Z0-9]/g, "-")
+                      .replace(/-+/g, "-")}`}
+                    className="h-full w-full"
+                  >
+                    <img
+                      className="min-w-32 md:min-w-52 min-h-full object-cover"
+                      src={
+                        displayImage
+                          ? `https://image.tmdb.org/t/p/w342${displayImage}`
+                          : adult
+                          ? "/pixeled.webp"
+                          : "/no-photo.webp"
+                      }
+                      alt={displayTitle}
+                      loading="lazy"
+                    />
+                  </Link>
+                  <div className="lg:absolute bottom-0 w-full bg-neutral-800 lg:opacity-0 lg:group-hover:opacity-100 z-10">
+                    <ThreePrefrenceBtn
+                      genres={genre_ids
+                        .map((id: number) => {
+                          const genre = GenreList.genres.find(
+                            (g: any) => g.id === id
+                          );
+                          return genre ? genre.name : null;
+                        })
+                        .filter(Boolean)}
+                      cardId={id}
+                      cardType={media_type}
+                      cardName={displayTitle}
+                      cardAdult={adult}
+                      cardImg={displayImage}
+                    />
+                    <div className="py-2 border-t border-neutral-950 hover:bg-neutral-700">
+                      <button
+                        className="w-full flex justify-center text-lg text-center text-gray-300 hover:text-white"
+                        onClick={() => handleCardTransfer(data)}
                       >
-                        <Link
-                          href={`/app/${media_type}/${id}-${displayTitle
-                            .trim()
-                            .replace(/[^a-zA-Z0-9]/g, "-")
-                            .replace(/-+/g, "-")}`}
-                          className="mb-1 hover:underline"
-                        >
-                          <span>
-                            {displayTitle.length > 20
-                              ? `${displayTitle.slice(0, 20)}...`
-                              : displayTitle}
-                          </span>
-                        </Link>
-                      </div>
+                        <LuSend />
+                      </button>
+                    </div>
+                    <div
+                      title={displayTitle}
+                      className="w-full flex flex-col gap-2 px-4 bg-indigo-700 text-gray-200"
+                    >
+                      <Link
+                        href={`/app/${media_type}/${id}-${displayTitle
+                          .trim()
+                          .replace(/[^a-zA-Z0-9]/g, "-")
+                          .replace(/-+/g, "-")}`}
+                        className="mb-1 hover:underline"
+                      >
+                        <span>
+                          {displayTitle.length > 20
+                            ? `${displayTitle.slice(0, 20)}...`
+                            : displayTitle}
+                        </span>
+                      </Link>
                     </div>
                   </div>
                 </div>

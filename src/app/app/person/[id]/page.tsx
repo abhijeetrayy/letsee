@@ -83,7 +83,7 @@ const PersonList = async ({ params }: PageProps) => {
 
     return (
       <div className="text-white w-full flex flex-col items-center justify-center min-h-screen">
-        <div className="max-w-6xl w-full px-4 py-8">
+        <div className="max-w-6xl w-full px-2 py-8">
           {/* Artist Introduction */}
           <div className="flex flex-col md:flex-row gap-8 mb-12">
             <div className="flex-shrink-0">
