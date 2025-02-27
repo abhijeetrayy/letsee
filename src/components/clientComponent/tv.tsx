@@ -321,9 +321,7 @@ export default function Tv({
                         : "/no-photo.webp"
                     }
                     alt={firstSeason.name}
-                    width={342}
-                    height={513}
-                    className="rounded-md object-cover w-full sm:w-1/3"
+                    className="rounded-md object-cover w-full max-w-72"
                   />
                   <div className="flex-1">
                     <h3 className="text-xl sm:text-2xl font-semibold text-neutral-100">

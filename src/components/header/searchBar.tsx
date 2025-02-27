@@ -2,8 +2,8 @@
 import { useSearch } from "@/app/contextAPI/searchContext";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { CiSearch } from "react-icons/ci";
+import { FaSearch } from "react-icons/fa";
+import { FaCircleNotch } from "react-icons/fa6";
 
 function SearchBar() {
   const [input, setInput] = useState("");
@@ -25,9 +25,12 @@ function SearchBar() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-row items-center gap-2">
+    <form
+      onSubmit={handleSubmit}
+      className="relative flex flex-row items-center "
+    >
       <input
-        className="pl-3 ring-2 ring-gray-200 outline-0 rounded-sm focus:bg-neutral-200 bg-gray-200 text-gray-900"
+        className="w-full py-2 px-4 bg-neutral-800 text-neutral-200 rounded-full focus:outline-none focus:ring-2 focus:ring-neutral-500 placeholder-neutral-400 text-sm sm:text-base"
         name="searchtext"
         type="text"
         value={input}
@@ -38,16 +41,16 @@ function SearchBar() {
         placeholder="Search"
       />
       <button
-        className="px-4 py-2 rounded-md bg-neutral-600 hover:bg-neutral-500"
         type="submit"
+        className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-neutral-700 text-neutral-100 p-1.5 rounded-full hover:bg-neutral-600"
         disabled={isSearchLoading || input.trim().length === 0}
       >
         {isSearchLoading ? (
           <div className="w-fit m-auto animate-spin">
-            <AiOutlineLoading3Quarters />
+            <FaCircleNotch />
           </div>
         ) : (
-          <CiSearch />
+          <FaSearch size={16} />
         )}
       </button>
     </form>

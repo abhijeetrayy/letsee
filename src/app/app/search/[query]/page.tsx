@@ -290,7 +290,7 @@ function Page() {
                           .replace(/[^a-zA-Z0-9]/g, "-")
                           .replace(/-+/g, "-") || "unknown"
                       }`}
-                      className="h-[230px] md:h-[300px] w-full"
+                      className="h-full w-full"
                     >
                       <img
                         className="object-cover h-full w-full"
@@ -354,7 +354,7 @@ function Page() {
                         .trim()
                         .replace(/[^a-zA-Z0-9]/g, "-")
                         .replace(/-+/g, "-")}`}
-                      className="h-[230px] md:h-[300px] w-full"
+                      className="h-full w-full"
                     >
                       <img
                         className="object-cover w-full h-full"
@@ -368,7 +368,7 @@ function Page() {
                         alt={data.title || data.name || "Unknown"}
                       />
                     </Link>
-                    <div className="lg:absolute bottom-0 w-full bg-neutral-900 lg:opacity-0 lg:group-hover:opacity-100">
+                    <div className="w-full bg-neutral-900 ">
                       <ThreePrefrenceBtn
                         genres={
                           data.genre_ids
@@ -396,7 +396,7 @@ function Page() {
                       </div>
                       <div
                         title={data.name || data.title || "Unknown"}
-                        className="w-full flex flex-col h-full gap-2 px-4 bg-indigo-700 text-gray-200 lg:opacity-0 lg:group-hover:opacity-100"
+                        className="w-full flex flex-col h-full gap-2 px-4 bg-indigo-700 text-gray-200 "
                       >
                         <Link
                           href={`/app/${displayMediaType}/${data.id}-${(

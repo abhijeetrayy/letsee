@@ -199,7 +199,7 @@ const EpisodePage = async ({ params }: PageProps) => {
                         className="rounded-md object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full bg-neutral-600 rounded-md flex items-center justify-center">
+                      <div className="w-full min-h-52 h-full bg-neutral-600 rounded-md flex items-center justify-center">
                         <span className="text-xs text-neutral-400">
                           No Image
                         </span>
@@ -237,7 +237,7 @@ const EpisodePage = async ({ params }: PageProps) => {
                         className="rounded-md object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full bg-neutral-600 rounded-md flex items-center justify-center">
+                      <div className="w-full h-full min-h-52 bg-neutral-600 rounded-md flex items-center justify-center">
                         <span className="text-xs text-neutral-400">
                           No Image
                         </span>
