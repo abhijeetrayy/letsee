@@ -54,13 +54,13 @@ function FavoritesList({ favorites, favoriteCount }: any) {
   // };
 
   return (
-    <div className="">
+    <div className="mt-5">
       {/* <SendMessageModal
         data={cardData}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       /> */}
-      <div className="my-3">
+      <div className="my-3 ">
         <h1 className="text-2xl font-bold mb-4">
           Favorites &quot;{favoriteCount}&quot;
         </h1>

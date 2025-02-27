@@ -192,7 +192,7 @@ export default async function ProfilePage({ params }: PageProps) {
         </div>
 
         {/* Genre Statistics */}
-        <div className="">
+        <div className="mt-8">
           <StatisticsGenre username={user.username} userId={profileId} />
         </div>
 
@@ -231,7 +231,7 @@ export default async function ProfilePage({ params }: PageProps) {
             </p>
           </div>
         ) : (
-          <div className=" rounded-lg shadow-md p-1">
+          <div className=" rounded-lg shadow-md p-1 mt-5">
             <RecommendationTile
               isOwner={isOwner}
               name={user.username}
