@@ -1,26 +1,48 @@
-// pages/api/movies.js
-import axios from "axios";
-import { NextApiRequest, NextApiResponse } from "next";
+// pages/api/search/route.ts
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
-  const requestClone = req.clone();
-  const body = await requestClone.json();
-  const queryString = body.query;
-  const page = body.page;
-  console.log(page);
+  const body = await req.json();
+  const { query, page, media_type, include_adult, year, region, language } =
+    body;
+
+  if (!query) {
+    return NextResponse.json({ error: "Query is required" }, { status: 400 });
+  }
 
   try {
-    const response = await fetch(
-      `https://api.themoviedb.org/3/search/multi?api_key=${process.env.TMDB_API_KEY}&query=${queryString}&page=${page}`
-    );
+    // Dynamically select endpoint based on media_type
+    let endpoint = "multi";
+    if (media_type === "movie") endpoint = "movie";
+    else if (media_type === "tv") endpoint = "tv";
+    else if (media_type === "person") endpoint = "person";
 
-    const show = await response.json();
-    console.log(show);
+    const url = new URL(`https://api.themoviedb.org/3/search/${endpoint}`);
+    url.searchParams.append("api_key", process.env.TMDB_API_KEY || "");
+    url.searchParams.append("query", query);
+    url.searchParams.append("page", page.toString());
+    url.searchParams.append("include_adult", include_adult ? "true" : "false");
+    if (year)
+      url.searchParams.append(
+        media_type === "movie" ? "year" : "first_air_date_year",
+        year
+      );
+    if (region) url.searchParams.append("region", region);
+    url.searchParams.append("language", language || "en-US");
 
-    return NextResponse.json(show, { status: 200 });
+    const response = await fetch(url.toString());
+
+    if (!response.ok) {
+      throw new Error(`TMDb API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return NextResponse.json(data, { status: 200 });
   } catch (error) {
-    console.log(error);
-    return NextResponse.json(error, { status: 500 });
+    console.error("API Error:", error);
+    return NextResponse.json(
+      { error: (error as Error).message },
+      { status: 500 }
+    );
   }
 }

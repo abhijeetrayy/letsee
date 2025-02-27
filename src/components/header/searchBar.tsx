@@ -31,6 +31,7 @@ function SearchBar() {
         name="searchtext"
         type="text"
         value={input}
+        onKeyDown={(e) => e.key === "Enter" && handleSubmit}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           setInput(e.target.value)
         }

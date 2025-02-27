@@ -29,7 +29,6 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {" "}
         <SearchProvider>
           <header className="sticky top-0 w-full m-auto z-50 bg-neutral-900">
             <Navbar />

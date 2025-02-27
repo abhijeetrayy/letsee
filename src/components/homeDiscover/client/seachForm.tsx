@@ -1,296 +1,423 @@
 "use client";
-import Link from "next/link";
-import React, { useState } from "react";
-// import CardMovieButton from "@/components/buttons/cardMovieButton";
 import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
-import { LuSend } from "react-icons/lu";
-import SendMessageModal from "@components/message/sendCard";
 import { GenreList } from "@/staticData/genreList";
+import SendMessageModal from "@components/message/sendCard";
+import debounce from "lodash/debounce";
+import Link from "next/link";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { LuSend } from "react-icons/lu";
 
-const MovieSearch = () => {
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState([]) as any;
+interface SearchResult {
+  id: number;
+  media_type: "movie" | "tv" | "person";
+  title?: string;
+  name: string;
+  poster_path?: string;
+  backdrop_path?: string;
+  release_date?: string;
+  first_air_date?: string;
+  genre_ids?: number[];
+  adult: boolean;
+  profile_path?: string;
+  known_for_department?: string;
+}
+
+interface SearchResponse {
+  results: SearchResult[];
+  total_pages: number;
+  total_results: number;
+  page: number;
+  searched: boolean;
+}
+
+function Page() {
+  const [results, setResults] = useState<SearchResponse>({
+    results: [],
+    total_pages: 0,
+    total_results: 0,
+    page: 1,
+    searched: false,
+  });
   const [loading, setLoading] = useState(false);
-  const [typing, settyping] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
+  const [displayquery, setdisplayquery] = useState("");
   const [page, setPage] = useState(1);
-
+  const [mediaType, setMediaType] = useState<string>("multi");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [cardData, setCardData] = useState([]) as any;
+  const [cardData, setCardData] = useState<any>(null);
 
-  const handleCardTransfer = (data: any) => {
+  const topScroll = useRef(null);
+
+  // Debounced fetch function
+  const fetchData = useCallback(
+    debounce(async (searchQuery: string, searchPage: number, type: string) => {
+      if (!searchQuery) {
+        setResults({
+          results: [],
+          total_pages: 0,
+          total_results: 0,
+          page: 1,
+          searched: false,
+        });
+        setLoading(false);
+        return;
+      }
+
+      setLoading(true);
+      setError(null);
+
+      try {
+        const response = await fetch("/api/search", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            query: searchQuery,
+            page: searchPage,
+            media_type: type,
+          }),
+          cache: "no-store",
+        });
+
+        if (!response.ok) {
+          throw new Error(`Network response failed: ${response.status}`);
+        }
+
+        const data: SearchResponse = await response.json();
+        setResults({
+          results: data.results,
+          total_pages: data.total_pages,
+          total_results: data.total_results,
+          page: data.page,
+          searched: true,
+        });
+        setdisplayquery(searchQuery);
+        setPage(data.page); // Sync page with API response
+      } catch (err) {
+        setError(
+          (err as Error).message || "An error occurred while fetching data"
+        );
+        setResults({
+          results: [],
+          total_pages: 0,
+          total_results: 0,
+          page: searchPage,
+          searched: true,
+        });
+      } finally {
+        setLoading(false);
+      }
+    }, 300),
+    []
+  );
+
+  // Handle search submission
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (query.trim()) {
+      handleScroll(topScroll.current);
+      setPage(1);
+      fetchData(query, 1, mediaType);
+    } else {
+      setResults({
+        results: [],
+        total_pages: 0,
+        total_results: 0,
+        page: 1,
+        searched: false,
+      });
+      setError(null);
+    }
+  };
+  useEffect(() => {
+    fetchData(query, 1, mediaType);
+  }, [mediaType]);
+  // Handle page change
+  const changePage = useCallback(
+    (newPage: number) => {
+      if (query && newPage >= 1 && newPage <= results.total_pages) {
+        handleScroll(topScroll.current);
+        setPage(newPage);
+
+        fetchData(query, newPage, mediaType);
+      }
+    },
+    [query, mediaType, results.total_pages, fetchData]
+  );
+
+  const handleCardTransfer = (data: SearchResult) => {
     setCardData(data);
     setIsModalOpen(true);
   };
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleScroll = (ref: HTMLDivElement | null) => {
+    if (ref) {
+      const element = ref;
+      const elementRect = element.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
 
-    setLoading(true);
-    const search = await fetch("/api/search", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ query, page: 1 }),
-    });
+      // Calculate position to center the element in the viewport
+      const centerPosition =
+        scrollTop +
+        elementRect.top -
+        viewportHeight / 2 +
+        elementRect.height / 2;
 
-    const data = await search.json();
-    console.log(data);
-    setResults(data);
-    setLoading(false);
-    settyping(false);
+      window.scrollTo({
+        top: element.offsetTop - 100,
+        behavior: "smooth",
+      });
+    }
   };
 
-  const nextPage = async () => {
-    setLoading(true);
-    setPage(page + 1);
+  // Render card based on media type
+  const renderCard = (data: SearchResult) => {
+    const isPerson = data.media_type === "person" || mediaType == "person";
+    const title = data.title || data.name || "Unknown";
+    const imageUrl = isPerson
+      ? data.profile_path
+        ? `https://image.tmdb.org/t/p/h632${data.profile_path}`
+        : "/no-photo.webp"
+      : data.poster_path || data.backdrop_path
+      ? `https://image.tmdb.org/t/p/w342${
+          data.poster_path || data.backdrop_path
+        }`
+      : "/no-photo.webp";
 
-    const search = await fetch("/api/search", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ query, page: page + 1 }),
-    });
-
-    const data = await search.json();
-    console.log(data);
-    setResults(data);
-    setLoading(false);
-  };
-  const lastPage = async () => {
-    setLoading(true);
-    setPage(page - 1);
-
-    const search = await fetch("/api/search", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ query, page: page - 1 }),
-    });
-
-    const data = await search.json();
-    console.log(data);
-    setResults(data);
-    setLoading(false);
-  };
-  return (
-    <div className="text-white max-w-7xl w-full min-h-44 mx-auto ">
-      <SendMessageModal
-        media_type={cardData.media_type}
-        data={cardData}
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
-      <form onSubmit={handleSearch} className="mb-8">
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => {
-            setQuery(e.target.value);
-            settyping(true);
-          }}
-          className="px-4 py-2 w-full bg-neutral-800 text-white rounded-md"
-          placeholder="Search for movies, tv shows and people..."
-        />
-        <button type="submit" className="mt-4 px-4 py-2 bg-blue-600 rounded-md">
-          Search
-        </button>
-      </form>
-      {results.length == 0 && (
-        <p>Hello, search your favorate shows and movies.</p>
-      )}
-      {loading ? (
-        <div className="w-full min-h-52 flex justify-center items-center">
-          loading..
-        </div>
-      ) : (
-        <div>
-          {results.total_results == 0 && !typing && (
-            <div className="h-full w-full flex items-center justify-center">
-              <p className="text-md">
-                Result for &quot;
-                <span className="text-pink-600">
-                  {decodeURIComponent(query as string)}
-                </span>
-                &quot;{" "}
-                <span className="font-bold text-purple-600">is not found</span>{" "}
-                - or check your spelling{" "}
-              </p>
-            </div>
+    return (
+      <div
+        key={data.id}
+        className={`relative group flex flex-col ${
+          isPerson ? "bg-indigo-700" : "bg-neutral-900"
+        } w-full h-full text-gray-300 rounded-md overflow-hidden hover:z-10`}
+      >
+        <div className="absolute top-0 left-0 flex flex-row justify-between w-full z-10">
+          <p className="p-1 bg-black text-white rounded-br-md text-sm">
+            {data.media_type
+              ? data.media_type
+              : mediaType == "movie"
+              ? "movie"
+              : mediaType == "tv"
+              ? "tv"
+              : "person"}
+          </p>
+          {!isPerson && (data.release_date || data.first_air_date) && (
+            <p className="p-1 bg-indigo-600 text-white rounded-bl-md text-sm">
+              {new Date(
+                data.release_date || data.first_air_date || ""
+              ).getFullYear() || "N/A"}
+            </p>
           )}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-            {results?.results?.map(
-              (data: any) =>
-                data?.media_type !== "person" && (
-                  <div
-                    key={data.id}
-                    className=" overflow-hidden relative group flex flex-col  bg-black w-full text-gray-300 rounded-md   duration-300   hover:z-30"
-                  >
-                    <div className="absolute  top-0 left-0 flex flex-row justify-between w-full z-20">
-                      <p className="p-1 bg-black text-white rounded-br-md text-sm">
-                        {data.media_type}
-                      </p>
-                      {(data.release_date || data.first_air_date) && (
-                        <p className="p-1 bg-indigo-600 text-white rounded-bl-md text-sm">
-                          {new Date(data.release_date).getFullYear() ||
-                            new Date(data.first_air_date).getFullYear()}
-                        </p>
-                      )}
-                    </div>
-                    <Link
-                      href={`/app/${data.media_type}/${data.id}--${(
-                        data.name || data.title
-                      )
-                        .trim()
-                        .replace(/[^a-zA-Z0-9]/g, "-")
-                        .replace(/-+/g, "-")}`}
-                      className=" h-full w-full"
-                    >
-                      <img
-                        className="relative object-cover w-full h-[230px] md:h-[300px] lg:h-full "
-                        src={
-                          data.poster_path || data.backdrop_path
-                            ? `https://image.tmdb.org/t/p/w342${
-                                data.poster_path || data.backdrop_path
-                              }`
-                            : "/no-photo.webp"
-                        }
-                        width={400}
-                        height={400}
-                        alt={data.title}
-                      />
-                    </Link>
-
-                    <div className="lg:absolute bottom-0 w-full bg-neutral-900 lg:opacity-0 lg:group-hover:opacity-100 ">
-                      <ThreePrefrenceBtn
-                        genres={data.genre_ids
-                          .map((id: number) => {
-                            const genre = GenreList.genres.find(
-                              (g: any) => g.id === id
-                            );
-                            return genre ? genre.name : null;
-                          })
-                          .filter(Boolean)}
-                        cardId={data.id}
-                        cardType={data.media_type}
-                        cardName={data.name || data.title}
-                        cardAdult={data.adult}
-                        cardImg={data.poster_path || data.backdrop_path}
-                      />
-                      <div className="py-2 border-t border-neutral-950 bg-neutral-800 hover:bg-neutral-700">
-                        <button
-                          className="w-full  flex justify-center text-lg text-center "
-                          onClick={() => handleCardTransfer(data)}
-                        >
-                          <LuSend />
-                        </button>
-                      </div>
-                      <div
-                        title={data.name || data.title}
-                        className="w-full flex flex-col gap-2  px-4  bg-indigo-700  text-gray-200 "
-                      >
-                        <Link
-                          href={`/app/${data.media_type}/${data.id}-${(
-                            data.name || data.title
-                          )
-                            .trim()
-                            .replace(/[^a-zA-Z0-9]/g, "-")
-                            .replace(/-+/g, "-")}}`}
-                          className="mb-1"
-                        >
-                          <span className="">
-                            {data?.title
-                              ? data.title.length > 20
-                                ? data.title?.slice(0, 20) + "..."
-                                : data.title
-                              : data.name.length > 20
-                              ? data.name?.slice(0, 20) + "..."
-                              : data.name}
-                          </span>
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                )
-            )}
-            {results?.results?.map(
-              (data: any) =>
-                data?.media_type == "person" && (
-                  <div
-                    key={data.id}
-                    className=" relative group flex flex-col   text-gray-300 rounded-md overflow-hidden duration-300 l hover:z-30"
-                  >
-                    <div className="absolute top-0 left-0 z-40">
-                      <p className="p-1 bg-black text-white rounded-br-md text-sm">
-                        {data.media_type}
-                      </p>
-                    </div>
-                    <Link
-                      className="group-hover:underline"
-                      href={`/app/person/${data.id}-${data.name
-                        .trim()
-                        .replace(/[^a-zA-Z0-9]/g, "-")
-                        .replace(/-+/g, "-")}`}
-                    >
-                      <img
-                        className="relative rounded-md object-cover h-[230px] md:h-[300px] w-full  "
-                        src={
-                          data.profile_path
-                            ? `https://image.tmdb.org/t/p/h632${data.profile_path}`
-                            : "/no-photo.webp"
-                        }
-                        width={400}
-                        height={400}
-                        alt={data.title}
-                      />
-                    </Link>
-                    <span className=" flex flex-col gap-3  py-2 hlimitSearch px-4 h-full bg-indigo-700">
-                      <div className="mb-1">
-                        <Link
-                          className="group-hover:underline"
-                          href={`/app/person/${data.id}-${data.name
-                            .trim()
-                            .replace(/[^a-zA-Z0-9]/g, "-")
-                            .replace(/-+/g, "-")}`}
-                        >
-                          {data.name}
-                        </Link>
-                      </div>
-                      <p className="text-xs mb-1 ">
-                        {data.release_date || data.first_air_date}
-                      </p>
-                      <p className=" text-xs ">{data.known_for_department}</p>
-                    </span>
-                  </div>
-                )
+        </div>
+        <Link
+          href={`/app/${
+            data.media_type
+              ? data.media_type
+              : mediaType == "movie"
+              ? "movie"
+              : mediaType == "tv"
+              ? "tv"
+              : "person"
+          }/${data.id}-${title
+            .trim()
+            .replace(/[^a-zA-Z0-9]/g, "-")
+            .replace(/-+/g, "-")}`}
+          className="h-[230px] md:h-[300px] w-full"
+        >
+          <img
+            className="object-cover w-full h-full"
+            src={imageUrl}
+            alt={title}
+          />
+        </Link>
+        <div
+          className={`${
+            isPerson
+              ? "bg-indigo-700"
+              : "lg:absolute bottom-0 w-full bg-neutral-900 "
+          }`}
+        >
+          {!isPerson && (
+            <>
+              <ThreePrefrenceBtn
+                genres={
+                  data.genre_ids
+                    ?.map((id: number) => {
+                      const genre = GenreList.genres.find(
+                        (g: any) => g.id === id
+                      );
+                      return genre ? genre.name : null;
+                    })
+                    .filter(Boolean) || []
+                }
+                cardId={data.id}
+                cardType={data.media_type}
+                cardName={title}
+                cardAdult={data.adult}
+                cardImg={data.poster_path || data.backdrop_path}
+              />
+              <div className="py-2 border-t border-neutral-950 bg-neutral-800 hover:bg-neutral-700">
+                <button
+                  className="w-full flex justify-center text-lg text-center text-gray-300 hover:text-white"
+                  onClick={() => handleCardTransfer(data)}
+                >
+                  <LuSend />
+                </button>
+              </div>
+            </>
+          )}
+          <div
+            title={title}
+            className="w-full flex flex-col gap-2 px-4 py-2 bg-indigo-700 text-gray-200"
+          >
+            <Link
+              href={`/app/${
+                data.media_type
+                  ? data.media_type
+                  : mediaType == "movie"
+                  ? "movie"
+                  : mediaType == "tv"
+                  ? "tv"
+                  : "person"
+              }/${data.id}-${title
+                .trim()
+                .replace(/[^a-zA-Z0-9]/g, "-")
+                .replace(/-+/g, "-")}`}
+              className="hover:underline"
+            >
+              <span>
+                {title.length > 20 ? `${title.slice(0, 20)}...` : title}
+              </span>
+            </Link>
+            {isPerson && data.known_for_department && (
+              <div className="text-xs underline">
+                {data.known_for_department}
+              </div>
             )}
           </div>
         </div>
+      </div>
+    );
+  };
+
+  return (
+    <div
+      ref={topScroll}
+      className=" mx-auto w-full max-w-7xl px-4 py-6 text-white"
+    >
+      {/* Search Bar and Filter */}
+      <form
+        onSubmit={handleSearch}
+        className="mb-8 flex flex-col sm:flex-row gap-4 items-center"
+      >
+        <input
+          type="text"
+          value={query}
+          onKeyDown={(e) => e.key == "enter" && handleSearch}
+          onChange={(e) => setQuery(e.target.value)}
+          className="px-4 py-2 w-full sm:flex-1 bg-neutral-800 text-white rounded-md border border-gray-300 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+          placeholder="Search for movies, TV shows, or people..."
+        />
+        <select
+          value={mediaType}
+          onChange={(e) => setMediaType(e.target.value)}
+          className="px-4 py-2 bg-neutral-700 rounded-md text-white"
+        >
+          <option value="multi">All</option>
+          <option value="movie">Movies</option>
+          <option value="tv">TV Shows</option>
+          <option value="person">Person</option>
+        </select>
+        <button
+          type="submit"
+          className="px-4 py-2 bg-blue-600 rounded-md hover:bg-blue-700"
+        >
+          Search
+        </button>
+      </form>
+
+      {/* Loading State */}
+      {loading && (
+        <div className="min-h-52 w-full flex justify-center items-center">
+          Loading...
+        </div>
       )}
 
-      {results?.total_pages > 1 && (
-        <div className=" w-full flex flex-row gap-2 justify-center items-center my-4">
+      {/* Results or Prompt */}
+      {!loading && (
+        <div className="w-full my-4">
+          {results.total_results > 0 && (
+            <div className="mb-4">
+              <p>
+                Search Results: "{displayquery}" - {results.total_results} items
+              </p>
+            </div>
+          )}
+
+          {results.total_results === 0 && results.searched && (
+            <div className="flex flex-col h-full w-full gap-5 items-center justify-center">
+              <p className="text-lg">
+                Result for "
+                <span className="text-pink-600">{displayquery}</span>"
+                <span className="font-bold text-purple-600"> is not found</span>{" "}
+                - or check your spelling
+              </p>
+              <img
+                src="/abhijeetray.webp"
+                alt="not-found"
+                className="max-w-md"
+              />
+            </div>
+          )}
+
+          {!query && (
+            <p className="text-center">
+              Please enter a search query to see results.
+            </p>
+          )}
+
+          {results.results.length > 0 && (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+              {results.results.map((data) => renderCard(data))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Pagination */}
+      {!loading && results.total_pages > 1 && (
+        <div className="flex flex-row justify-center items-center my-6">
           <button
-            className="px-4 py-2 bg-neutral-700 rounded-md hover:bg-neutral-600"
-            onClick={lastPage}
-            disabled={results.page === 1}
+            className="px-4 py-2 bg-neutral-700 rounded-md hover:bg-neutral-600 disabled:opacity-50"
+            onClick={() => changePage(page - 1)}
+            disabled={page === 1}
           >
-            Last
+            Previous
           </button>
-          page: <span>{results.page}</span> of {results?.total_pages}
+          <span className="mx-4">
+            Page {page} of {results.total_pages}
+          </span>
           <button
-            className="px-4 py-2  bg-neutral-700 rounded-md hover:bg-neutral-600"
-            onClick={nextPage}
-            disabled={results.page === results.total_pages}
+            className="px-4 py-2 bg-neutral-700 rounded-md hover:bg-neutral-600 disabled:opacity-50"
+            onClick={() => changePage(page + 1)}
+            disabled={page === results.total_pages}
           >
-            next
+            Next
           </button>
         </div>
       )}
+
+      {mediaType !== "person" && cardData && (
+        <SendMessageModal
+          media_type={cardData.media_type}
+          data={cardData}
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
     </div>
   );
-};
+}
 
-export default MovieSearch;
+export default Page;

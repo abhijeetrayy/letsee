@@ -72,7 +72,9 @@ async function Navbar() {
   return (
     <div className="max-w-[1520px] w-full m-auto flex flex-row justify-between text-white  p-3 h-full ">
       <div>
-        <Link href="/app">Let&apos;s see</Link>
+        <Link className="font-bold text-xl ml-5" href="/app">
+          Let&apos;s see
+        </Link>
       </div>
 
       <div className="flex flex-row gap-3 items-center">
