@@ -78,7 +78,7 @@ function WatchLaterList({ watchlist, watchlistCount }: any) {
                     src={
                       item.item_adult
                         ? "/pixeled.webp"
-                        : `https://image.tmdb.org/t/p/w185/${item.item_img}`
+                        : `https://image.tmdb.org/t/p/w185/${item.image_url}`
                     }
                     loading="lazy"
                     alt={item.item_name}
@@ -92,7 +92,7 @@ function WatchLaterList({ watchlist, watchlistCount }: any) {
                     cardType={item.item_type}
                     cardName={item.item_name}
                     cardAdult={item.item_adult}
-                    cardImg={item.item_img}
+                    cardImg={item.image_url}
                   />
                   <div
                     title={item.name || item.title}

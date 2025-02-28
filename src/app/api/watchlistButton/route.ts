@@ -91,7 +91,7 @@ async function addToWatchlist(
     item_name: item.name,
     item_id: item.itemId,
     item_type: item.mediaType,
-    item_img: item.imgUrl,
+    image_url: item.imgUrl,
     item_adult: item.adult,
     genres: item.genres,
   });
