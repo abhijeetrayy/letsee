@@ -25,7 +25,7 @@ export default function UpdatePasswordComponent() {
 
       const { error } = await supabase.auth.verifyOtp({
         token_hash: tokenHash,
-        type: "recovery",
+        type: "email",
       });
 
       setLoading(false);
