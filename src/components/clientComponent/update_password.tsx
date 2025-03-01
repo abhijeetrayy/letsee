@@ -11,7 +11,7 @@ export default function UpdatePasswordComponent() {
   const searchParams = useSearchParams();
   const supabase = createClient();
 
-  const tokenHash = searchParams.get("token");
+  const tokenHash = searchParams.get("access_token");
 
   useEffect(() => {
     const verifyToken = async () => {
