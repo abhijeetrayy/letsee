@@ -1,7 +1,11 @@
+// /app/update-password/page.tsx
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
+
+// Force dynamic rendering to skip prerendering
+export const dynamic = "force-dynamic";
 
 export default function UpdatePassword() {
   const [newPassword, setNewPassword] = useState("");
@@ -11,10 +15,8 @@ export default function UpdatePassword() {
   const searchParams = useSearchParams();
   const supabase = createClient();
 
-  // Extract token_hash from URL
   const tokenHash = searchParams.get("token");
 
-  // Verify token_hash and establish session on mount
   useEffect(() => {
     const verifyToken = async () => {
       if (!tokenHash) {
@@ -25,9 +27,8 @@ export default function UpdatePassword() {
       setLoading(true);
       setMessage("Verifying reset token...");
 
-      // Verify the token_hash for password recovery
       const { error } = await supabase.auth.verifyOtp({
-        token_hash: tokenHash, // Use token_hash instead of token
+        token_hash: tokenHash,
         type: "recovery",
       });
 
@@ -43,7 +44,6 @@ export default function UpdatePassword() {
     verifyToken();
   }, [tokenHash]);
 
-  // Handle password update
   const handleUpdatePassword = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!tokenHash) {
