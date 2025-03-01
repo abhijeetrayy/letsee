@@ -35,26 +35,26 @@ export async function updateSession(request: NextRequest) {
     // Allow access to the update-password page if it has a token
     if (isUpdatePasswordPage && hasToken) {
       return response;
-    }
+    } else {
+      // Redirect authenticated users from `/` to `/app`
+      if (request.nextUrl.pathname === "/") {
+        console.log("🔄 Redirecting authenticated user to /app");
+        return NextResponse.redirect(new URL("/app", request.url));
+      }
 
-    // Redirect authenticated users from `/` to `/app`
-    if (request.nextUrl.pathname === "/") {
-      console.log("🔄 Redirecting authenticated user to /app");
-      return NextResponse.redirect(new URL("/app", request.url));
-    }
+      // Redirect unauthenticated users away from protected pages
+      if (!user && !isPublicRoute) {
+        console.log("🔐 Redirecting unauthenticated user to /login");
+        return NextResponse.redirect(new URL("/login", request.url));
+      }
 
-    // Redirect unauthenticated users away from protected pages
-    if (!user && !isPublicRoute) {
-      console.log("🔐 Redirecting unauthenticated user to /login");
-      return NextResponse.redirect(new URL("/login", request.url));
-    }
-
-    // Redirect authenticated users away from auth pages
-    if (user && isPublicRoute) {
-      console.log(
-        "🔄 Redirecting authenticated user away from auth pages to /app"
-      );
-      return NextResponse.redirect(new URL("/app", request.url));
+      // Redirect authenticated users away from auth pages
+      if (user && isPublicRoute) {
+        console.log(
+          "🔄 Redirecting authenticated user away from auth pages to /app"
+        );
+        return NextResponse.redirect(new URL("/app", request.url));
+      }
     }
 
     return response;
