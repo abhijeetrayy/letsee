@@ -13,20 +13,35 @@ export default function UpdatePasswordComponent() {
   const searchParams = useSearchParams();
   const supabase = createClient();
 
-  const tokenHash = searchParams.get("token");
+  // Try to get token from query parameters or hash
+  const tokenHash =
+    searchParams.get("token") ||
+    (typeof window !== "undefined" &&
+      new URL(window.location.href).hash.split("token=")[1]?.split("&")[0]);
 
   useEffect(() => {
-    const verifyToken = async () => {
-      // If no token, check if user is already logged in
+    const checkSessionAndToken = async () => {
+      // Log for debugging
+      console.log("Token Hash:", tokenHash);
+      console.log("Full URL:", window.location.href);
+
+      // Check for active session first
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+      console.log("User:", user, "User Error:", userError);
+
+      if (user) {
+        setMessage("User logged in. Enter new password to update.");
+        return;
+      }
+
+      // If no session, rely on token
       if (!tokenHash) {
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
-        if (user) {
-          setMessage("User logged in. Enter new password to update.");
-        } else {
-          setMessage("Error: No reset token provided and no active session.");
-        }
+        setMessage(
+          "Error: No reset token provided and no active session. Please use a valid reset link."
+        );
         return;
       }
 
@@ -42,12 +57,13 @@ export default function UpdatePasswordComponent() {
 
       if (error) {
         setMessage(`Error verifying token: ${error.message}`);
+        console.error("Verify OTP Error:", error);
       } else {
         setMessage("Token verified. Enter your new password below.");
       }
     };
 
-    verifyToken();
+    checkSessionAndToken();
   }, [tokenHash]);
 
   const handleUpdatePassword = async (e: React.FormEvent) => {
@@ -64,6 +80,7 @@ export default function UpdatePasswordComponent() {
 
     if (error) {
       setMessage(`Error: ${error.message}`);
+      console.error("Update Error:", error);
     } else {
       setMessage("Password updated successfully! Redirecting to login...");
       setTimeout(() => {
