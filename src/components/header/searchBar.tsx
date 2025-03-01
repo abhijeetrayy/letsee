@@ -33,9 +33,6 @@ function SearchBar() {
   const router = useRouter();
   const { isSearchLoading, setIsSearchLoading } = useSearch();
 
-  // TMDB API Key (replace with your key or move to config)
-  const TMDB_API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;
-
   // Handle form submission
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -62,30 +59,26 @@ function SearchBar() {
 
       setIsLoading(true);
       try {
-        // Multi-search for movies, TV, and persons
-        const multiResponse = await fetch(
-          `https://api.themoviedb.org/3/search/multi?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(
-            input
-          )}&page=1`
+        // Fetch results from the API route
+        const response = await fetch(
+          `/api/search?query=${encodeURIComponent(input)}`
         );
-        if (!multiResponse.ok) throw new Error("Failed to fetch multi-search");
+        if (!response.ok) throw new Error("Failed to fetch search results");
 
-        const multiData = await multiResponse.json();
-        const movie = multiData.results.filter(
+        const data = await response.json();
+        const movie = data.results.filter(
           (item: SearchResult) => item.media_type === "movie"
         );
-        const tv = multiData.results.filter(
+        const tv = data.results.filter(
           (item: SearchResult) => item.media_type === "tv"
         );
-        const person = multiData.results.filter(
+        const person = data.results.filter(
           (item: SearchResult) => item.media_type === "person"
         );
 
         // Keyword search
         const keywordResponse = await fetch(
-          `https://api.themoviedb.org/3/search/keyword?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(
-            input
-          )}&page=1`
+          `/api/search?query=${encodeURIComponent(input)}&media_type=keyword`
         );
         if (!keywordResponse.ok) throw new Error("Failed to fetch keywords");
 

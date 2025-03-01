@@ -14,19 +14,12 @@ interface BurgerMenuProps {
 
 const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [searchText, setSearchText] = useState("");
 
   const router = useRouter();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
-
-  async function search(e: React.FormEvent) {
-    e.preventDefault();
-    router.push(`/app/search/${searchText}`);
-    setIsOpen(false);
-  }
 
   function link(link: string) {
     router.push(link);
@@ -60,29 +53,6 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID }) => {
 
           <ul className="flex flex-col items-center justify-center h-full space-y-8 text-white">
             <li>
-              <div>
-                <form
-                  className="flex flex-row items-center gap-2"
-                  onSubmit={search}
-                >
-                  <input
-                    className="pl-3 ring-2 ring-gray-200 outline-0 rounded-sm focus:bg-neutral-200 bg-gray-200 text-gray-900"
-                    name="searchtext"
-                    type="text"
-                    value={searchText}
-                    onChange={(e) => setSearchText(e.target.value)}
-                    placeholder="Search"
-                  />
-                  <button
-                    type="submit"
-                    className="px-4 py-2 rounded-md bg-neutral-600 hover:bg-neutral-500"
-                  >
-                    <CiSearch />
-                  </button>
-                </form>
-              </div>
-            </li>
-            <li>
               <button
                 onClick={() => link("/app")}
                 className="text-2xl hover:text-gray-400"
@@ -93,10 +63,34 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID }) => {
 
             <li>
               <button
+                onClick={() => link(`/app/tvbygenre/list/35-Comedy`)}
+                className="text-2xl hover:text-gray-400"
+              >
+                Tv Genre
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => link(`/app/moviebygenre/list/16-Animation`)}
+                className="text-2xl hover:text-gray-400"
+              >
+                Movie Genre
+              </button>
+            </li>
+            <li>
+              <button
                 onClick={() => link(`/app/profile`)}
                 className="text-2xl hover:text-gray-400"
               >
-                People
+                users
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => link(`/app/reel`)}
+                className="text-2xl hover:text-gray-400"
+              >
+                Reels
               </button>
             </li>
 
@@ -141,29 +135,6 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID }) => {
         </div>
 
         <ul className="flex flex-col items-center justify-center h-full space-y-8 text-white">
-          <li>
-            <div>
-              <form
-                className="flex flex-row items-center gap-2"
-                onSubmit={search}
-              >
-                <input
-                  className="pl-3 ring-2 ring-gray-200 outline-0 rounded-sm focus:bg-neutral-200 bg-gray-200 text-gray-900"
-                  name="searchtext"
-                  type="text"
-                  value={searchText}
-                  onChange={(e) => setSearchText(e.target.value)}
-                  placeholder="Search"
-                />
-                <button
-                  type="submit"
-                  className="px-4 py-2 rounded-md bg-neutral-600 hover:bg-neutral-500"
-                >
-                  <CiSearch />
-                </button>
-              </form>
-            </div>
-          </li>
           <div className="w-full flex  flex-col items-center mr-5 gap-3">
             <button
               onClick={() => link("/app")}

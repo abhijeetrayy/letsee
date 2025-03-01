@@ -4,10 +4,9 @@ import ThreePrefrenceBtn from "@/components/buttons/threePrefrencebtn";
 import SendMessageModal from "@components/message/sendCard";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { LuSend } from "react-icons/lu";
 import { GenreList } from "@/staticData/genreList";
-import debounce from "lodash/debounce";
 
 interface SearchResult {
   id: number;
@@ -49,7 +48,7 @@ function SearchPage() {
   const query = Array.isArray(params.query)
     ? params.query[0]
     : params.query || "";
-  const mediaType = searchParams.get("media_type") || "multi"; // Default to "multi" if not specified
+  const mediaType = searchParams.get("media_type") || "multi"; // Default to "multi"
   const urlPage = Number(searchParams.get("page")) || 1;
 
   // Sync page state with URL
@@ -57,10 +56,10 @@ function SearchPage() {
     setPage(urlPage);
   }, [urlPage]);
 
-  // Fetch data function
-  const fetchData = useCallback(
-    debounce(async (searchQuery: string, searchPage: number) => {
-      if (!searchQuery) {
+  // Fetch data from the API
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!query) {
         setError("Search query is required");
         setLoading(false);
         setIsSearchLoading(false);
@@ -72,37 +71,22 @@ function SearchPage() {
       setError(null);
 
       try {
-        let url: URL;
-        if (mediaType === "keyword") {
-          // Use /discover/movie for keyword search
-          url = new URL(`https://api.themoviedb.org/3/discover/movie`);
-          url.searchParams.append("with_keywords", searchQuery);
-        } else {
-          // Use /search/{endpoint} for other media types
-          let endpoint = "multi";
-          if (mediaType === "movie") endpoint = "movie";
-          else if (mediaType === "tv") endpoint = "tv";
-          else if (mediaType === "person") endpoint = "person";
+        const response = await fetch("/api/searchPage", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            query: decodeURIComponent(query),
+            media_type: mediaType,
+            page: page,
+          }),
+          cache: "no-store", // Ensure fresh data
+        });
 
-          url = new URL(`https://api.themoviedb.org/3/search/${endpoint}`);
-          url.searchParams.append("query", searchQuery);
-        }
-
-        url.searchParams.append(
-          "api_key",
-          process.env.NEXT_PUBLIC_TMDB_API_KEY || ""
-        );
-        url.searchParams.append("page", searchPage.toString());
-        url.searchParams.append("include_adult", "false"); // Default to false
-        url.searchParams.append("language", "en-US"); // Default to English
-
-        const response = await fetch(url.toString());
         if (!response.ok) {
           throw new Error(`Failed to fetch data: ${response.status}`);
         }
 
         const data: SearchResponse = await response.json();
-        console.log(data);
         setResults(data);
       } catch (err) {
         setError(
@@ -113,14 +97,10 @@ function SearchPage() {
         setLoading(false);
         setIsSearchLoading(false);
       }
-    }, 300),
-    [mediaType, setIsSearchLoading]
-  );
+    };
 
-  // Fetch data when query, mediaType, or page changes
-  useEffect(() => {
-    fetchData(decodeURIComponent(query), page);
-  }, [query, page, mediaType, fetchData]);
+    fetchData();
+  }, [query, page, mediaType, setIsSearchLoading]);
 
   // Handle card transfer for sending messages
   const handleCardTransfer = (data: SearchResult) => {

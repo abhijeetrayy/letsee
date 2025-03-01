@@ -16,7 +16,7 @@ async function Navbar() {
     return (
       <div className="max-w-[1520px] w-full m-auto flex flex-row justify-between text-white  p-3 h-full ">
         <div>
-          <Link className="font-bold text-xl sm:ml-5" href="/app">
+          <Link className="font-bold text-md md:text-xl sm:ml-5" href="/app">
             Let&apos;s see
           </Link>
         </div>
@@ -74,7 +74,7 @@ async function Navbar() {
   return (
     <div className="max-w-[1520px] w-full m-auto flex flex-row justify-between text-white  p-3 h-full ">
       <div>
-        <Link className="font-bold text-xl sm:ml-5" href="/app">
+        <Link className="font-bold text-md md:text-xl sm:ml-5" href="/app">
           Let&apos;s see
         </Link>
       </div>
