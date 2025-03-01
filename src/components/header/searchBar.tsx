@@ -90,7 +90,7 @@ function SearchBar() {
             name: kw.name,
           })
         );
-
+        console.log(keywordData);
         setResults({ movie, tv, person, keyword });
       } catch (error) {
         console.error("Error fetching search results:", error);
@@ -204,45 +204,42 @@ function SearchBar() {
                         )}
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 h-auto">
                           {items.map((item: any) => (
-                            <>
-                              <Link
-                                key={item.id}
-                                href={
-                                  category === "keyword"
-                                    ? `/app/search/${encodeURIComponent(
-                                        item.id
-                                      )}?media_type=keyword`
-                                    : `/app/${item.media_type}/${item.id}-${(
-                                        item.title ||
-                                        item.name ||
-                                        ""
-                                      )
-                                        .trim()
-                                        .replace(/[^a-zA-Z0-9]/g, "-")
-                                        .replace(/-+/g, "-")}`
-                                }
-                                onClick={() => setIsModalOpen(false)}
-                                className="flex items-center gap-3 p-2 bg-neutral-700 rounded-md hover:bg-neutral-600 transition-colors"
-                              >
-                                {item.media_type !== "keyword" && (
-                                  <img
-                                    src={
-                                      item.poster_path || item.profile_path
-                                        ? `https://image.tmdb.org/t/p/w92${
-                                            item.poster_path ||
-                                            item.profile_path
-                                          }`
-                                        : "https://placehold.co/92x138?text=No+Image"
-                                    }
-                                    alt={item.title || item.name}
-                                    className="w-12 h-18 object-cover rounded"
-                                  />
-                                )}
-                                <span className="text-sm sm:text-base truncate">
-                                  {item.title || item.name}
-                                </span>
-                              </Link>
-                            </>
+                            <Link
+                              key={item.id}
+                              href={
+                                category === "keyword"
+                                  ? `/app/search/${encodeURIComponent(
+                                      item.id
+                                    )}?media_type=keyword`
+                                  : `/app/${category}/${item.id}-${(
+                                      item.title ||
+                                      item.name ||
+                                      ""
+                                    )
+                                      .trim()
+                                      .replace(/[^a-zA-Z0-9]/g, "-")
+                                      .replace(/-+/g, "-")}`
+                              }
+                              onClick={() => setIsModalOpen(false)}
+                              className="flex items-center gap-3 p-2 bg-neutral-700 rounded-md hover:bg-neutral-600 transition-colors"
+                            >
+                              {item.media_type !== "keyword" && (
+                                <img
+                                  src={
+                                    item.poster_path || item.profile_path
+                                      ? `https://image.tmdb.org/t/p/w92${
+                                          item.poster_path || item.profile_path
+                                        }`
+                                      : "https://placehold.co/92x138?text=No+Image"
+                                  }
+                                  alt={item.title || item.name}
+                                  className="w-12 h-18 object-cover rounded"
+                                />
+                              )}
+                              <span className="text-sm sm:text-base truncate">
+                                {item.title || item.name}
+                              </span>
+                            </Link>
                           ))}
                           {category !== "keyword" && (
                             <Link

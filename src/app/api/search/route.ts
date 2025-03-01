@@ -4,6 +4,7 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const query = searchParams.get("query") || "";
   const mediaType = searchParams.get("media_type") || "multi";
+  console.log(mediaType);
 
   if (!query) {
     return NextResponse.json({ error: "Query is required" }, { status: 400 });
@@ -13,9 +14,9 @@ export async function GET(request: Request) {
     let url: string;
     if (mediaType === "keyword") {
       // Use /discover/movie for keyword search
-      url = `https://api.themoviedb.org/3/discover/movie?api_key=${
+      url = `https://api.themoviedb.org/3/search/keyword?api_key=${
         process.env.TMDB_API_KEY
-      }&with_keywords=${encodeURIComponent(query)}`;
+      }&query=${encodeURIComponent(query)}`;
     } else {
       // Use /search/{endpoint} for other media types
       let endpoint = "multi";
