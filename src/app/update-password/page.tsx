@@ -1,13 +1,22 @@
 // /app/update-password/page.tsx
 "use client";
+import { Suspense } from "react";
+
+export default function UpdatePassword() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <UpdatePasswordComponent />
+    </Suspense>
+  );
+}
+
+// /app/update-password/UpdatePasswordComponent.tsx
+("use client");
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 
-// Force dynamic rendering to skip prerendering
-export const dynamic = "force-dynamic";
-
-export default function UpdatePassword() {
+export function UpdatePasswordComponent() {
   const [newPassword, setNewPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
