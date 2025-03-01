@@ -1,7 +1,7 @@
 "use client";
 
 import LoginForm from "@/components/login/loginform";
-import { createClient } from "@/utils/supabase/client";
+import { supabase } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 // import { toast, ToastContainer } from "react-toastify";
@@ -12,7 +12,6 @@ export default function LoginPage() {
   const router = useRouter();
 
   const login = async (email: string, password: string) => {
-    const supabase = createClient();
     setLoading(true);
     setError("");
 
@@ -30,7 +29,6 @@ export default function LoginPage() {
   };
 
   const signup = async (email: string, password: string) => {
-    const supabase = createClient();
     setLoading(true);
     setError("");
 

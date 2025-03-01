@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useParams } from "next/navigation";
-import { createClient } from "@/utils/supabase/client";
+import { supabase } from "@/utils/supabase/client";
 import Link from "next/link";
 import { FiSend, FiArrowDown } from "react-icons/fi";
 import Image from "next/image";
@@ -40,8 +40,6 @@ const Chat = () => {
   const { id } = useParams<{ id: string }>();
   const chatRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
-
-  const supabase = createClient();
 
   const isRecipientValid = async (recipientId: string): Promise<boolean> => {
     const { data, error } = await supabase

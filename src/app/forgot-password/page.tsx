@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { createClient } from "../../utils/supabase/client";
+import { supabase } from "../../utils/supabase/client";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -8,8 +8,6 @@ export default function ForgotPassword() {
   const [message, setMessage] = useState("");
   const [lastRequestTime, setLastRequestTime] = useState<number | null>(null);
   const [cooldown, setCooldown] = useState(0);
-
-  const supabase = createClient();
 
   // Cooldown timer
   useEffect(() => {

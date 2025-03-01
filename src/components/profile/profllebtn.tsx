@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { createClient } from "@/utils/supabase/client";
+import { supabase } from "@/utils/supabase/client";
 import { sendFollowRequest } from "@/utils/followerAction";
 import Link from "next/link";
 
@@ -20,7 +20,6 @@ export function FollowerBtnClient({
   const [isLoading, setIsLoading] = useState(false);
   const [logedin, setLogedin] = useState(false);
   const [modal, setModal] = useState(false);
-  const supabase = createClient();
 
   useEffect(() => {
     const fetchStatus = async () => {
@@ -165,7 +164,6 @@ export function ShowFollowing({ followingCount, userId }: any) {
   const [modal, setModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [following, setFollowing] = useState([]);
-  const supabase = createClient();
 
   useEffect(() => {
     async function getFollowing() {
@@ -240,7 +238,6 @@ export function ShowFollower({ followerCount, userId }: any) {
   const [modal, setModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [following, setFollowing] = useState([]);
-  const supabase = createClient();
 
   useEffect(() => {
     async function getFollowing() {

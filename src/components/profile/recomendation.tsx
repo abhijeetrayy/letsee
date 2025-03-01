@@ -1,6 +1,6 @@
 // components/RecommendationTile.tsx
 "use client";
-import { createClient } from "@/utils/supabase/client";
+import { supabase } from "@/utils/supabase/client";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
@@ -27,7 +27,6 @@ const RecommendationTile = ({ isOwner, name, id }: any) => {
   const [actionLoading, setActionLoading] = useState<{
     [key: string]: boolean;
   }>({});
-  const supabase = createClient();
 
   // Fetch initial data
   useEffect(() => {

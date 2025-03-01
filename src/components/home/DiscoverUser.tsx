@@ -1,6 +1,6 @@
 // components/DiscoverUsers.tsx
 "use client";
-import { createClient } from "@/utils/supabase/client";
+import { supabase } from "@/utils/supabase/client";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
@@ -22,8 +22,6 @@ function DiscoverUsers() {
 
   useEffect(() => {
     const getUser = async () => {
-      const supabase = createClient();
-
       const { data: Users, error } = await supabase
         .from("users")
         .select(

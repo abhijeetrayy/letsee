@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { createClient } from "@/utils/supabase/client";
+import { supabase } from "@/utils/supabase/client";
 
 interface RealtimeUnreadCountProps {
   userId: string;
@@ -13,7 +13,6 @@ const RealtimeUnreadCount: React.FC<RealtimeUnreadCountProps> = ({
   className,
 }) => {
   const [unreadCount, setUnreadCount] = useState<number>(0);
-  const supabase = createClient();
 
   useEffect(() => {
     const fetchUnreadCount = async () => {

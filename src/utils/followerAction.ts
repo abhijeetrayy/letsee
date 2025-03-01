@@ -1,4 +1,4 @@
-import { createClient } from "@/utils/supabase/client";
+import { supabase } from "@/utils/supabase/client";
 
 /**
  * Sends a follow request from `senderId` to `receiverId`.
@@ -8,8 +8,6 @@ export const sendFollowRequest = async (
   senderId: string,
   receiverId: string
 ) => {
-  const supabase = createClient();
-
   // Check if a request already exists
   const { data: existingRequest, error: checkError } = await supabase
     .from("user_follow_requests")
@@ -48,8 +46,6 @@ export const acceptFollowRequest = async (
   senderId: string,
   receiverId: string
 ) => {
-  const supabase = createClient();
-
   // Add to user_connections
   const { error: connError } = await supabase.from("user_connections").insert({
     follower_id: senderId,
@@ -71,8 +67,6 @@ export const acceptFollowRequest = async (
  * Rejects a follow request by deleting it from `user_follow_requests`.
  */
 export const rejectFollowRequest = async (requestId: number) => {
-  const supabase = createClient();
-
   const { error } = await supabase
     .from("user_follow_requests")
     .delete()

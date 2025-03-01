@@ -1,6 +1,6 @@
 "use client";
 
-import { createClient } from "@/utils/supabase/client";
+import { supabase } from "@/utils/supabase/client";
 import {
   acceptFollowRequest,
   rejectFollowRequest,
@@ -8,7 +8,6 @@ import {
 import { useEffect, useState } from "react";
 
 const NotificationsPage = () => {
-  const supabase = createClient();
   const [requests, setRequests] = useState<any[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);

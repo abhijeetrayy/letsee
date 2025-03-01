@@ -1,11 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { createClient } from "@/utils/supabase/client";
+import { supabase } from "@/utils/supabase/client";
 
 const Visibility: React.FC = () => {
   const [visibility, setVisibility] = useState<string>("public");
-
-  const supabase = createClient();
 
   const handleVisibilityChange = (
     event: React.ChangeEvent<HTMLSelectElement>

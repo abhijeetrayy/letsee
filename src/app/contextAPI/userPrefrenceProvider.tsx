@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import UserPrefrenceContext from "./userPrefrence";
-import { createClient } from "@/utils/supabase/client";
+import { supabase } from "@/utils/supabase/client";
 
 const UserPrefrenceProvider = ({ children }: { children: React.ReactNode }) => {
   const [userPrefrence, setUserPrefrence] = useState({
@@ -15,7 +15,6 @@ const UserPrefrenceProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     async function handler() {
-      const supabase = createClient();
       const { data: userData, error: userError } =
         await supabase.auth.getUser();
       const user = userData?.user;

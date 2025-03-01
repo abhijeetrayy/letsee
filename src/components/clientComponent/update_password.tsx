@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { createClient } from "@/utils/supabase/client";
+import { supabase } from "@/utils/supabase/client";
 
 export const dynamic = "force-dynamic"; // Ensure dynamic rendering
 
@@ -11,7 +11,6 @@ export default function UpdatePasswordComponent() {
   const [message, setMessage] = useState("");
   const router = useRouter();
   const searchParams = useSearchParams();
-  const supabase = createClient();
 
   // Try to get token from query parameters or hash
   const tokenHash =

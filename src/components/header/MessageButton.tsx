@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { createClient } from "@/utils/supabase/client";
+import { supabase } from "@/utils/supabase/client";
 import { LuSend } from "react-icons/lu";
 
 interface MessageButtonProps {
@@ -12,7 +12,6 @@ interface MessageButtonProps {
 
 const MessageButton: React.FC<MessageButtonProps> = ({ userId }) => {
   const [unreadCount, setUnreadCount] = useState<number>(0);
-  const supabase = createClient();
 
   useEffect(() => {
     const fetchUnreadCount = async () => {

@@ -1,11 +1,11 @@
 "use client";
 import React from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/utils/supabase/client"; // Adjust the path as necessary
+import { supabase } from "@/utils/supabase/client"; // Adjust the path as necessary
 
 const SignOut = () => {
   const router = useRouter();
-  const supabase = createClient();
+
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) {

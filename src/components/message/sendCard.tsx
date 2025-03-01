@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
-import { createClient } from "@/utils/supabase/client";
+import { supabase } from "@/utils/supabase/client";
 import { FaCheck } from "react-icons/fa";
 import { MdContentCopy } from "react-icons/md";
 import { FaInstagram, FaTwitter, FaWhatsapp } from "react-icons/fa6";
@@ -59,8 +59,6 @@ const SendMessageModal: React.FC<Props> = ({
   const [sender, setSender] = useState<User | null>(null);
   const [logedin, setLogedin] = useState(false);
   const [copyToggle, setCopyToggle] = useState(false);
-
-  const supabase = createClient();
 
   const link = `https://letsee-dusky.vercel.app/app/${
     media_type ? media_type : data?.media_type

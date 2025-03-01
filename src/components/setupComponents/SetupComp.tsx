@@ -1,12 +1,10 @@
 "use client";
 import React, { useState, useEffect, use } from "react";
-import { createClient } from "@/utils/supabase/client";
+import { supabase } from "@/utils/supabase/client";
 import { Span } from "next/dist/trace";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { CiSearch } from "react-icons/ci";
 import { useRouter } from "next/navigation";
-
-const supabase = createClient();
 
 function Page() {
   const [loading, setLoading] = useState(true);

@@ -1,11 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { createClient } from "@/utils/supabase/client";
+import { supabase } from "@/utils/supabase/client";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-
-const supabase = createClient();
 
 function ProfilePage() {
   const [loading, setLoading] = useState(true);
