@@ -43,10 +43,6 @@ export async function updateSession(request: NextRequest) {
     }
 
     // Redirect unauthenticated users from non-public routes to /login
-    if (!user && !isPublicRoute) {
-      console.log("🔐 Redirecting unauthenticated user to /login");
-      return NextResponse.redirect(new URL("/login", request.url));
-    }
 
     // Redirect authenticated users from public routes (except /update-password with token) to /app
     if (user && isPublicRoute && !isUpdatePasswordPage) {
