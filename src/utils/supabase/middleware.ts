@@ -8,7 +8,6 @@ export async function updateSession(request: NextRequest) {
   const response = NextResponse.next();
 
   try {
-    // Fetch user session
     const { data: userData, error: userError } = await supabase.auth.getUser();
     const user = userData?.user;
 
@@ -19,43 +18,39 @@ export async function updateSession(request: NextRequest) {
       );
     }
 
-    // Define public routes (including /update-password since it’s token-based)
     const publicRoutes = [
       "/login",
       "/signup",
       "/forgot-password",
-      "/update-password", // Add this to public routes
+      "/update-password",
     ];
     const isPublicRoute = publicRoutes.includes(request.nextUrl.pathname);
 
-    // Check if the request is for the update-password page and has a token
     const isUpdatePasswordPage =
       request.nextUrl.pathname === "/update-password";
     const hasToken = request.nextUrl.searchParams.has("token");
 
-    // Allow access to /update-password with a token, regardless of authentication
+    // Allow /update-password with token for unauthenticated users
     if (isUpdatePasswordPage && hasToken) {
       console.log("✅ Allowing access to /update-password with token");
-      return response; // Exit early to prevent further redirects
+      return response; // Early return to prevent redirects
     }
 
-    // Redirect authenticated users from `/` to `/app`
+    // Redirect authenticated users from root to /app
     if (user && request.nextUrl.pathname === "/") {
       console.log("🔄 Redirecting authenticated user to /app");
       return NextResponse.redirect(new URL("/app", request.url));
     }
 
-    // Redirect unauthenticated users away from protected pages
+    // Redirect unauthenticated users from non-public routes to /login
     if (!user && !isPublicRoute) {
       console.log("🔐 Redirecting unauthenticated user to /login");
       return NextResponse.redirect(new URL("/login", request.url));
     }
 
-    // Redirect authenticated users away from auth pages (except /update-password with token)
-    if (user && isPublicRoute && !(isUpdatePasswordPage && hasToken)) {
-      console.log(
-        "🔄 Redirecting authenticated user away from auth pages to /app"
-      );
+    // Redirect authenticated users from public routes (except /update-password with token) to /app
+    if (user && isPublicRoute && !isUpdatePasswordPage) {
+      console.log("🔄 Redirecting authenticated user from auth page to /app");
       return NextResponse.redirect(new URL("/app", request.url));
     }
 
@@ -65,8 +60,3 @@ export async function updateSession(request: NextRequest) {
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }
-
-// Optionally, configure the matcher to apply middleware to specific routes
-export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
-};

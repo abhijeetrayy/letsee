@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 
+export const dynamic = "force-dynamic"; // Ensure dynamic rendering
+
 export default function UpdatePasswordComponent() {
   const [newPassword, setNewPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -11,15 +13,20 @@ export default function UpdatePasswordComponent() {
   const searchParams = useSearchParams();
   const supabase = createClient();
 
-  // Extract token from query parameters or hash fragment
-  const tokenHash =
-    searchParams.get("token") ||
-    new URL(window.location.href).hash.split("access_token=")[1]?.split("&")[0];
+  const tokenHash = searchParams.get("token");
 
   useEffect(() => {
     const verifyToken = async () => {
+      // If no token, check if user is already logged in
       if (!tokenHash) {
-        setMessage("Error: No reset token provided in URL.");
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (user) {
+          setMessage("User logged in. Enter new password to update.");
+        } else {
+          setMessage("Error: No reset token provided and no active session.");
+        }
         return;
       }
 
@@ -28,7 +35,7 @@ export default function UpdatePasswordComponent() {
 
       const { error } = await supabase.auth.verifyOtp({
         token_hash: tokenHash,
-        type: "recovery", // Use "recovery" for password reset
+        type: "recovery",
       });
 
       setLoading(false);
@@ -45,10 +52,6 @@ export default function UpdatePasswordComponent() {
 
   const handleUpdatePassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!tokenHash) {
-      setMessage("Error: No reset token provided.");
-      return;
-    }
 
     setLoading(true);
     setMessage("Updating password...");
@@ -98,14 +101,14 @@ export default function UpdatePasswordComponent() {
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
             required
-            disabled={loading || !tokenHash}
+            disabled={loading}
           />
 
           {message && <p className="text-white">{message}</p>}
           <div className="flex flex-col gap-3 mt-3">
             <button
               className="text-neutral-100 bg-indigo-700 py-2 rounded-md w-full hover:bg-indigo-600"
-              disabled={loading || !tokenHash}
+              disabled={loading}
               type="submit"
             >
               Update Password
