@@ -8,14 +8,6 @@ export async function updateSession(request: NextRequest) {
   const response = NextResponse.next();
 
   try {
-    // Refresh session
-    // const { data, error } = await supabase.auth.refreshSession();
-
-    // if (error) {
-    //   console.warn("⚠️ Error refreshing session:", error.message);
-    //   return response;
-    // }
-
     // Fetch user session
     const { data: userData, error: userError } = await supabase.auth.getUser();
 
@@ -27,15 +19,6 @@ export async function updateSession(request: NextRequest) {
       );
     }
 
-    // if (userError || !user) {
-    //   console.warn(
-    //     "⚠️ No active session:",
-    //     userError?.message || "User not logged in"
-    //   );
-    // } else {
-    //   console.log("✅ Authenticated:", user.email);
-    // }
-
     const publicRoutes = [
       "/login",
       "/signup",
@@ -44,6 +27,16 @@ export async function updateSession(request: NextRequest) {
     ];
     const isPublicRoute = publicRoutes.includes(request.nextUrl.pathname);
 
+    // Check if the request is for the update-password page and has a token
+    const isUpdatePasswordPage =
+      request.nextUrl.pathname === "/update-password";
+    const hasToken = request.nextUrl.searchParams.has("token");
+
+    // Allow access to the update-password page if it has a token
+    if (isUpdatePasswordPage && hasToken) {
+      return response;
+    }
+
     // Redirect authenticated users from `/` to `/app`
     if (request.nextUrl.pathname === "/") {
       console.log("🔄 Redirecting authenticated user to /app");
@@ -51,10 +44,10 @@ export async function updateSession(request: NextRequest) {
     }
 
     // Redirect unauthenticated users away from protected pages
-    // if (!user && !isPublicRoute) {
-    //   console.log("🔐 Redirecting unauthenticated user to /login");
-    //   return NextResponse.redirect(new URL("/login", request.url));
-    // }
+    if (!user && !isPublicRoute) {
+      console.log("🔐 Redirecting unauthenticated user to /login");
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
 
     // Redirect authenticated users away from auth pages
     if (user && isPublicRoute) {
