@@ -12,15 +12,6 @@ export default function UpdatePassword() {
 
   const supabase = createClient();
 
-  useEffect(() => {
-    // Check if the user is authenticated (i.e., they clicked the reset link)
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) {
-        router.push("/login"); // Redirect to login if not authenticated
-      }
-    });
-  }, [router, supabase.auth]);
-
   const handleUpdatePassword = async (e: any) => {
     e.preventDefault();
     setLoading(true);
