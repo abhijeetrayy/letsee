@@ -1,19 +1,56 @@
-"use client"; // Mark as a Client Component
+"use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 
 export default function UpdatePassword() {
   const [newPassword, setNewPassword] = useState("");
   const [loading, setLoading] = useState(false);
-
   const [message, setMessage] = useState("");
   const router = useRouter();
-
+  const searchParams = useSearchParams();
   const supabase = createClient();
 
-  const handleUpdatePassword = async (e: any) => {
+  // Extract token_hash from URL
+  const tokenHash = searchParams.get("token");
+
+  // Verify token_hash and establish session on mount
+  useEffect(() => {
+    const verifyToken = async () => {
+      if (!tokenHash) {
+        setMessage("Error: No reset token provided in URL.");
+        return;
+      }
+
+      setLoading(true);
+      setMessage("Verifying reset token...");
+
+      // Verify the token_hash for password recovery
+      const { error } = await supabase.auth.verifyOtp({
+        token_hash: tokenHash, // Use token_hash instead of token
+        type: "recovery",
+      });
+
+      setLoading(false);
+
+      if (error) {
+        setMessage(`Error verifying token: ${error.message}`);
+      } else {
+        setMessage("Token verified. Enter your new password below.");
+      }
+    };
+
+    verifyToken();
+  }, [tokenHash]);
+
+  // Handle password update
+  const handleUpdatePassword = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!tokenHash) {
+      setMessage("Error: No reset token provided.");
+      return;
+    }
+
     setLoading(true);
     setMessage("Updating password...");
 
@@ -44,13 +81,13 @@ export default function UpdatePassword() {
           }
         >
           <h1 className="text-7xl font-extrabold text-neutral-100">
-            Let&apos;s See
+            Let's See
           </h1>
           <p>Social media for cinema.</p>
         </div>
         <form
           onSubmit={handleUpdatePassword}
-          className={"flex flex-col max-w-sm w-full m-auto gap-2"}
+          className="flex flex-col max-w-sm w-full m-auto gap-2"
         >
           <label className="text-neutral-100 pl-2" htmlFor="password">
             Update password
@@ -62,13 +99,14 @@ export default function UpdatePassword() {
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
             required
+            disabled={loading || !tokenHash}
           />
 
           {message && <p className="text-white">{message}</p>}
           <div className="flex flex-col gap-3 mt-3">
             <button
               className="text-neutral-100 bg-indigo-700 py-2 rounded-md w-full hover:bg-indigo-600"
-              disabled={loading}
+              disabled={loading || !tokenHash}
               type="submit"
             >
               Update Password
