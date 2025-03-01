@@ -61,7 +61,6 @@ export async function favorite(
   }
 
   const userId = data?.user.id;
-  console.log(userId);
 
   const { error: insertError } = await supabase.from("favorite_items").insert({
     user_id: userId,
@@ -91,7 +90,6 @@ export async function watchLater(
   }
 
   const userId = data?.user.id;
-  console.log(userId);
 
   const { error: insertError } = await supabase.from("user_watchlist").insert({
     user_id: userId,

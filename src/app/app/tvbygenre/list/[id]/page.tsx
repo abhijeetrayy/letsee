@@ -38,7 +38,7 @@ function Page() {
         }
 
         const data = await response.json();
-        console.log(data);
+
         setSResults(data);
       } catch (error) {
         console.error("Error fetching data:", error);

@@ -34,12 +34,10 @@ const WatchedMoviesList = ({ userId }: { userId: string }) => {
   const [loading, setLoading] = useState(false);
   const [genreFilter, setGenreFilter] = useState<string | null>(null);
 
-  console.log("Rendering WatchedMoviesList with userId:", userId);
-
   const fetchMovies = useCallback(
     async (page: number, genre: string | null = null) => {
       if (loading) return; // Prevent multiple simultaneous fetches
-      console.log("Fetching movies for page:", page, "with genre:", genre);
+
       setLoading(true);
 
       try {
@@ -70,7 +68,6 @@ const WatchedMoviesList = ({ userId }: { userId: string }) => {
   );
 
   useEffect(() => {
-    console.log("useEffect triggered for currentPage:", currentPage);
     fetchMovies(currentPage, genreFilter);
   }, [currentPage, genreFilter]); // Fetch movies when `currentPage` or `genreFilter` changes
 
@@ -78,7 +75,6 @@ const WatchedMoviesList = ({ userId }: { userId: string }) => {
 
   const handlePageChange = useCallback(() => {
     if (currentPage < totalPages && !loading) {
-      console.log("Loading next page:", currentPage + 1);
       setCurrentPage((prev) => prev + 1);
     }
   }, [currentPage, totalPages, loading]);

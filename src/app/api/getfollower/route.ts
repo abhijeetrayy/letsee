@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     .from("user_connections")
     .select("follower_id, users!fk_follower(username)")
     .eq("followed_id", userId);
-  console.log(connection, "from router follower");
+
   if (connectionError) {
     console.error("Error fetching connections:", connectionError);
     return NextResponse.json(

@@ -44,7 +44,6 @@ const RealtimeUnreadCount: React.FC<RealtimeUnreadCountProps> = ({
           filter: `recipient_id=eq.${userId}`,
         },
         (payload: any) => {
-          console.log("New message received:", payload);
           setUnreadCount((prevCount) => prevCount + 1);
         }
       )
@@ -57,7 +56,6 @@ const RealtimeUnreadCount: React.FC<RealtimeUnreadCountProps> = ({
           filter: `recipient_id=eq.${userId},is_read=eq.false`,
         },
         (payload: any) => {
-          console.log("Message updated:", payload);
           fetchUnreadCount(); // Re-fetch count when a message is updated
         }
       )

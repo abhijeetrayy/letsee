@@ -13,7 +13,6 @@ async function UserConnections({ userId }: any) {
     .from("user_connections")
     .select("*", { count: "exact", head: true })
     .eq("followed_id", userId);
-  console.log(followedby, following);
 
   return (
     <div className="flex flex-row justify-around h-20 w-full gap-0  z-50 ">

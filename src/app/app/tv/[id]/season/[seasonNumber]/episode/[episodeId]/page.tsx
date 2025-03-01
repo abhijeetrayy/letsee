@@ -94,8 +94,6 @@ const EpisodePage = async ({ params }: PageProps) => {
   const seasonNumber = (await params).seasonNumber;
   const episodeId = (await params).episodeId;
 
-  console.log("Resolved Params:", { id, seasonNumber, episodeId });
-
   let data;
   try {
     data = await fetchEpisodeData(id, seasonNumber, episodeId);

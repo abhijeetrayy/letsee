@@ -42,7 +42,7 @@ async function profileContent({ profileId }: any) {
     favorates,
     watchlist,
   }: any = await getUserData(profileId);
-  console.log(watchedCount, favoriteCount, watchlistCount);
+
   return (
     <div>
       {favoriteCount > 0 && (

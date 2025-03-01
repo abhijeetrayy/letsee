@@ -90,7 +90,7 @@ function SearchBar() {
             name: kw.name,
           })
         );
-        console.log(keywordData);
+
         setResults({ movie, tv, person, keyword });
       } catch (error) {
         console.error("Error fetching search results:", error);

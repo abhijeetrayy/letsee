@@ -16,7 +16,7 @@ const Visibility: React.FC = () => {
   useEffect(() => {
     const fetchVisibility = async () => {
       const { data: user, error }: any = await supabase.auth.getUser();
-      console.log(user);
+
       if (error) {
         console.error("Error fetching user:", error.message);
         return;
@@ -30,7 +30,7 @@ const Visibility: React.FC = () => {
         console.error("Error fetching visibility:", visibilityError.message);
         return;
       }
-      console.log(data);
+
       setVisibility(data?.visibility || "public");
     };
     fetchVisibility();

@@ -95,7 +95,7 @@ export async function generateMetadata({
 const ShowDetails = async ({ params }: PageProps) => {
   const { id } = await params;
   const show = await getShowDetails(id);
-  console.log(show);
+
   const ExternalIDs = await getExternalIds(id);
   const { cast, crew } = await getShowCredit(id);
   const { results: videos } = await getVideos(id);

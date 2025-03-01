@@ -14,7 +14,7 @@ function imdbRating({ id }: any) {
           `https://www.omdbapi.com/?i=${id}&apikey=${process.env.NEXT_PUBLIC_OMDB_API_KEY}`
         );
         const res = await response.json();
-        console.log(res);
+
         if (res.Response == "False") {
           setImdbRating("N/A");
         } else setImdbRating(res.imdbRating);

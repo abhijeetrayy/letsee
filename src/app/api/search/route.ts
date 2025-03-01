@@ -4,7 +4,6 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const query = searchParams.get("query") || "";
   const mediaType = searchParams.get("media_type") || "multi";
-  console.log(mediaType);
 
   if (!query) {
     return NextResponse.json({ error: "Query is required" }, { status: 400 });

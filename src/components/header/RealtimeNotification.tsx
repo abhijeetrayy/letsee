@@ -40,7 +40,6 @@ const RealtimeUnreadCount: React.FC<RealtimeUnreadCountProps> = ({
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "user_follow_requests" },
         (payload) => {
-          console.log("New follow request received:", payload);
           setUnreadCount((prevCount) => prevCount + 1);
         }
       )

@@ -14,7 +14,7 @@ function genreConvert({ genreids }: any) {
   const idsName = genreids?.map(
     (id: number) => genreMap.get(id) || "Unknown Genre"
   );
-  console.log(idsName);
+
   return (
     <div className="inline-block mb-1">
       {idsName?.map((item: any) => (

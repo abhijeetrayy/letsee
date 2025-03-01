@@ -18,10 +18,6 @@ export async function POST(req: NextRequest) {
 
   // Parse the request body
   const { itemId, name, mediaType, imgUrl, adult, genres } = await req.json();
-  console.log(
-    { itemId, name, mediaType, imgUrl, adult, genres },
-    "Request Body"
-  );
 
   try {
     // Check if the item exists in the watchlist

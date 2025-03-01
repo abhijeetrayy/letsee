@@ -57,7 +57,6 @@ async function getTvGenre() {
     { next: { revalidate: 86400 } }
   );
   if (!tvGenresResponse.ok) {
-    console.log(tvGenresResponse);
     throw new Error("Failed to fetch TV genres data");
   }
   const tvGenres = await tvGenresResponse.json();

@@ -24,9 +24,6 @@ const CleanWatchlist = () => {
 
       for (const user of users) {
         const userId = user.id;
-        console.log(
-          `Cleaning watchlist for user: ${user.username} (${userId})`
-        );
 
         // Fetch all watchlist items of the user
         const { data: watchlist, error: watchlistError } = await supabase
@@ -34,7 +31,6 @@ const CleanWatchlist = () => {
           .select("item_id")
           .eq("user_id", userId);
         if (!watchlist || watchlist.length === 0) {
-          console.log(`No watchlist items found for user: ${user.username}`);
           continue;
         }
         if (watchlistError) throw watchlistError;
