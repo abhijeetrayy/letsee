@@ -11,44 +11,8 @@ export default function UpdatePasswordComponent() {
   const searchParams = useSearchParams();
   const supabase = createClient();
 
-  // Extract token from query parameters or hash fragment
-  const tokenHash =
-    searchParams.get("token") ||
-    new URL(window.location.href).hash.split("access_token=")[1]?.split("&")[0];
-
-  useEffect(() => {
-    const verifyToken = async () => {
-      if (!tokenHash) {
-        setMessage("Error: No reset token provided in URL.");
-        return;
-      }
-
-      setLoading(true);
-      setMessage("Verifying reset token...");
-
-      const { error } = await supabase.auth.verifyOtp({
-        token_hash: tokenHash,
-        type: "recovery", // Use "recovery" for password reset
-      });
-
-      setLoading(false);
-
-      if (error) {
-        setMessage(`Error verifying token: ${error.message}`);
-      } else {
-        setMessage("Token verified. Enter your new password below.");
-      }
-    };
-
-    verifyToken();
-  }, [tokenHash]);
-
   const handleUpdatePassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!tokenHash) {
-      setMessage("Error: No reset token provided.");
-      return;
-    }
 
     setLoading(true);
     setMessage("Updating password...");
@@ -98,14 +62,14 @@ export default function UpdatePasswordComponent() {
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
             required
-            disabled={loading || !tokenHash}
+            disabled={loading}
           />
 
           {message && <p className="text-white">{message}</p>}
           <div className="flex flex-col gap-3 mt-3">
             <button
               className="text-neutral-100 bg-indigo-700 py-2 rounded-md w-full hover:bg-indigo-600"
-              disabled={loading || !tokenHash}
+              disabled={loading}
               type="submit"
             >
               Update Password
