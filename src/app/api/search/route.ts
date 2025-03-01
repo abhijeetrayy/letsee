@@ -1,21 +1,28 @@
-// pages/api/search/route.ts
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { query, page, media_type, include_adult, year, region, language } =
-    body;
+  const {
+    query,
+    page,
+    media_type,
+    include_adult,
+    year,
+    region,
+    language,
+    keyword,
+  } = body;
 
   if (!query) {
     return NextResponse.json({ error: "Query is required" }, { status: 400 });
   }
 
   try {
-    // Dynamically select endpoint based on media_type
     let endpoint = "multi";
     if (media_type === "movie") endpoint = "movie";
     else if (media_type === "tv") endpoint = "tv";
     else if (media_type === "person") endpoint = "person";
+    else if (media_type === "keyword") endpoint = "keyword";
 
     const url = new URL(`https://api.themoviedb.org/3/search/${endpoint}`);
     url.searchParams.append("api_key", process.env.TMDB_API_KEY || "");

@@ -63,23 +63,23 @@ function MovieCast({
                   .trim()
                   .replace(/[^a-zA-Z0-9]/g, "-")
                   .replace(/-+/g, "-")}`}
-                className="flex-shrink-0 w-24 md:w-36 snap-start flex flex-col items-center hover:opacity-80 transition-opacity duration-200"
+                className="flex-shrink-0 snap-start flex flex-col items-center hover:opacity-80 transition-opacity duration-200"
               >
                 {item.profile_path ? (
                   <img
                     src={`https://image.tmdb.org/t/p/w185${item.profile_path}`}
                     alt={item.name}
-                    className="rounded-md object-cover w-24 h-32 md:w-36 md:h-54"
+                    className="rounded-md object-cover w-24 h-32 md:w-36 md:h-52"
                   />
                 ) : (
-                  <div className="w-full h-full bg-neutral-600 rounded-md flex items-center justify-center">
+                  <div className="w-24 h-32 md:w-36 md:h-52 bg-neutral-600 rounded-md flex items-center justify-center">
                     <span className="text-xs text-neutral-400">No Image</span>
                   </div>
                 )}
-                <p className="text-sm text-neutral-200 mt-2 text-center truncate w-full">
+                <p className="text-sm  w-24  md:w-36  text-neutral-200 mt-2 text-center break-words ">
                   {item.name}
                 </p>
-                <p className="text-xs text-neutral-400 text-center truncate w-full">
+                <p className="text-xs  w-24  md:w-36  text-neutral-400 text-center break-words ">
                   {item.character}
                 </p>
               </Link>
@@ -87,7 +87,7 @@ function MovieCast({
             <div className="flex-shrink-0 w-24 md:w-36 snap-start flex flex-col items-center">
               <Link
                 href={`/app/${type === "movie" ? "movie" : "tv"}/${id}/cast`}
-                className="flex justify-center items-center w-full h-32 md:h-56 border-2 border-neutral-500 hover:border-indigo-600 hover:bg-neutral-800 rounded-md text-neutral-200 text-sm transition-colors duration-200"
+                className="flex justify-center items-center w-full h-32 md:h-52 border-2 border-neutral-500 hover:border-indigo-600 hover:bg-neutral-800 rounded-md text-neutral-200 text-sm transition-colors duration-200"
               >
                 More...
               </Link>

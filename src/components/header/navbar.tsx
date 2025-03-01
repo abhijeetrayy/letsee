@@ -44,10 +44,10 @@ async function Navbar() {
             <FcFilmReel />
           </Link>
 
+          <SearchBar />
           <div className="hidden md:flex flex-row gap-3 items-center">
-            <SearchBar />
             <Link
-              className="flex items-center text-gray-100 justify-center px-3 py-1 rounded-md bg-blue-600 hover:bg-blue-500 relative"
+              className="flex  text-nowrap items-center text-gray-100 justify-center px-3 py-1 rounded-md bg-blue-600 hover:bg-blue-500 relative"
               href="/login"
             >
               Log in
@@ -102,8 +102,8 @@ async function Navbar() {
           <FaUser />
         </Link>
 
+        <SearchBar />
         <div className="hidden md:flex flex-row gap-3 items-center">
-          <SearchBar />
           <DropdownMenu user={userData} />
         </div>
         <BurgerMenu userID={userData?.username} />

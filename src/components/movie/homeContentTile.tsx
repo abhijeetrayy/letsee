@@ -107,70 +107,76 @@ export default function HomeContentTile({ data, type }: any) {
           className="flex flex-row gap-4 py-3 overflow-x-auto no-scrollbar"
         >
           {results.length > 0 ? (
-            results.map((item: any) => (
-              <div
-                key={item.id}
-                className="card-item bg-neutral-700 rounded-md overflow-hidden flex-shrink-0 flex flex-col justify-between h-auto group relative"
-                style={{ width: `${itemWidth}px` }} // Dynamically set width
-              >
-                <div className="absolute top-0 left-0">
-                  <p className="px-1 py-1 bg-neutral-950 text-white rounded-br-md text-xs sm:text-sm">
-                    {type == "mix" ? item.media_type : type}
-                  </p>
-                </div>
-                <Link
-                  className="w-full h-full"
-                  href={`/app/${type == "mix" ? item.media_type : type}/${
-                    item.id
-                  }-${(item?.name || item?.title)
-                    .trim()
-                    .replace(/[^a-zA-Z0-9]/g, "-")
-                    .replace(/-+/g, "-")}`}
-                >
-                  <img
-                    className="w-full h-full object-cover"
-                    src={
-                      item.poster_path
-                        ? `https://image.tmdb.org/t/p/w342${item.poster_path}`
-                        : "/no-photo.webp"
-                    }
-                    alt={item.name || item.title}
-                  />
-                </Link>
-                <div className="lg:absolute lg:bottom-0 w-full lg:opacity-0 lg:group-hover:opacity-100 bg-neutral-900 transition-opacity duration-300">
-                  <ThreePrefrenceBtn
-                    genres={item.genre_ids
-                      .map((id: number) => {
-                        const genre = GenreList.genres.find(
-                          (g: any) => g.id === id
-                        );
-                        return genre ? genre.name : null;
-                      })
-                      .filter(Boolean)}
-                    cardId={item.id}
-                    cardType={type == "mix" ? item.media_type : type}
-                    cardName={item.name || item.title}
-                    cardAdult={item.adult}
-                    cardImg={item.poster_path}
-                  />
-                  <div className="py-2 border-t border-neutral-950 bg-neutral-800 hover:bg-neutral-700">
-                    <button
-                      className="w-full flex justify-center text-lg text-center text-neutral-100"
-                      onClick={() => handleCardTransfer(item)}
+            results.map((item: any) => {
+              if (item.media_type !== "person") {
+                return (
+                  <div
+                    key={item.id}
+                    className="card-item bg-neutral-700 rounded-md overflow-hidden flex-shrink-0 flex flex-col justify-between h-auto group relative"
+                    style={{ width: `${itemWidth}px` }} // Dynamically set width
+                  >
+                    <div className="absolute top-0 left-0">
+                      <p className="px-1 py-1 bg-neutral-950 text-white rounded-br-md text-xs sm:text-sm">
+                        {type == "mix" ? item.media_type : type}
+                      </p>
+                    </div>
+                    <Link
+                      className="w-full h-full"
+                      href={`/app/${type == "mix" ? item.media_type : type}/${
+                        item.id
+                      }-${(item?.name || item?.title)
+                        .trim()
+                        .replace(/[^a-zA-Z0-9]/g, "-")
+                        .replace(/-+/g, "-")}`}
                     >
-                      <LuSend />
-                    </button>
+                      <img
+                        className="w-full h-full object-cover"
+                        src={
+                          item.poster_path
+                            ? `https://image.tmdb.org/t/p/w342${item.poster_path}`
+                            : "/no-photo.webp"
+                        }
+                        alt={item.name || item.title}
+                      />
+                    </Link>
+                    <div className="lg:absolute lg:bottom-0 w-full lg:opacity-0 lg:group-hover:opacity-100 bg-neutral-900 transition-opacity duration-300">
+                      <ThreePrefrenceBtn
+                        genres={item.genre_ids
+                          .map((id: number) => {
+                            const genre = GenreList.genres.find(
+                              (g: any) => g.id === id
+                            );
+                            return genre ? genre.name : null;
+                          })
+                          .filter(Boolean)}
+                        cardId={item.id}
+                        cardType={type == "mix" ? item.media_type : type}
+                        cardName={item.name || item.title}
+                        cardAdult={item.adult}
+                        cardImg={item.poster_path}
+                      />
+                      <div className="py-2 border-t border-neutral-950 bg-neutral-800 hover:bg-neutral-700">
+                        <button
+                          className="w-full flex justify-center text-lg text-center text-neutral-100"
+                          onClick={() => handleCardTransfer(item)}
+                        >
+                          <LuSend />
+                        </button>
+                      </div>
+                      <div className="min-h-14 flex flex-col justify-center px-3 pb-1 w-full bg-indigo-700 text-gray-100 text-sm sm:text-base">
+                        <p className="line-clamp-2">
+                          {(item.name || item.title).length > 40
+                            ? `${(item.name || item.title).slice(0, 40)}...`
+                            : item.name || item.title}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <div className="min-h-14 flex flex-col justify-center px-3 pb-1 w-full bg-indigo-700 text-gray-100 text-sm sm:text-base">
-                    <p className="line-clamp-2">
-                      {(item.name || item.title).length > 40
-                        ? `${(item.name || item.title).slice(0, 40)}...`
-                        : item.name || item.title}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))
+                );
+              } else {
+                return null;
+              }
+            })
           ) : (
             <p className="text-neutral-400 text-center w-full">
               No trending movies available

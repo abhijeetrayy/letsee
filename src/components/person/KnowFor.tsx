@@ -30,7 +30,7 @@ const ScrollableCastList: React.FC<ScrollableCastListProps> = ({
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [cardData, setCardData] = useState<any>(null);
 
@@ -39,15 +39,14 @@ const ScrollableCastList: React.FC<ScrollableCastListProps> = ({
     if (element) {
       const { scrollLeft, scrollWidth, clientWidth } = element;
       setCanScrollLeft(scrollLeft > 0);
-      setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 10); // Small buffer for precision
+      setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 10); // Small buffer
     }
   };
 
   const scrollLeft = () => {
     const element = scrollRef.current;
     if (element) {
-      const itemWidth =
-        element.querySelector(".image-item")?.clientWidth || 300;
+      const itemWidth = element.querySelector(".cast-item")?.clientWidth || 128;
       element.scrollBy({ left: -itemWidth * 2, behavior: "smooth" });
     }
   };
@@ -55,25 +54,23 @@ const ScrollableCastList: React.FC<ScrollableCastListProps> = ({
   const scrollRight = () => {
     const element = scrollRef.current;
     if (element) {
-      const itemWidth =
-        element.querySelector(".image-item")?.clientWidth || 300;
+      const itemWidth = element.querySelector(".cast-item")?.clientWidth || 128;
       element.scrollBy({ left: itemWidth * 2, behavior: "smooth" });
     }
   };
+
   useEffect(() => {
     handleScroll(); // Initialize scroll state
-
     const element = scrollRef.current;
     if (element) {
       element.addEventListener("scroll", handleScroll);
-      // Check initial scroll state after content loads
-      const timer = setTimeout(() => handleScroll(), 100); // Delay to ensure rendering
+      const timer = setTimeout(() => handleScroll(), 100); // Delay for render
       return () => {
         element.removeEventListener("scroll", handleScroll);
         clearTimeout(timer);
       };
     }
-  }, [castData]); // Re-run if castData changes
+  }, [castData]);
 
   const handleCardTransfer = (data: any) => {
     setCardData(data);
@@ -91,10 +88,10 @@ const ScrollableCastList: React.FC<ScrollableCastListProps> = ({
       <div className="relative">
         <div
           ref={scrollRef}
-          className="w-full flex flex-row gap-5 overflow-x-scroll no-scrollbar snap-x snap-mandatory"
+          className="w-full flex flex-row gap-4 overflow-x-scroll no-scrollbar snap-x snap-mandatory"
         >
           {castData
-            ?.filter((data) => data && data.adult !== true)
+            ?.filter((data) => data && !data.adult)
             .slice(0, 17)
             .map((data) => {
               if (!data) return null;
@@ -120,11 +117,11 @@ const ScrollableCastList: React.FC<ScrollableCastListProps> = ({
               return (
                 <div
                   key={id}
-                  className="relative group w-full h-auto flex flex-col bg-black text-gray-300"
+                  className="cast-item relative group flex-shrink-0 w-32 sm:w-40 md:w-52 flex flex-col bg-black text-gray-300" // Responsive width
                 >
                   <div className="absolute top-0 left-0 z-10 lg:opacity-0 lg:group-hover:opacity-100">
                     <p
-                      className={`p-1 text-white rounded-br-md text-sm ${
+                      className={`p-1 text-white rounded-br-md text-xs sm:text-sm ${
                         adult ? "bg-red-600" : "bg-black"
                       }`}
                     >
@@ -133,7 +130,7 @@ const ScrollableCastList: React.FC<ScrollableCastListProps> = ({
                   </div>
                   <div className="absolute top-0 right-0 z-10">
                     {year > 0 && (
-                      <p className="p-1 bg-indigo-600 text-white rounded-tr-sm rounded-bl-md text-sm">
+                      <p className="p-1 bg-indigo-600 text-white rounded-tr-sm rounded-bl-md text-xs sm:text-sm">
                         {year}
                       </p>
                     )}
@@ -143,10 +140,10 @@ const ScrollableCastList: React.FC<ScrollableCastListProps> = ({
                       .trim()
                       .replace(/[^a-zA-Z0-9]/g, "-")
                       .replace(/-+/g, "-")}`}
-                    className="h-full w-full"
+                    className="flex"
                   >
                     <img
-                      className="min-w-32 md:min-w-52 min-h-full object-cover"
+                      className="w-full h-48 sm:h-60 md:h-72 object-cover" // Responsive height
                       src={
                         displayImage
                           ? `https://image.tmdb.org/t/p/w342${displayImage}`
@@ -161,7 +158,7 @@ const ScrollableCastList: React.FC<ScrollableCastListProps> = ({
                   <div className="lg:absolute bottom-0 w-full bg-neutral-800 lg:opacity-0 lg:group-hover:opacity-100 z-10">
                     <ThreePrefrenceBtn
                       genres={genre_ids
-                        .map((id: number) => {
+                        ?.map((id: number) => {
                           const genre = GenreList.genres.find(
                             (g: any) => g.id === id
                           );
@@ -176,7 +173,7 @@ const ScrollableCastList: React.FC<ScrollableCastListProps> = ({
                     />
                     <div className="py-2 border-t border-neutral-950 hover:bg-neutral-700">
                       <button
-                        className="w-full flex justify-center text-lg text-center text-gray-300 hover:text-white"
+                        className="w-full flex justify-center text-lg text-gray-300 hover:text-white"
                         onClick={() => handleCardTransfer(data)}
                       >
                         <LuSend />
@@ -184,20 +181,16 @@ const ScrollableCastList: React.FC<ScrollableCastListProps> = ({
                     </div>
                     <div
                       title={displayTitle}
-                      className="w-full flex flex-col gap-2 px-4 bg-indigo-700 text-gray-200"
+                      className="w-full flex flex-col gap-2 px-4 py-2 bg-indigo-700 text-gray-200"
                     >
                       <Link
                         href={`/app/${media_type}/${id}-${displayTitle
                           .trim()
                           .replace(/[^a-zA-Z0-9]/g, "-")
                           .replace(/-+/g, "-")}`}
-                        className="mb-1 hover:underline"
+                        className="hover:underline truncate text-sm sm:text-base"
                       >
-                        <span>
-                          {displayTitle.length > 20
-                            ? `${displayTitle.slice(0, 20)}...`
-                            : displayTitle}
-                        </span>
+                        {displayTitle}
                       </Link>
                     </div>
                   </div>
@@ -205,15 +198,17 @@ const ScrollableCastList: React.FC<ScrollableCastListProps> = ({
               );
             })}
         </div>
+
+        {/* Left Fade Overlay */}
         <div
-          className={`hidden md:block absolute top-0 left-0 h-full w-12 sm:w-20 bg-gradient-to-r from-black to-transparent pointer-events-none transition-opacity duration-300 ${
+          className={`hidden md:block absolute top-0 left-0 h-full w-12 sm:w-16 bg-gradient-to-r from-black to-transparent pointer-events-none transition-opacity duration-300 ${
             canScrollLeft ? "opacity-80" : "opacity-0"
           }`}
         />
 
         {/* Right Fade Overlay */}
         <div
-          className={`hidden md:block absolute top-0 right-0 h-full w-12 sm:w-20 bg-gradient-to-l from-black to-transparent pointer-events-none transition-opacity duration-300 ${
+          className={`hidden md:block absolute top-0 right-0 h-full w-12 sm:w-16 bg-gradient-to-l from-black to-transparent pointer-events-none transition-opacity duration-300 ${
             canScrollRight ? "opacity-80" : "opacity-0"
           }`}
         />
@@ -224,7 +219,7 @@ const ScrollableCastList: React.FC<ScrollableCastListProps> = ({
             onClick={scrollLeft}
             className="hidden md:block absolute left-2 top-1/2 transform -translate-y-1/2 bg-neutral-800 text-neutral-100 p-2 sm:p-3 rounded-full hover:bg-neutral-700 transition-colors duration-200 z-10 shadow-md"
           >
-            <FaChevronLeft size={20} className="" />
+            <FaChevronLeft size={20} />
           </button>
         )}
         {canScrollRight && (
@@ -232,7 +227,7 @@ const ScrollableCastList: React.FC<ScrollableCastListProps> = ({
             onClick={scrollRight}
             className="hidden md:block absolute right-2 top-1/2 transform -translate-y-1/2 bg-neutral-800 text-neutral-100 p-2 sm:p-3 rounded-full hover:bg-neutral-700 transition-colors duration-200 z-10 shadow-md"
           >
-            <FaChevronRight size={20} className="" />
+            <FaChevronRight size={20} />
           </button>
         )}
       </div>

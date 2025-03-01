@@ -106,6 +106,7 @@ export default async function Home() {
   const genre = await getData();
   const { tvGenres } = await getTvGenre();
   const data = await getTrending();
+
   const TrendingTv = await getTrendingTV();
   const RomanceData = await getRomance();
   const ActionData = await getAction();
