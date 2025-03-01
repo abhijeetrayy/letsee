@@ -11,7 +11,10 @@ export default function UpdatePasswordComponent() {
   const searchParams = useSearchParams();
   const supabase = createClient();
 
-  const tokenHash = searchParams.get("access_token");
+  // Extract token from query parameters or hash fragment
+  const tokenHash =
+    searchParams.get("token") ||
+    new URL(window.location.href).hash.split("access_token=")[1]?.split("&")[0];
 
   useEffect(() => {
     const verifyToken = async () => {
@@ -25,7 +28,7 @@ export default function UpdatePasswordComponent() {
 
       const { error } = await supabase.auth.verifyOtp({
         token_hash: tokenHash,
-        type: "email",
+        type: "recovery", // Use "recovery" for password reset
       });
 
       setLoading(false);
