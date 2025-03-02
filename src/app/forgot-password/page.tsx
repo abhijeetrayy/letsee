@@ -101,13 +101,13 @@ export default function ForgotPassword() {
               Send Reset Link {cooldown > 0 ? `(${cooldown}s)` : ""}
             </button>
           </div>
+          <p className="flex flex-row gap-2 m-auto w-full text-white">
+            <span>back to login</span>{" "}
+            <Link className="underline" href={"/login"}>
+              click
+            </Link>
+          </p>
         </form>
-        <div className="flex flex-row gap-2">
-          <p>back to login</p>{" "}
-          <Link className="underline" href={"/login"}>
-            click
-          </Link>
-        </div>
       </div>
     </div>
   );
