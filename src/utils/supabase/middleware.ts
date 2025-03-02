@@ -38,7 +38,10 @@ export async function updateSession(request: NextRequest) {
   }
 
   // Redirect unauthenticated users away from protected pages
-
+  if (!user && request.nextUrl.pathname === "/") {
+    console.log("🔄 Redirecting authenticated user to /app");
+    return NextResponse.redirect(new URL("/app", request.url));
+  }
   // Redirect authenticated users away from auth pages
   if (user && isPublicRoute && !isUpdatePasswordPage) {
     console.log("🔄 Redirecting authenticated user from auth page to /app");
