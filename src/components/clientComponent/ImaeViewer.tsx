@@ -126,12 +126,12 @@ const ImagesSection: React.FC<ImagesSectionProps> = ({
               {displayImages.map((item: Image, index: number) => (
                 <div
                   key={index}
-                  className="card-item image-item   rounded-lg overflow-hidden flex-shrink-0 group cursor-pointer"
+                  className="card-item image-item  h-auto rounded-lg overflow-hidden flex-shrink-0 group cursor-pointer"
                   onClick={() => openModal(item)}
-                  style={{ width: `${itemWidth}px`, height: `${itemWidth}px` }}
+                  style={{ width: `${itemWidth}px` }}
                 >
                   <img
-                    className="w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-60"
+                    className="w-full h-full aspect-video object-cover transition-opacity duration-300 group-hover:opacity-60"
                     src={
                       movie.adult
                         ? "/pixeled.webp"

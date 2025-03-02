@@ -54,7 +54,7 @@ export default function HomeContentTile({ data, type }: any) {
       const element = scrollRef.current;
       if (element) {
         const containerWidth = element.clientWidth;
-        const baseItemWidth = 200; // Base width for each item
+        const baseItemWidth = 160; // Base width for each item
         const gap = 16; // Gap between items (adjust as needed)
         const peekWidth = containerWidth * 0.15; // 15% of container width for peek
 
@@ -94,7 +94,7 @@ export default function HomeContentTile({ data, type }: any) {
   const results = data?.results || [];
 
   return (
-    <div className="w-full md:px-4 mb-5">
+    <div className="w-full md:px-4 md:mb-5">
       <SendMessageModal
         media_type={type !== "mix" ? type : cardData?.media_type}
         data={cardData}
@@ -112,7 +112,7 @@ export default function HomeContentTile({ data, type }: any) {
                 return (
                   <div
                     key={item.id}
-                    className="card-item bg-neutral-700 rounded-md overflow-hidden flex-shrink-0 flex flex-col justify-between h-auto group relative"
+                    className="card-item bg-neutral-700 rounded-md overflow-hidden h-auto flex-shrink-0 flex flex-col justify-between group relative"
                     style={{ width: `${itemWidth}px` }} // Dynamically set width
                   >
                     <div className="absolute top-0 left-0">
@@ -163,13 +163,21 @@ export default function HomeContentTile({ data, type }: any) {
                           <LuSend />
                         </button>
                       </div>
-                      <div className="min-h-14 flex flex-col justify-center px-3 pb-1 w-full bg-indigo-700 text-gray-100 text-sm sm:text-base">
+                      <Link
+                        href={`/app/${type == "mix" ? item.media_type : type}/${
+                          item.id
+                        }-${(item?.name || item?.title)
+                          .trim()
+                          .replace(/[^a-zA-Z0-9]/g, "-")
+                          .replace(/-+/g, "-")}`}
+                        className="min-h-14 flex flex-col justify-center px-3 pb-1 w-full bg-indigo-700 text-gray-100 text-sm sm:text-base"
+                      >
                         <p className="line-clamp-2">
                           {(item.name || item.title).length > 40
                             ? `${(item.name || item.title).slice(0, 40)}...`
                             : item.name || item.title}
                         </p>
-                      </div>
+                      </Link>
                     </div>
                   </div>
                 );

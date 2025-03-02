@@ -68,7 +68,7 @@ function Page() {
       setError(null);
 
       try {
-        const response = await fetch("/api/search", {
+        const response = await fetch("/api/homeSearch", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -188,11 +188,11 @@ function Page() {
     return (
       <div
         key={data.id}
-        className={`relative group flex flex-col ${
+        className={`relative group flex flex-col h-auto ${
           isPerson ? "bg-indigo-700" : "bg-neutral-900"
         } w-full h-full text-gray-300 rounded-md overflow-hidden hover:z-10`}
       >
-        <div className="absolute top-0 left-0 flex flex-row justify-between w-full z-10">
+        <div className="absolute top-0 left-0 flex flex-row justify-between w-full  z-10">
           <p className="p-1 bg-black text-white rounded-br-md text-sm">
             {data.media_type
               ? data.media_type
@@ -223,20 +223,16 @@ function Page() {
             .trim()
             .replace(/[^a-zA-Z0-9]/g, "-")
             .replace(/-+/g, "-")}`}
-          className="h-[230px] md:h-[300px] w-full"
+          className="h-full w-full"
         >
           <img
-            className="object-cover w-full h-full"
+            className="object-cover w-full h-[250px] md:h-[320px]"
             src={imageUrl}
             alt={title}
           />
         </Link>
         <div
-          className={`${
-            isPerson
-              ? "bg-indigo-700"
-              : "lg:absolute bottom-0 w-full bg-neutral-900 "
-          }`}
+          className={`${isPerson ? "bg-indigo-700" : "w-full bg-neutral-900 "}`}
         >
           {!isPerson && (
             <>
@@ -346,7 +342,7 @@ function Page() {
 
       {/* Results or Prompt */}
       {!loading && (
-        <div className="w-full my-4">
+        <div className="w-full h-auto my-4">
           {results.total_results > 0 && (
             <div className="mb-4">
               <p>

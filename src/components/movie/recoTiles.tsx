@@ -74,7 +74,7 @@ export default function MovieRecoTile({
       const element = scrollRef.current;
       if (element) {
         const containerWidth = element.clientWidth;
-        const baseItemWidth = 200; // Base width for each item
+        const baseItemWidth = 150; // Base width for each item
         const gap = 16; // Gap between items (adjust as needed)
         const peekWidth = containerWidth * 0.15; // 15% of container width for peek
 
@@ -131,7 +131,7 @@ export default function MovieRecoTile({
             results.map((item: any) => (
               <div
                 key={item.id}
-                className="card-item bg-neutral-700 rounded-md overflow-hidden flex-shrink-0 flex flex-col justify-between h-auto group relative"
+                className="card-item bg-neutral-700 h-auto rounded-md overflow-hidden flex-shrink-0 flex flex-col justify-between  group relative"
                 style={{ width: `${itemWidth}px` }} // Dynamically set width
               >
                 <div className="absolute top-0 left-0">
