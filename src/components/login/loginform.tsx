@@ -60,6 +60,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
             name="password"
             type="password"
             value={password}
+            onKeyDown={(e) => e.key == "enter" && onLogin}
             onChange={(e) => setPassword(e.target.value)}
             required
           />

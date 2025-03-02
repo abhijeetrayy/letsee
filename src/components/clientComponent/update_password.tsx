@@ -32,7 +32,7 @@ export default function UpdatePasswordComponent() {
       console.log("User:", user, "User Error:", userError);
 
       if (user) {
-        setMessage("User logged in. Enter new password to update.");
+        setMessage("User in. Enter new password to update.");
         return;
       }
 

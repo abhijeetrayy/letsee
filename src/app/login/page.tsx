@@ -22,14 +22,14 @@ export default function LoginPage() {
       });
 
       if (error) {
-        console.error("Login Error:", error.message);
+        console.log("Login Error:", error.message);
         setError(error.message);
       } else {
         // Force a full page refresh to ensure the session is set
-        window.location.href = "/app";
+        router.refresh();
       }
     } catch (err) {
-      console.error("Unexpected Login Error:", err);
+      console.log("Unexpected Login Error:", err);
       setError("An unexpected error occurred. Please try again.");
     } finally {
       setLoading(false);
@@ -43,13 +43,13 @@ export default function LoginPage() {
       const { data, error } = await supabase.auth.signUp({ email, password });
 
       if (error) {
-        console.error("Signup Error:", error.message);
+        console.log("Signup Error:", error.message);
         setError(error.message);
       } else {
-        window.location.href = "/app";
+        router.refresh();
       }
     } catch (err) {
-      console.error("Unexpected Signup Error:", err);
+      console.log("Unexpected Signup Error:", err);
       setError("An unexpected error occurred during signup.");
     } finally {
       setLoading(false);

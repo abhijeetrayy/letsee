@@ -1,4 +1,3 @@
-// components/DiscoverUsers.tsx
 "use client";
 import { supabase } from "@/utils/supabase/client";
 import Link from "next/link";
@@ -33,6 +32,8 @@ function DiscoverUsers() {
             watchlist_count
           )`
         )
+        .not("username", "is", null) // Filter out null usernames
+        .neq("username", "") // Filter out empty usernames
         .order("updated_at", { ascending: false })
         .limit(10);
 
@@ -63,15 +64,15 @@ function DiscoverUsers() {
     if (element) {
       const { scrollLeft, scrollWidth, clientWidth } = element;
       setCanScrollLeft(scrollLeft > 0);
-      setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 10); // Small buffer
+      setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 10);
     }
   };
 
   const scrollLeft = () => {
     const element = scrollRef.current;
     if (element) {
-      const itemWidth = element.querySelector(".user-card")?.clientWidth || 300; // Default to 300px if no card
-      const shift = window.innerWidth < 640 ? itemWidth * 2 : itemWidth * 4; // 2 items on mobile, 5 on desktop
+      const itemWidth = element.querySelector(".user-card")?.clientWidth || 300;
+      const shift = window.innerWidth < 640 ? itemWidth * 2 : itemWidth * 4;
       element.scrollBy({ left: -shift, behavior: "smooth" });
     }
   };
