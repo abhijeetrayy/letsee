@@ -22,7 +22,7 @@ export default function LoginPage() {
       });
 
       if (error) {
-        console.log("Login Error:", error.message);
+        console.log("Login Error:", error);
         setError(error.message);
       } else {
         // Force a full page refresh to ensure the session is set
