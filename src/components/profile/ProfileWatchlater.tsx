@@ -56,8 +56,8 @@ function WatchLaterList({ watchlist, watchlistCount }: any) {
           className="w-full flex flex-row overflow-x-scroll thin-scroll gap-3  pb-3"
         >
           {watchlist?.map((item: any) => (
-            <div key={item.id}>
-              <div className="relative group flex flex-col rounded-md bg-black w-full text-gray-300 overflow-hidden">
+            <div className="h-auto" key={item.id}>
+              <div className="relative group flex flex-col rounded-md h-full bg-black w-full text-gray-300 overflow-hidden">
                 <div className="absolute top-0 left-0  lg:opacity-0 lg:group-hover:opacity-100">
                   {item.item_adult ? (
                     <p className="p-1 bg-red-600 text-white rounded-br-md text-sm">
@@ -70,7 +70,7 @@ function WatchLaterList({ watchlist, watchlistCount }: any) {
                   )}
                 </div>
                 <Link
-                  className="h-32 md:h-[270px] w-28 md:w-[200px]"
+                  className="h-full md:h-[270px] w-28 md:w-[200px]"
                   href={`/app/${item.item_type}/${item.item_id}`}
                 >
                   <img
@@ -84,7 +84,7 @@ function WatchLaterList({ watchlist, watchlistCount }: any) {
                     alt={item.item_name}
                   />
                 </Link>
-                <div className="w-full  bg-neutral-800 text-xs md:text-base">
+                <div className="w-full h-full   bg-neutral-800 text-xs md:text-base">
                   {/* Assuming ThreePrefrenceBtn is a valid component */}
                   <ThreePrefrenceBtn
                     genres={item.genres}
@@ -96,7 +96,7 @@ function WatchLaterList({ watchlist, watchlistCount }: any) {
                   />
                   <div
                     title={item.name || item.title}
-                    className="w-full full flex flex-col gap-2 px-4 bg-indigo-700 text-gray-200"
+                    className="w-full h-full flex flex-col items-center gap-2 px-1 md:px-4 bg-indigo-700 text-gray-200"
                   >
                     <Link
                       href={`/app/${item.item_type}/${item.item_id}`}

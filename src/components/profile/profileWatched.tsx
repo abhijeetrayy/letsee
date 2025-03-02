@@ -95,7 +95,7 @@ const WatchedMoviesList = ({ userId }: { userId: string }) => {
       <div className="flex flex-wrap gap-2 mb-4">
         <button
           onClick={handleClearFilter}
-          className={`px-4 py-2 rounded-md ${
+          className={`text-sm md:text-base px-4 py-2 rounded-md ${
             !genreFilter
               ? "bg-blue-500 text-white"
               : "bg-gray-200 text-gray-700 hover:bg-gray-300"
@@ -105,7 +105,7 @@ const WatchedMoviesList = ({ userId }: { userId: string }) => {
         </button>
         <button
           onClick={() => handleGenreFilter("Animation")}
-          className={`px-4 py-2 rounded-md ${
+          className={`text-sm md:text-base px-4 py-2 rounded-md ${
             genreFilter === "Animation"
               ? "bg-blue-500 text-white"
               : "bg-gray-200 text-gray-700 hover:bg-gray-300"

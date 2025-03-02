@@ -55,7 +55,7 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID }) => {
             <li>
               <button
                 onClick={() => link("/app")}
-                className="text-2xl hover:text-gray-400"
+                className=" flex flex-row gap-2 items-center justify-center w-72 px-4 py-2 rounded-md bg-neutral-600 hover:bg-neutral-500 relative"
               >
                 Home
               </button>
@@ -64,7 +64,7 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID }) => {
             <li>
               <button
                 onClick={() => link(`/app/tvbygenre/list/35-Comedy`)}
-                className="text-2xl hover:text-gray-400"
+                className=" flex flex-row gap-2 items-center justify-center w-72 px-4 py-2 rounded-md bg-neutral-600 hover:bg-neutral-500 relative"
               >
                 Tv Genre
               </button>
@@ -72,7 +72,7 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID }) => {
             <li>
               <button
                 onClick={() => link(`/app/moviebygenre/list/16-Animation`)}
-                className="text-2xl hover:text-gray-400"
+                className=" flex flex-row gap-2 items-center justify-center w-72 px-4 py-2 rounded-md bg-neutral-600 hover:bg-neutral-500 relative"
               >
                 Movie Genre
               </button>
@@ -80,7 +80,7 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID }) => {
             <li>
               <button
                 onClick={() => link(`/app/profile`)}
-                className="text-2xl hover:text-gray-400"
+                className=" flex flex-row gap-2 items-center justify-center w-72 px-4 py-2 rounded-md bg-neutral-600 hover:bg-neutral-500 relative"
               >
                 users
               </button>
@@ -88,14 +88,14 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID }) => {
             <li>
               <button
                 onClick={() => link(`/app/reel`)}
-                className="text-2xl hover:text-gray-400"
+                className=" flex flex-row gap-2 items-center justify-center w-72 px-4 py-2 rounded-md bg-neutral-600 hover:bg-neutral-500 relative"
               >
                 Reels
               </button>
             </li>
 
             <li>
-              <div className="text-2xl hover:text-gray-400">
+              <div>
                 <button
                   onClick={() => link(`/login`)}
                   className="text-2xl text-gray-100 hover:bg-blue-500 px-3 py-1 rounded-md bg-blue-600 "
@@ -138,28 +138,48 @@ const BurgerMenu: React.FC<BurgerMenuProps> = ({ userID }) => {
           <div className="w-full flex  flex-col items-center mr-5 gap-3">
             <button
               onClick={() => link("/app")}
-              className=" flex flex-row gap-2 items-center justify-center px-4 py-2 rounded-md bg-neutral-600 hover:bg-neutral-500 relative"
+              className=" flex flex-row gap-2 items-center justify-center w-72 px-4 py-2 rounded-md bg-neutral-600 hover:bg-neutral-500 relative"
             >
               Home
             </button>
 
             <button
+              onClick={() => link(`/app/tvbygenre/list/35-Comedy`)}
+              className=" flex flex-row gap-2 items-center justify-center w-72 px-4 py-2 rounded-md bg-neutral-600 hover:bg-neutral-500 relative"
+            >
+              Tv Genre
+            </button>
+
+            <button
+              onClick={() => link(`/app/moviebygenre/list/16-Animation`)}
+              className=" flex flex-row gap-2 items-center justify-center w-72 px-4 py-2 rounded-md bg-neutral-600 hover:bg-neutral-500 relative"
+            >
+              Movie Genre
+            </button>
+
+            <button
               onClick={() => link(`/app/profile`)}
-              className=" flex flex-row gap-2 items-center justify-center px-4 py-2 rounded-md bg-neutral-600 hover:bg-neutral-500 relative"
+              className=" flex flex-row gap-2 items-center justify-center w-72 px-4 py-2 rounded-md bg-neutral-600 hover:bg-neutral-500 relative"
             >
               <FaUser /> <span>User</span>
             </button>
 
             <button
-              className=" flex flex-row gap-2 items-center justify-center px-4 py-2 rounded-md bg-neutral-600 hover:bg-neutral-500 relative"
+              className=" flex flex-row gap-2 items-center justify-center w-72 px-4 py-2 rounded-md bg-neutral-600 hover:bg-neutral-500 relative"
               onClick={() => link(`/app/notification`)}
             >
               <IoNotifications /> <span>Notifi</span>
             </button>
+            <button
+              className=" flex flex-row gap-2 items-center justify-center w-72 px-4 py-2 rounded-md bg-neutral-600 hover:bg-neutral-500 relative"
+              onClick={() => link(`/app/messages`)}
+            >
+              <IoNotifications /> <span>Message's</span>
+            </button>
 
             <button
               onClick={() => link(`/app/profile/${userID}`)}
-              className=" flex flex-row gap-2 items-center justify-center px-4 py-2 rounded-md bg-neutral-600 hover:bg-neutral-500 relative"
+              className=" flex flex-row gap-2 items-center justify-center w-72 px-4 py-2 rounded-md bg-neutral-600 hover:bg-neutral-500 relative"
             >
               My Profile
             </button>

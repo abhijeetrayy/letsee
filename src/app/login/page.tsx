@@ -15,42 +15,44 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-    if (error) {
+      if (error) {
+        console.error("Login Error:", error.message);
+        setError(error.message);
+      } else {
+        // Force a full page refresh to ensure the session is set
+        window.location.href = "/app";
+      }
+    } catch (err) {
+      console.error("Unexpected Login Error:", err);
+      setError("An unexpected error occurred. Please try again.");
+    } finally {
       setLoading(false);
-      setError(error.message);
-    } else {
-      router.refresh();
     }
   };
-
   const signup = async (email: string, password: string) => {
     setLoading(true);
     setError("");
 
-    const { error } = await supabase.auth.signUp({ email, password });
+    try {
+      const { data, error } = await supabase.auth.signUp({ email, password });
 
-    if (error) {
+      if (error) {
+        console.error("Signup Error:", error.message);
+        setError(error.message);
+      } else {
+        window.location.href = "/app";
+      }
+    } catch (err) {
+      console.error("Unexpected Signup Error:", err);
+      setError("An unexpected error occurred during signup.");
+    } finally {
       setLoading(false);
-      setError(error.message);
-    } else {
-      // toast.success(
-      //   "Sign-up successful! Please check your email to confirm your account.",
-      //   {
-      //     position: "top-right",
-      //     autoClose: 5000,
-      //     hideProgressBar: false,
-      //     closeOnClick: true,
-      //     pauseOnHover: true,
-      //     draggable: true,
-      //     progress: undefined,
-      //   }
-      // );
-      router.refresh();
     }
   };
 

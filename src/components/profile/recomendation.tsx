@@ -429,7 +429,7 @@ const RecommendationTile = ({ isOwner, name, id }: any) => {
         {isOwner && (
           <button
             onClick={() => setIsModalOpen(true)}
-            className="bg-blue-600 text-white py-1 px-3 rounded-md hover:bg-blue-700 transition-colors duration-200"
+            className="bg-blue-600 text-white text-sm md:text-md  py-1 px-3 rounded-md hover:bg-blue-700 transition-colors duration-200"
           >
             Add Recommendation
           </button>
@@ -447,7 +447,7 @@ const RecommendationTile = ({ isOwner, name, id }: any) => {
               recommendations.map((item) => (
                 <div
                   key={item.id}
-                  className="card-item w-full max-w-[10rem]  bg-neutral-700 rounded-md overflow-hidden flex-shrink-0 flex flex-col justify-between h-auto group relative"
+                  className="card-item w-full max-w-[6rem] md:max-w-[10rem]  bg-neutral-700 rounded-md overflow-hidden flex-shrink-0 flex flex-col justify-between h-auto group relative"
                 >
                   <div className="absolute top-0 left-0">
                     <p className="px-1 py-1 bg-neutral-950 text-white rounded-br-md text-xs sm:text-sm">
@@ -492,7 +492,7 @@ const RecommendationTile = ({ isOwner, name, id }: any) => {
                       )}
                     </div>
                     <Link
-                      className="h-full flex items-center justify-center text-neutral-100 hover:underline"
+                      className="h-full flex items-center justify-center text-sm md:text-base text-neutral-100 hover:underline"
                       href={`/app/${item.item_type}/${item.item_id}-${(
                         item.name || ""
                       )

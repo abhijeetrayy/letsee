@@ -11,8 +11,7 @@ import HomeContentTile from "@components/movie/homeContentTile";
 
 async function getData() {
   const res = await fetch(
-    `https://api.themoviedb.org/3/genre/movie/list?api_key=${process.env.TMDB_API_KEY}`,
-    { next: { revalidate: 86400 } }
+    `https://api.themoviedb.org/3/genre/movie/list?api_key=${process.env.TMDB_API_KEY}`
   );
 
   if (!res.ok) {
@@ -25,8 +24,7 @@ async function getData() {
 
 async function getRomance() {
   const res = await fetch(
-    `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.TMDB_API_KEY}&with_genres=10749`,
-    { next: { revalidate: 86400 } }
+    `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.TMDB_API_KEY}&with_genres=10749`
   );
 
   if (!res.ok) {
@@ -39,8 +37,7 @@ async function getRomance() {
 
 async function getAction() {
   const res = await fetch(
-    `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.TMDB_API_KEY}&with_genres=28`,
-    { next: { revalidate: 86400 } }
+    `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.TMDB_API_KEY}&with_genres=28`
   );
 
   if (!res.ok) {
@@ -53,8 +50,7 @@ async function getAction() {
 
 async function getTvGenre() {
   const tvGenresResponse = await fetch(
-    `https://api.themoviedb.org/3/genre/tv/list?api_key=${process.env.TMDB_API_KEY}&language=en-US`,
-    { next: { revalidate: 86400 } }
+    `https://api.themoviedb.org/3/genre/tv/list?api_key=${process.env.TMDB_API_KEY}&language=en-US`
   );
   if (!tvGenresResponse.ok) {
     throw new Error("Failed to fetch TV genres data");
@@ -65,7 +61,7 @@ async function getTvGenre() {
 
 async function getTrending() {
   const url = `https://api.themoviedb.org/3/trending/all/week?api_key=${process.env.TMDB_API_KEY}`;
-  const res = await fetch(url, { next: { revalidate: 86400 } });
+  const res = await fetch(url);
 
   if (!res.ok) {
     console.log(res);
@@ -77,7 +73,7 @@ async function getTrending() {
 
 async function getTrendingTV() {
   const url = `https://api.themoviedb.org/3/trending/tv/day?api_key=${process.env.TMDB_API_KEY}`;
-  const res = await fetch(url, { next: { revalidate: 86400 } });
+  const res = await fetch(url);
 
   if (!res.ok) {
     console.log(res);
@@ -89,8 +85,7 @@ async function getTrendingTV() {
 
 async function getBollywoodKeyword() {
   const res = await fetch(
-    `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.TMDB_API_KEY}&with_keywords=315446&page=1`,
-    { next: { revalidate: 86400 } }
+    `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.TMDB_API_KEY}&with_keywords=315446&page=1`
   );
 
   if (!res.ok) {
