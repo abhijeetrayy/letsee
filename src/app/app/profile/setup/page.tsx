@@ -56,6 +56,13 @@ function ProfilePage() {
         error: "More than one character needed.",
         valid: false,
       };
+    if (sanitized == "null") {
+      return {
+        sanitized,
+        error: "null is null sooo.",
+        valid: false,
+      };
+    }
     if (sanitized.length > 15)
       return {
         sanitized,
@@ -145,6 +152,7 @@ function ProfilePage() {
         .select("username")
         .eq("id", updatedUser?.id)
         .single();
+      setLoading(true);
 
       if (data?.username) {
         router.push(`/app/profile/${data.username}`);
@@ -154,7 +162,12 @@ function ProfilePage() {
     }
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading)
+    return (
+      <div className=" bg-neutral-700 text-white w-full h-screen flex justify-center items-center flex-col gap-3">
+        Loading...
+      </div>
+    );
   if (!user)
     return (
       <div className="w-screen h-screen flex flex-col items-center justify-center">

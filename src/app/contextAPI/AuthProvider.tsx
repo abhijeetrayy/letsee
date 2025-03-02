@@ -2,7 +2,7 @@
 
 import { supabase } from "@/utils/supabase/client";
 import { Session, User } from "@supabase/supabase-js";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function AuthProvider({
@@ -15,6 +15,7 @@ export default function AuthProvider({
   const [loading, setLoading] = useState(true);
   const [initialFetchComplete, setInitialFetchComplete] = useState(false);
   const router = useRouter();
+  const pathname = usePathname(); // Get the current route
 
   useEffect(() => {
     console.log("🔄 useEffect running");
@@ -43,7 +44,7 @@ export default function AuthProvider({
           }
 
           setUser(user);
-          await validateUserProfile(user); // Await this function
+          await validateUserProfile(user, pathname); // Pass the current route
         }
       } catch (error) {
         console.error("❌ Error fetching session or user:", error);
@@ -65,12 +66,6 @@ export default function AuthProvider({
           return;
         }
 
-        console.log(
-          "🔄 Auth state changed. Event:",
-          _event,
-          "Session:",
-          session
-        );
         setSession(session);
 
         if (session) {
@@ -93,7 +88,7 @@ export default function AuthProvider({
           }
 
           setUser(user);
-          await validateUserProfile(user); // Await this function
+          await validateUserProfile(user, pathname); // Pass the current route
         } else {
           console.log("🚫 No session, setting user to null");
           setUser(null);
@@ -105,16 +100,23 @@ export default function AuthProvider({
       console.log("🧹 Cleaning up auth listener");
       authListener?.subscription.unsubscribe();
     };
-  }, [initialFetchComplete]);
+  }, [initialFetchComplete, pathname]); // Add pathname as a dependency
 
   // Validate user profile and redirect if necessary
-  const validateUserProfile = async (user: User | null) => {
+  const validateUserProfile = async (
+    user: User | null,
+    currentPath: string
+  ) => {
     console.log(user?.id);
     if (!user) {
       // Redirect to login if user is not authenticated
       router.push("/login");
       return;
     }
+
+    // Define routes that can be accessed without a username
+    const allowedRoutesWithoutUsername = ["/app/profile/setup"];
+    const isAllowedRoute = allowedRoutesWithoutUsername.includes(currentPath);
 
     // Fetch additional user data (e.g., username) from your database
     const { data: profile, error } = await supabase
@@ -126,14 +128,19 @@ export default function AuthProvider({
     console.log(profile);
 
     if (error || !profile?.username) {
-      // Redirect to profile settings if username is missing
-      router.push("/app/profile/setup");
+      if (!isAllowedRoute) {
+        router.push("/app/profile/setup");
+      }
     }
   };
 
   // Show loading state while session is being fetched
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className=" bg-neutral-700 text-white w-full h-screen flex justify-center items-center flex-col gap-3 ">
+        Loading...
+      </div>
+    );
   }
 
   // Render children only if the user is authenticated and has a valid profile

@@ -47,6 +47,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
             id="email"
             name="email"
             type="email"
+            onKeyDown={(e) => e.key == "enter" && handleSubmit}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -60,7 +61,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
             name="password"
             type="password"
             value={password}
-            onKeyDown={(e) => e.key == "enter" && onLogin}
+            onKeyDown={(e) => e.key == "enter" && handleSubmit}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
