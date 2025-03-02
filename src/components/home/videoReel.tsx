@@ -1,4 +1,3 @@
-// components/HomeReelViewer.tsx
 "use client";
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
@@ -10,6 +9,14 @@ import {
 } from "react-icons/fa";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
+// Extend Window interface for YouTube IFrame API
+declare global {
+  interface Window {
+    YT: any;
+    onYouTubeIframeAPIReady: (() => void) | undefined;
+  }
+}
+
 interface Movie {
   id: number;
   title: string;
@@ -17,18 +24,21 @@ interface Movie {
   poster_path?: string;
 }
 
+const FALLBACK_IMAGE = "/backgroundjpeg.webp";
+
 const HomeReelViewer: React.FC = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [isMuted, setIsMuted] = useState(true);
   const [isVideoReady, setIsVideoReady] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [useFallback, setUseFallback] = useState(false);
+  const [scriptLoaded, setScriptLoaded] = useState(false);
   const playerRef = useRef<HTMLDivElement>(null);
   const playerInstance = useRef<YT.Player | null>(null);
   const videoSectionRef = useRef<HTMLDivElement>(null);
-  const isMounted = useRef(false); // Replace useState with useRef for mount check
+  const isMounted = useRef(false);
 
   // Fetch top 5 movies with trailers
   useEffect(() => {
@@ -43,9 +53,25 @@ const HomeReelViewer: React.FC = () => {
         });
         if (!response.ok) throw new Error("Failed to fetch top movies");
         const data = await response.json();
-        setMovies(data.slice(0, 5));
+        const validMovies = data
+          .slice(0, 5)
+          .filter((movie: Movie) => movie.id && movie.title);
+        setMovies(
+          validMovies.length > 0
+            ? validMovies
+            : [
+                {
+                  id: 0,
+                  title: "No Video Available",
+                  poster_path: FALLBACK_IMAGE,
+                },
+              ]
+        );
       } catch (err) {
-        setError((err as Error).message);
+        console.error("Fetch Error:", err);
+        setMovies([
+          { id: 0, title: "No Video Available", poster_path: FALLBACK_IMAGE },
+        ]);
       } finally {
         setLoading(false);
       }
@@ -54,75 +80,118 @@ const HomeReelViewer: React.FC = () => {
     fetchTopMovies();
   }, []);
 
-  // Load YouTube script only once
+  // Load YouTube script with error handling
   useEffect(() => {
-    if (!window.YT) {
+    const loadYouTubeScript = () => {
+      if (window.YT && window.YT.Player) {
+        setScriptLoaded(true);
+        return;
+      }
+
       const tag = document.createElement("script");
       tag.src = "https://www.youtube.com/iframe_api";
+      tag.async = true;
+      tag.onload = () => {
+        if (isMounted.current) setScriptLoaded(true);
+      };
+      tag.onerror = () => {
+        console.error("Failed to load YouTube IFrame API script");
+        if (isMounted.current) setUseFallback(true);
+      };
       const firstScriptTag = document.getElementsByTagName("script")[0];
       firstScriptTag?.parentNode?.insertBefore(tag, firstScriptTag);
-    }
-    isMounted.current = true; // Set mounted flag
+    };
+
+    isMounted.current = true;
+    loadYouTubeScript();
+
     return () => {
-      isMounted.current = false; // Cleanup on unmount
+      isMounted.current = false;
     };
   }, []);
 
-  // Initialize and update YouTube player
+  // Initialize and update YouTube player with safe cleanup
   useEffect(() => {
-    if (!isMounted.current || !movies[currentIndex]?.trailer) return;
+    if (
+      !isMounted.current ||
+      !movies[currentIndex]?.trailer ||
+      useFallback ||
+      !scriptLoaded
+    ) {
+      setIsVideoReady(false); // Ensure video state is reset when using fallback
+      return;
+    }
 
-    const videoId = movies[currentIndex].trailer.split("embed/")[1];
+    const videoId = movies[currentIndex].trailer?.split("embed/")[1];
 
     const initializePlayer = () => {
       if (!playerRef.current || !window.YT?.Player) return;
 
-      // Destroy existing player instance
+      // Cleanup existing player safely
       if (playerInstance.current) {
-        playerInstance.current.destroy();
+        try {
+          if (typeof playerInstance.current.stopVideo === "function") {
+            playerInstance.current.stopVideo();
+          }
+          playerInstance.current.destroy();
+        } catch (err) {
+          console.error("Error during player cleanup:", err);
+        } finally {
+          playerInstance.current = null;
+        }
       }
 
       setIsVideoReady(false);
       setIsPlaying(false);
       setIsMuted(true);
-      playerInstance.current = new window.YT.Player(playerRef.current, {
-        width: "1280",
-        height: "720",
-        videoId,
-        playerVars: {
-          autoplay: 1,
-          mute: 1,
-          controls: 0,
-          modestbranding: 0,
-          showinfo: 0,
-          rel: 0,
-        },
-        events: {
-          onReady: (event: YT.PlayerEvent) => {
-            event.target.playVideo();
-            if (isMounted.current) {
-              setIsVideoReady(true);
-              setIsPlaying(true);
-            }
+
+      try {
+        playerInstance.current = new window.YT.Player(playerRef.current, {
+          width: "1280",
+          height: "720",
+          videoId,
+          playerVars: {
+            autoplay: 1,
+            mute: 1,
+            controls: 0,
+            modestbranding: 0,
+            showinfo: 0,
+            rel: 0,
           },
-          onStateChange: (event: YT.OnStateChangeEvent) => {
-            if (!isMounted.current) return;
-            if (event.data === window.YT.PlayerState.ENDED) {
-              nextMovie();
-            } else if (event.data === window.YT.PlayerState.PAUSED) {
-              setIsPlaying(false);
-            } else if (event.data === window.YT.PlayerState.PLAYING) {
-              setIsPlaying(true);
-            }
+          events: {
+            onReady: (event: YT.PlayerEvent) => {
+              if (isMounted.current) {
+                event.target.playVideo();
+                setIsVideoReady(true);
+                setIsPlaying(true);
+              }
+            },
+            // onStateChange: (event: YT.OnStateChangeEvent) => {
+            //   if (!isMounted.current) return;
+            //   if (event.data === window.YT.PlayerState.ENDED) {
+            //     nextMovie();
+            //   } else if (event.data === window.YT.PlayerState.PAUSED) {
+            //     setIsPlaying(false);
+            //   } else if (event.data === window.YT.PlayerState.PLAYING) {
+            //     setIsPlaying(true);
+            //   }
+            // },
+            // onError: (event: YT.OnErrorEvent) => {
+            //   console.error("YouTube Player Error:", event.data);
+            //   if (isMounted.current) {
+            //     setUseFallback(true); // Switch to fallback on any error
+            //     setIsVideoReady(false); // Reset video state
+            // }
+            //   },
           },
-          onError: (event: YT.OnErrorEvent) => {
-            console.error("YouTube Player Error:", event.data);
-            if (isMounted.current) {
-              setError("Failed to load video");
-            }
-          },
-        },
-      });
+        });
+      } catch (err) {
+        console.error("Player Initialization Error:", err);
+        // if (isMounted.current) {
+        //   setUseFallback(true);
+        //   setIsVideoReady(false);
+        // }
+      }
     };
 
     if (window.YT && window.YT.Player) {
@@ -133,30 +202,45 @@ const HomeReelViewer: React.FC = () => {
 
     return () => {
       if (playerInstance.current) {
-        playerInstance.current.destroy();
-        playerInstance.current = null;
+        try {
+          if (typeof playerInstance.current.stopVideo === "function") {
+            playerInstance.current.stopVideo();
+          }
+          playerInstance.current.destroy();
+        } catch (err) {
+          console.error("Cleanup Error:", err);
+        } finally {
+          playerInstance.current = null;
+        }
       }
     };
-  }, [currentIndex, movies]);
+  }, [currentIndex, movies, useFallback, scriptLoaded]);
 
   // Navigation handlers
   const nextMovie = useCallback(() => {
     setCurrentIndex((prev) => (prev + 1) % movies.length);
     setIsVideoReady(false);
+    setUseFallback(false);
   }, [movies.length]);
 
   const prevMovie = useCallback(() => {
     setCurrentIndex((prev) => (prev - 1 + movies.length) % movies.length);
     setIsVideoReady(false);
+    setUseFallback(false);
   }, [movies.length]);
 
   const goToMovie = useCallback((index: number) => {
     setCurrentIndex(index);
     setIsVideoReady(false);
+    setUseFallback(false);
   }, []);
 
   const toggleMute = useCallback(() => {
-    if (playerInstance.current) {
+    if (
+      playerInstance.current &&
+      !useFallback &&
+      typeof playerInstance.current.mute === "function"
+    ) {
       setIsMuted((prev) => {
         if (prev) {
           playerInstance.current?.unMute();
@@ -166,7 +250,7 @@ const HomeReelViewer: React.FC = () => {
         return !prev;
       });
     }
-  }, []);
+  }, [useFallback]);
 
   // Swipe-to-scroll logic
   const [touchStart, setTouchStart] = useState<number | null>(null);
@@ -210,16 +294,21 @@ const HomeReelViewer: React.FC = () => {
         {loading ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 overflow-hidden">
             <img
-              src="/backgroundjpeg.webp"
+              src={FALLBACK_IMAGE}
               alt="Loading background"
               className="w-full h-full object-cover animate-pulse"
             />
+            <AiOutlineLoading3Quarters className="absolute size-12 text-white animate-spin" />
           </div>
-        ) : error ? (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <p className="text-red-400 text-center">{error}</p>
+        ) : useFallback || !movies[currentIndex]?.trailer ? (
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <img
+              src={movies[currentIndex]?.poster_path || FALLBACK_IMAGE}
+              alt={movies[currentIndex]?.title || "No Video"}
+              className="w-full h-full object-cover"
+            />
           </div>
-        ) : movies.length > 0 ? (
+        ) : (
           <>
             <div className="absolute inset-0 aspect-[16/9] w-full h-full">
               <div
@@ -270,28 +359,24 @@ const HomeReelViewer: React.FC = () => {
               ))}
             </div>
 
-            {/* Scroll Buttons (Hidden below md) */}
+            {/* Scroll Buttons */}
             {movies.length > 1 && (
               <>
                 <button
                   onClick={prevMovie}
                   className="md:block hidden absolute left-2 top-1/2 transform -translate-y-1/2 bg-neutral-800 text-neutral-100 p-2 sm:p-3 rounded-full hover:bg-neutral-700 transition-colors duration-200 z-10 shadow-md"
                 >
-                  <FaChevronLeft size={16} className="sm:size-20" />
+                  <FaChevronLeft size={16} />
                 </button>
                 <button
                   onClick={nextMovie}
                   className="md:block hidden absolute right-2 top-1/2 transform -translate-y-1/2 bg-neutral-800 text-neutral-100 p-2 sm:p-3 rounded-full hover:bg-neutral-700 transition-colors duration-200 z-10 shadow-md"
                 >
-                  <FaChevronRight size={16} className="sm:size-20" />
+                  <FaChevronRight size={16} />
                 </button>
               </>
             )}
           </>
-        ) : (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <p className="text-neutral-400 text-center">No top movies found</p>
-          </div>
         )}
       </div>
 

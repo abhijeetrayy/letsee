@@ -1,5 +1,3 @@
-"use client";
-
 import { createBrowserClient as createSupabaseClient } from "@supabase/ssr";
 
 export const supabase = createSupabaseClient(

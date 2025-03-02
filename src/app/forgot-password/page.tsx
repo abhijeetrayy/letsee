@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { supabase } from "../../utils/supabase/client";
+import Link from "next/link";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -101,6 +102,12 @@ export default function ForgotPassword() {
             </button>
           </div>
         </form>
+        <div className="flex flex-row gap-2">
+          <p>back to login</p>{" "}
+          <Link className="underline" href={"/login"}>
+            click
+          </Link>
+        </div>
       </div>
     </div>
   );
