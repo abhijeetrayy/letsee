@@ -16,7 +16,6 @@ export default function AuthProvider({
 
   useEffect(() => {
     const fetchSession = async () => {
-      setLoading(true);
       try {
         const {
           data: { user },
@@ -38,21 +37,19 @@ export default function AuthProvider({
         } else console.log("no user");
       } catch (error) {
         console.error("Error fetching session or profile:", error);
-      } finally {
-        setLoading(false);
       }
     };
 
     fetchSession();
   }, [router, pathname]);
 
-  if (loading) {
-    return (
-      <div className="bg-neutral-700 text-white w-full h-screen flex justify-center items-center flex-col gap-3">
-        <AiOutlineLoading3Quarters className="absolute size-12 text-white animate-spin" />
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="bg-neutral-700 text-white w-full h-screen flex justify-center items-center flex-col gap-3">
+  //       <AiOutlineLoading3Quarters className="absolute size-12 text-white animate-spin" />
+  //     </div>
+  //   );
+  // }
 
   return <>{children}</>;
 }

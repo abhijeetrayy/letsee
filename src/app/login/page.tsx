@@ -24,6 +24,7 @@ export default function LoginPage() {
       if (error) {
         console.log("Login Error:", error);
         setError(error.message);
+        setLoading(false);
       } else {
         // Force a full page refresh to ensure the session is set
         router.refresh();

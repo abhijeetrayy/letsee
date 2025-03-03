@@ -79,9 +79,9 @@ const SignOut: React.FC = () => {
           "Sign Out"
         )}
       </button>
-      {error && (
+      {/* {error && (
         <p className="mt-2 text-red-500 text-sm text-center">{error}</p>
-      )}
+      )} */}
     </div>
   );
 };
