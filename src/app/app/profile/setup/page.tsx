@@ -165,7 +165,7 @@ function ProfilePage() {
   if (loading)
     return (
       <div className=" bg-neutral-700 text-white w-full h-screen flex justify-center items-center flex-col gap-3">
-        Loading...
+        <AiOutlineLoading3Quarters className="absolute size-12 text-white animate-spin" />
       </div>
     );
   if (!user)

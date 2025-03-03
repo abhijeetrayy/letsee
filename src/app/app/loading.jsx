@@ -1,9 +1,10 @@
 import React from "react";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 function loading() {
   return (
-    <div className="z-50 min-h-screen w-full text-white flex justify-center items-center">
-      loading...
+    <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 overflow-hidden">
+      <AiOutlineLoading3Quarters className="absolute size-12 text-white animate-spin" />
     </div>
   );
 }

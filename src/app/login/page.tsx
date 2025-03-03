@@ -29,10 +29,9 @@ export default function LoginPage() {
         router.refresh();
       }
     } catch (err) {
+      setLoading(false);
       console.log("Unexpected Login Error:", err);
       setError("An unexpected error occurred. Please try again.");
-    } finally {
-      setLoading(false);
     }
   };
   const signup = async (email: string, password: string) => {

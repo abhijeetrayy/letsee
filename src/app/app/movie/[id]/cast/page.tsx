@@ -112,7 +112,7 @@ export default async function Page({ params }: PageProps) {
             />
           </div>
 
-          <div className="max-w-6xl w-full relative z-10 flex flex-row gap-5">
+          <div className="max-w-6xl w-full p-6 relative z-10 flex flex-col md:flex-row gap-5">
             <div className="flex-1">
               <img
                 className="rounded-md object-cover h-full max-h-[500px]"
