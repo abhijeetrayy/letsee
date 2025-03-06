@@ -1,70 +1,107 @@
 "use client";
 
+import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { IoNotifications } from "react-icons/io5";
+import { FaUser } from "react-icons/fa6";
+import { FcFilmReel } from "react-icons/fc";
 import BurgerMenu from "./BurgerMenu";
 import DropdownMenu from "./dropDownMenu";
 import MessageButton from "./MessageButton";
 import RealtimeNotification from "./RealtimeNotification";
 import SearchBar from "./searchBar";
-import { FaUser } from "react-icons/fa6";
-import { FcFilmReel } from "react-icons/fc";
-import { useEffect, useState } from "react";
 import { supabase } from "@/utils/supabase/client";
 
-function Navbar() {
+const Navbar: React.FC = () => {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    // Fetch the current user on component mount
-    const fetchUser = async () => {
+  // Fetch user data with error handling
+  const fetchUser = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
       const {
         data: { user },
+        error: authError,
       } = await supabase.auth.getUser();
+      if (authError)
+        throw new Error(
+          "Failed to fetch authentication data: " + authError.message
+        );
+
       if (user) {
-        const { data: userData, error } = await supabase
+        const { data: userData, error: dbError } = await supabase
           .from("users")
           .select("*")
           .eq("id", user.id)
           .single();
-        if (userData) {
-          setUser(userData);
-        }
-      }
-      setLoading(false);
-    };
 
+        if (dbError)
+          throw new Error("Failed to fetch user data: " + dbError.message);
+        if (!userData) throw new Error("User data not found in database");
+
+        setUser(userData);
+      } else {
+        setUser(null);
+      }
+    } catch (err) {
+      console.error("Error in fetchUser:", err);
+      setError(
+        err instanceof Error ? err.message : "An unexpected error occurred"
+      );
+      setUser(null); // Reset user on error to avoid stale data
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Handle auth state changes and initial fetch
+  useEffect(() => {
     fetchUser();
 
-    // Listen for authentication state changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (session?.user) {
-        const { data: userData, error } = await supabase
-          .from("users")
-          .select("*")
-          .eq("id", session.user.id)
-          .single();
-        if (userData) {
+      try {
+        if (session?.user) {
+          const { data: userData, error } = await supabase
+            .from("users")
+            .select("*")
+            .eq("id", session.user.id)
+            .single();
+
+          if (error)
+            throw new Error(
+              "Failed to fetch user data on auth change: " + error.message
+            );
+          if (!userData) throw new Error("User data not found on auth change");
+
           setUser(userData);
+        } else {
+          setUser(null);
         }
-      } else {
+      } catch (err) {
+        console.error("Error in auth state change:", err);
+        setError(
+          err instanceof Error ? err.message : "An unexpected error occurred"
+        );
         setUser(null);
       }
     });
 
-    // Cleanup subscription on unmount
     return () => subscription.unsubscribe();
-  }, []);
+  }, [fetchUser]);
 
+  // Loading state UI
   if (loading) {
     return (
       <div className="max-w-[1520px] w-full m-auto flex flex-row items-center justify-between text-white p-3 h-full">
         <div>
           <Link className="font-bold text-md md:text-xl sm:ml-5" href="/app">
-            Let&apos;s see
+            Let's see
           </Link>
         </div>
         <div className="flex flex-row gap-3 items-center">
@@ -75,11 +112,36 @@ function Navbar() {
     );
   }
 
+  // Error state UI
+  if (error) {
+    return (
+      <div className="max-w-[1520px] w-full m-auto flex flex-row items-center justify-between text-white p-3 h-full">
+        <div>
+          <Link className="font-bold text-md md:text-xl sm:ml-5" href="/app">
+            Let's see
+          </Link>
+        </div>
+        <div className="flex flex-row gap-3 items-center">
+          <span className="text-red-400 text-sm">
+            Error: Unable to load user data
+          </span>
+          <Link
+            className="flex text-nowrap items-center text-gray-100 justify-center px-3 py-1 rounded-md bg-blue-600 hover:bg-blue-500"
+            href="/login"
+          >
+            Retry Login
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  // Main Navbar UI
   return (
     <div className="max-w-[1520px] w-full m-auto flex flex-row items-center justify-between text-white p-3 h-full">
       <div>
         <Link className="font-bold text-md md:text-xl sm:ml-5" href="/app">
-          Let&apos;s see
+          Let's see
         </Link>
       </div>
 
@@ -123,6 +185,6 @@ function Navbar() {
       </div>
     </div>
   );
-}
+};
 
 export default Navbar;
