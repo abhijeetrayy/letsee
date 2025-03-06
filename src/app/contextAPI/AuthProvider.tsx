@@ -34,7 +34,7 @@ export default function AuthProvider({
           ) {
             router.push("/app/profile/setup");
           }
-        } else console.log("no user");
+        } else console.log("no-user");
       } catch (error) {
         console.error("Error fetching session or profile:", error);
       }
