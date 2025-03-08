@@ -27,6 +27,7 @@ const Navbar: React.FC = () => {
         data: { user },
         error: authError,
       } = await supabase.auth.getUser();
+      console.log(user);
       if (authError)
         throw new Error(
           "Failed to fetch authentication data: " + authError.message

@@ -26,6 +26,7 @@ const UserPrefrenceProvider = ({ children }: { children: React.ReactNode }) => {
           },
         });
         const res = await prefrence.json();
+        console.log(res);
 
         setUserPrefrence(res);
         setUser(true);

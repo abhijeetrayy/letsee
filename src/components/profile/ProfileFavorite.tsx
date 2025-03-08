@@ -29,13 +29,13 @@ function FavoritesList({ favorites, favoriteCount }: any) {
 
   const scrollLeft = () => {
     if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: -200, behavior: "smooth" });
+      scrollRef.current.scrollBy({ left: -400, behavior: "smooth" });
     }
   };
 
   const scrollRight = () => {
     if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: 200, behavior: "smooth" });
+      scrollRef.current.scrollBy({ left: 400, behavior: "smooth" });
     }
   };
 
