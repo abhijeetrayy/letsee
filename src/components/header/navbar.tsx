@@ -159,7 +159,7 @@ const Navbar: React.FC = () => {
             href="/app/notification"
           >
             <IoNotifications />
-            <RealtimeNotification userId={user.id} />
+            {/* <RealtimeNotification userId={user.id} /> */}
           </Link>
         )}
         <Link
