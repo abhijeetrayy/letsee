@@ -88,7 +88,7 @@ const PersonList = async ({ params }: PageProps) => {
           <div className="flex flex-col md:flex-row gap-8 mb-12">
             <div className="flex-shrink-0">
               {person.profile_path ? (
-                <Image
+                <img
                   src={`https://image.tmdb.org/t/p/h632${person.profile_path}`}
                   width={300}
                   height={450}

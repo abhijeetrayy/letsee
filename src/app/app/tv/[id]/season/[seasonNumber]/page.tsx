@@ -111,7 +111,7 @@ const SeasonPage = async ({ params }: SeasonPageProps) => {
         {/* Series Header */}
         <header className="mb-8 flex flex-col sm:flex-row gap-6">
           {seriesPoster && (
-            <Image
+            <img
               src={`https://image.tmdb.org/t/p/w300${seriesPoster}`}
               alt={seriesName}
               width={300}
@@ -139,7 +139,7 @@ const SeasonPage = async ({ params }: SeasonPageProps) => {
         <section className="bg-neutral-800 rounded-lg p-4 mb-8">
           <div className="flex flex-col sm:flex-row gap-4">
             {currentSeason.poster_path && (
-              <Image
+              <img
                 src={`https://image.tmdb.org/t/p/w185${currentSeason.poster_path}`}
                 alt={currentSeason.name}
                 width={185}
@@ -170,7 +170,7 @@ const SeasonPage = async ({ params }: SeasonPageProps) => {
                   className="flex flex-col sm:flex-row gap-4 bg-neutral-700 hover:bg-neutral-900 p-3 rounded-md"
                 >
                   {episode.still_path ? (
-                    <Image
+                    <img
                       src={`https://image.tmdb.org/t/p/w185${episode.still_path}`}
                       alt={episode.name}
                       width={185}
@@ -221,7 +221,7 @@ const SeasonPage = async ({ params }: SeasonPageProps) => {
                 }`}
               >
                 {season.poster_path ? (
-                  <Image
+                  <img
                     src={`https://image.tmdb.org/t/p/w154${season.poster_path}`}
                     alt={season.name}
                     width={154}
