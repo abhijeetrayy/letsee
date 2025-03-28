@@ -15,14 +15,6 @@ export async function GET(request: Request) {
   const supabase = await createClient();
   try {
     // Check if the user is authenticated (optional, depending on your requirements)
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
-    if (authError || !user) {
-      // If auth is not required, you can remove this block
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
 
     // Fetch users and their stats from Supabase
     const { data: usersData, error: dbError } = await supabase
