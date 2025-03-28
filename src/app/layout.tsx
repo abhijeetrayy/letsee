@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "@components/header/navbar";
+
 import { SearchProvider } from "./contextAPI/searchContext";
 import AuthProvider from "./contextAPI/AuthProvider";
 
@@ -31,12 +31,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
-          <SearchProvider>
-            <header className="sticky top-0 w-full m-auto z-50 bg-neutral-900">
-              <Navbar />
-            </header>
-            {children}
-          </SearchProvider>
+          <SearchProvider>{children}</SearchProvider>
         </AuthProvider>
       </body>
     </html>

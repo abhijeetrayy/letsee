@@ -2,61 +2,49 @@
 
 import Link from "next/link";
 import { IoNotifications } from "react-icons/io5";
+import { FaUser } from "react-icons/fa6";
+import { FcFilmReel } from "react-icons/fc";
+import { useEffect, useState } from "react";
+import { supabase } from "@/utils/supabase/client";
 import BurgerMenu from "./BurgerMenu";
 import DropdownMenu from "./dropDownMenu";
 import MessageButton from "./MessageButton";
 import RealtimeNotification from "./RealtimeNotification";
 import SearchBar from "./searchBar";
-import { FaUser } from "react-icons/fa6";
-import { FcFilmReel } from "react-icons/fc";
-import { useEffect, useState } from "react";
-import { supabase } from "@/utils/supabase/client";
 
-function Navbar() {
-  const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+// Define the User type based on your Supabase "users" table structure
+interface User {
+  id: string;
+  username?: string;
+  [key: string]: any; // Flexible for additional fields
+}
+
+export function LogedNavbar() {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    // Fetch the current user on component mount
     const fetchUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (user) {
-        const { data: userData, error } = await supabase
-          .from("users")
-          .select("*")
-          .eq("id", user.id)
-          .single();
-        if (userData) {
-          setUser(userData);
+      try {
+        const response = await fetch("/api/navbar", {
+          credentials: "include", // Include cookies for auth
+        });
+        if (response.ok) {
+          const { user } = await response.json();
+          setUser(user || null);
+          console.log(user);
+        } else {
+          setUser(null);
         }
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
+        setUser(null);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     fetchUser();
-
-    // Listen for authentication state changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (session?.user) {
-        const { data: userData, error } = await supabase
-          .from("users")
-          .select("*")
-          .eq("id", session.user.id)
-          .single();
-        if (userData) {
-          setUser(userData);
-        }
-      } else {
-        setUser(null);
-      }
-    });
-
-    // Cleanup subscription on unmount
-    return () => subscription.unsubscribe();
   }, []);
 
   if (loading) {
@@ -64,7 +52,7 @@ function Navbar() {
       <div className="max-w-[1520px] w-full m-auto flex flex-row items-center justify-between text-white p-3 h-full">
         <div>
           <Link className="font-bold text-md md:text-xl sm:ml-5" href="/app">
-            Let&apos;s see
+            Let's see
           </Link>
         </div>
         <div className="flex flex-row gap-3 items-center">
@@ -79,7 +67,7 @@ function Navbar() {
     <div className="max-w-[1520px] w-full m-auto flex flex-row items-center justify-between text-white p-3 h-full">
       <div>
         <Link className="font-bold text-md md:text-xl sm:ml-5" href="/app">
-          Let&apos;s see
+          Let's see
         </Link>
       </div>
 
@@ -124,5 +112,3 @@ function Navbar() {
     </div>
   );
 }
-
-export default Navbar;

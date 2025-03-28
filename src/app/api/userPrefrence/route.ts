@@ -1,7 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
-export const POST = async (req: NextRequest) => {
+export const GET = async (req: NextRequest) => {
   const supabase = await createClient();
   const { data: user, error: userError } = await supabase.auth.getUser();
   if (userError) {

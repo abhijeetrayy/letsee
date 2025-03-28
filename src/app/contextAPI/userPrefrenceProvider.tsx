@@ -19,12 +19,7 @@ const UserPrefrenceProvider = ({ children }: { children: React.ReactNode }) => {
         await supabase.auth.getUser();
       const user = userData?.user;
       if (!userError && user) {
-        const prefrence = await fetch("/api/userPrefrence", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const prefrence = await fetch("/api/userPrefrence");
         const res = await prefrence.json();
 
         setUserPrefrence(res);
