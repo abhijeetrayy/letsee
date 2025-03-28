@@ -1,13 +1,28 @@
-// components/RecommendationTile.tsx
 "use client";
-import { supabase } from "@/utils/supabase/client";
+
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { MdDeleteOutline } from "react-icons/md";
 
-const RecommendationTile = ({ isOwner, name, id }: any) => {
+interface RecommendationTileProps {
+  isOwner: boolean;
+  name: string;
+  id: string;
+}
+
+interface Item {
+  id: number;
+  item_id: number;
+  item_name: string;
+  item_type: string;
+  image_url?: string;
+  item_adult?: boolean;
+  recommended?: boolean;
+}
+
+const RecommendationTile = ({ isOwner, name, id }: RecommendationTileProps) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const modalScrollRef = useRef<HTMLDivElement>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -17,10 +32,10 @@ const RecommendationTile = ({ isOwner, name, id }: any) => {
   const [canScrollRight, setCanScrollRight] = useState(false);
   const [modalCanScrollLeft, setModalCanScrollLeft] = useState(false);
   const [modalCanScrollRight, setModalCanScrollRight] = useState(false);
-  const [recommendations, setRecommendations] = useState<any[]>([]);
-  const [watchedItems, setWatchedItems] = useState<any[]>([]);
+  const [recommendations, setRecommendations] = useState<Item[]>([]);
+  const [watchedItems, setWatchedItems] = useState<Item[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searchResults, setSearchResults] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchLoading, setSearchLoading] = useState(false);
@@ -34,49 +49,31 @@ const RecommendationTile = ({ isOwner, name, id }: any) => {
       setLoading(true);
       setError(null);
 
-      const { data: userData, error: userError } =
-        await supabase.auth.getUser();
-      if (userError || !userData?.user) {
-        setError("User not authenticated");
+      try {
+        const response = await fetch("/api/recommendations", {
+          method: "POST", // Using POST to send user_id in body
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ user_id: id }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to load data");
+        }
+
+        const data = await response.json();
+        console.log(data.recommendations);
+        setRecommendations(data.recommendations || []);
+        setWatchedItems(data.watchedItems || []);
+      } catch (err: any) {
+        console.error("Error fetching data:", err);
+        setError(err.message || "Failed to load data");
+      } finally {
         setLoading(false);
-        return;
       }
-
-      const userId = userData.user.id;
-
-      const [recoResponse, watchedResponse] = await Promise.all([
-        supabase
-          .from("recommendation")
-          .select("*")
-          .eq("user_id", id)
-          .order("recommended_at", { ascending: false }),
-        supabase
-          .from("watched_items")
-          .select("*")
-          .eq("user_id", id)
-          .order("watched_at", { ascending: false })
-          .limit(10),
-      ]);
-
-      if (recoResponse.error) {
-        console.error("Error fetching recommendations:", recoResponse.error);
-        setError("Failed to load recommendations");
-      } else {
-        setRecommendations(recoResponse.data || []);
-      }
-
-      if (watchedResponse.error) {
-        console.error("Error fetching watched items:", watchedResponse.error);
-        setError("Failed to load watched items");
-      } else {
-        setWatchedItems(watchedResponse.data || []);
-      }
-
-      setLoading(false);
     };
 
     fetchData();
-  }, [supabase]);
+  }, [id]);
 
   // Scroll handling for recommendations
   const handleScroll = useCallback(() => {
@@ -156,76 +153,70 @@ const RecommendationTile = ({ isOwner, name, id }: any) => {
     }
 
     setSearchLoading(true);
-    const { data: userData } = await supabase.auth.getUser();
-    if (!userData?.user) {
-      setSearchLoading(false);
-      return;
-    }
+    try {
+      const response = await fetch("/api/recommendations/search", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query: searchQuery }),
+      });
 
-    const { data, error } = await supabase
-      .from("watched_items")
-      .select("*")
-      .eq("user_id", userData.user.id)
-      .ilike("item_name", `%${searchQuery}%`)
-      .order("item_name", { ascending: true })
-      .limit(10);
-
-    setSearchLoading(false);
-    if (error) {
-      console.error("Error searching watched items:", error);
+      if (!response.ok) {
+        throw new Error("Error searching watched items");
+      }
+      const data = await response.json();
+      setSearchResults(data.results || []);
+    } catch (error) {
+      console.error("Search error:", error);
       setSearchResults([]);
-    } else {
-      setSearchResults(data || []);
+    } finally {
+      setSearchLoading(false);
     }
   };
 
   // Add to recommendations
-  const handleAddToRecommendations = async (item: any) => {
-    const { data: userData } = await supabase.auth.getUser();
-    if (!userData?.user) return;
-
+  const handleAddToRecommendations = async (item: Item) => {
     setActionLoading((prev) => ({ ...prev, [`add-${item.id}`]: true }));
+    try {
+      const response = await fetch("/api/recommendations/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          item_id: item.item_id,
+          name: item.item_name,
+          item_type: item.item_type,
+          image: item.image_url,
+          adult: item.item_adult,
+        }),
+      });
 
-    const { error } = await supabase.from("recommendation").insert({
-      user_id: userData.user.id,
-      item_id: item.item_id,
-      name: item.item_name,
-      item_type: item.item_type,
-      image: item.image_url,
-      adult: item.item_adult,
-    });
+      if (!response.ok) {
+        throw new Error("Error adding to recommendations");
+      }
 
-    if (error) {
-      console.error("Error adding to recommendations:", error);
-    } else {
-      const { data: updatedData } = await supabase
-        .from("recommendation")
-        .select("*")
-        .eq("user_id", userData.user.id)
-        .order("recommended_at", { ascending: false });
-      setRecommendations(updatedData || []);
+      const updatedReco = await response.json();
+      setRecommendations(updatedReco.recommendations || []);
       setSearchResults((prev) => prev.filter((i) => i.id !== item.id));
+    } catch (error) {
+      console.error("Add error:", error);
+    } finally {
+      setActionLoading((prev) => ({ ...prev, [`add-${item.id}`]: false }));
     }
-
-    setActionLoading((prev) => ({ ...prev, [`add-${item.id}`]: false }));
   };
 
   // Remove from recommendations
   const handleRemove = async (itemId: number) => {
-    const { data: userData } = await supabase.auth.getUser();
-    if (!userData?.user) return;
-
     setActionLoading((prev) => ({ ...prev, [`remove-${itemId}`]: true }));
+    try {
+      const response = await fetch("/api/recommendations/remove", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ item_id: itemId }),
+      });
 
-    const { error } = await supabase
-      .from("recommendation")
-      .delete()
-      .eq("user_id", userData.user.id)
-      .eq("item_id", itemId);
+      if (!response.ok) {
+        throw new Error("Error removing recommendation");
+      }
 
-    if (error) {
-      console.error("Error removing recommendation:", error);
-    } else {
       setRecommendations((prev) =>
         prev.filter((item) => item.item_id !== itemId)
       );
@@ -234,9 +225,11 @@ const RecommendationTile = ({ isOwner, name, id }: any) => {
           i.item_id === itemId ? { ...i, recommended: false } : i
         )
       );
+    } catch (error) {
+      console.error("Remove error:", error);
+    } finally {
+      setActionLoading((prev) => ({ ...prev, [`remove-${itemId}`]: false }));
     }
-
-    setActionLoading((prev) => ({ ...prev, [`remove-${itemId}`]: false }));
   };
 
   // Check if item is in recommendations
@@ -429,7 +422,7 @@ const RecommendationTile = ({ isOwner, name, id }: any) => {
         {isOwner && (
           <button
             onClick={() => setIsModalOpen(true)}
-            className="bg-blue-600 text-white text-sm md:text-md  py-1 px-3 rounded-md hover:bg-blue-700 transition-colors duration-200"
+            className="bg-blue-600 text-white text-sm md:text-md py-1 px-3 rounded-md hover:bg-blue-700 transition-colors duration-200"
           >
             Add Recommendation
           </button>
@@ -444,10 +437,10 @@ const RecommendationTile = ({ isOwner, name, id }: any) => {
             className="flex flex-row gap-4 py-3 overflow-x-auto no-scrollbar"
           >
             {recommendations.length > 0 ? (
-              recommendations.map((item) => (
+              recommendations.map((item: any) => (
                 <div
                   key={item.id}
-                  className="card-item w-full max-w-[6rem] md:max-w-[10rem]  bg-neutral-700 rounded-md overflow-hidden flex-shrink-0 flex flex-col justify-between h-auto group relative"
+                  className="card-item w-full max-w-[6rem] md:max-w-[10rem] bg-neutral-700 rounded-md overflow-hidden flex-shrink-0 flex flex-col justify-between h-auto group relative"
                 >
                   <div className="absolute top-0 left-0">
                     <p className="px-1 py-1 bg-neutral-950 text-white rounded-br-md text-xs sm:text-sm">
