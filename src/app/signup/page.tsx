@@ -3,7 +3,7 @@
 import SignupForm from "@/components/signup/signupForm";
 import { supabase } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import { toast, ToastContainer } from "react-toastify";
 // import "react-toastify/dist/ReactToastify.css";
 
@@ -11,6 +11,19 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
+
+  // Check if user is already logged in
+  useEffect(() => {
+    const checkUser = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (session) {
+        router.push("/app"); // Redirect to /app if user is logged in
+      }
+    };
+    checkUser();
+  }, [router]);
 
   const signup = async (email: string, password: string) => {
     setLoading(true);

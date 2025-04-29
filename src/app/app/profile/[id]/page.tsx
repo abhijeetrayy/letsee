@@ -236,19 +236,7 @@ export default async function ProfilePage({ params }: PageProps) {
 
         {/* Content Visibility */}
         <div className="rounded-lg shadow-md p-1 mt-5">
-          {!currentUserId ? (
-            <div className="w-full flex items-center justify-center h-52 text-neutral-600">
-              Log in to view @{user.username}'s content.
-            </div>
-          ) : user.visibility === "private" && !isOwner ? (
-            <div className="text-center py-10 text-neutral-600">
-              This profile is private. Only the owner can view it.
-            </div>
-          ) : !canViewContent ? (
-            <div className="text-center py-10 text-neutral-600">
-              Follow @{user.username} to see their content.
-            </div>
-          ) : (
+          {canViewContent ? (
             <>
               <RecommendationTile
                 isOwner={isOwner}
@@ -257,6 +245,10 @@ export default async function ProfilePage({ params }: PageProps) {
               />
               <ProfileContent profileId={user.id} />
             </>
+          ) : (
+            <div className="text-center py-10 text-neutral-600">
+              Follow @{user.username} to see their content.
+            </div>
           )}
         </div>
       </div>
